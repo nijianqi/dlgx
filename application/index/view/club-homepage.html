@@ -1,0 +1,181 @@
+{include file="common/header" title="社团主页" keywords="社团主页" description="" /}
+<input id="club-id" type="hidden" value="{$club.id}">
+	<div id="homepage-top">
+		<div id="homepage-intro">
+			<img src="{$club.club_icon}" alt="">
+			<h2>{$club.club_name}</h2>
+			<p>关注数 {$followCounts}</p>
+		</div>
+		</div>
+		{if $clubFollowInfo.is_follow == 2}
+		<a class="homepage-watch _watch"><span>已关注</span></a>
+		{else/}
+		<a class="homepage-watch" onclick="follow({$club.id},2)"><img src="__PUBLIC__/images/plus_white.png" alt=""><span>关注</span></a>
+		{/if}
+	</div>
+	
+	<div class="adetail-wrap">
+		<p class="adetail-head">社团公告</p>
+		<div id="adetail-notice">
+			{if !empty($club.club_notice)}
+			{$club.club_notice}
+			{else/}
+			<p>暂无公告</p>
+			{/if}
+		</div>
+	</div>
+<div class="adetail-wrap">
+	<p class="adetail-head">社团简介</p>
+	<div id="adetail-jianjie">
+		{$club.club_intro}
+	</div>
+</div>
+
+	<div class="adetail-wrap">
+		<p class="adetail-head">社团相册
+			<a href="{:url('Club/clubAlbum',['club_id'=>$club.id])}">
+				<span class="fr">更多
+					<i class="fa fa-angle-right"></i>
+				</span>
+			</a>
+		</p>
+		<div id="adetail-ablum" class="clearfix">
+			{if empty($clubAlbumList)}
+			<p>暂无相册</p>
+			{else}
+			{foreach name="$clubAlbumList" item="vo"}
+			<a href="{:url('Club/clubAlbum',['club_id'=>$club.id])}"><div class="adetail-ablum-item"><img src="{$vo.album_img}" alt=""></div></a>
+			{/foreach}
+			{/if}
+		</div>
+	</div>
+	
+	<div id="club-member" class="adetail-wrap">
+		<p class="adetail-head">社团成员
+			<a href="{:url('Club/member_list',['club_id'=>$club.id])}">
+				<span class="fr">更多
+				<i class="fa fa-angle-right"></i>
+				</span>
+			</a>
+		</p>
+		<div class="detail-info clearfix">
+			<ul>
+				{if empty($memberList)}
+				<p>暂时还有社团成员</p>
+				{else/}
+				{foreach name="memberList" item="vo"}
+				<a href="{:url('Member/personHomepage', ['member_id' => $vo.member_id])}">
+				<li><img src="{$vo.member_icon}" alt=""><h4>{$vo.member_name}</h4></li>
+				</a>
+				{/foreach}
+				{/if}
+			</ul>
+		</div>
+	</div>
+	
+	<div class="adetail-wrap">
+		<p class="adetail-head">社团活动
+			<a href="{:url('Activity/actList', ['club_owner_id' => $club.club_owner_id])}">
+				<span class="fr">更多
+					<i class="fa fa-angle-right"></i>
+				</span>
+			</a>
+		</p>
+		<div id="homepage-actlist">
+			{if empty($activityList)}
+			<p>暂时还未发起活动</p>
+			{else}
+			{foreach name="activityList" item="vo"}
+			<div class="act-item clearfix">
+				<div class="act-img"><a href="{:url('Activity/index',['act_id'=>$vo.id])}"><img src="{$vo.act_detail_img}" alt=""></a></div>
+				<div class="act-info">
+					<h2 class="act-title one-line">
+						<a href="{:url('Activity/index',['act_id'=>$vo.id])}">{$vo.act_name}</a>
+					</h2>
+					<div class="act-organize clearfix">
+						<img src="{$member.member_icon}" alt="">
+						<span class="one-line">发起人({$member.member_name})</span>
+					</div>
+					<p class="act-time one-line">活动时间: {$vo.act_start_time} - {$vo.act_end_time}</p>
+					<div class="act-operate">
+						<span>{$vo.act_release_time}发布</span>
+						{if $vo.act_status == 1}
+						<img src="__IMAGES__/activity_before.png" alt="">
+						{elseif $vo.act_status == 2}
+						<img src="__IMAGES__/activity_ing.png" alt="">
+						{elseif $vo.act_status == 3}
+						<img src="__IMAGES__/activity_over.png" alt="">
+						{/if}
+					</div>
+				</div>
+			</div>
+			{/foreach}
+			{/if}
+		</div>
+	</div>
+    {if empty($isJoin)}
+	<div class="homepage-submit">
+		<button class="submit">输入口令加入</button>
+	</div>
+    {/if}
+	<div class="center trans-alert none">
+		<img src="__PUBLIC__/images/tick.png" alt="">
+		<p></p>
+	</div>
+	<script src="__PUBLIC__/script/min/swipe.min.js"></script>
+	<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+	<script>
+		$(function() {
+		    $(".homepage-watch").click(function() {
+		    	if($(this).hasClass("_watch")) {
+		    		return;
+		    	}
+		    	$(this).addClass('_watch').find('img').addClass('none').next('span').text('已关注');
+		    	$(".trans-alert p").text('关注成功').parent().removeClass('none');
+		    	setTimeout(function() {
+		    		$(".trans-alert").addClass('none');
+		    	},1400)
+		    });
+
+		    $(".submit").click(function() {
+		    	myprompt("请输入加入口令",function(val) {
+		    			if(val === '') {
+		    				myalert("口令不能为空！");
+		    				return;
+		    			}
+					$.ajax({
+						type:'POST',
+						url:"{:url('club/join')}",
+						data:{'id' : $('#club-id').val(),'club_password' :val},
+						async: false,
+						success: function(data) {
+							if(data.flag == -1) {
+								location.href = "{:url('member/edit')}";
+							}else if(data.flag == -2){
+								myalert("口令错误");
+							}else{
+								myalert("恭喜您！成功加入“{$club.club_name}");
+								setTimeout(function() {
+									location.reload();
+								},1400)
+							}
+						}
+					});
+		    	}, "例：123456789");
+		    })
+		});
+		function follow(id,follow){
+				$.ajax({
+					type:'POST',
+					url:"{:url('club/follow')}",
+					data:{'id' : id,'is_follow' : follow},
+					async: false,
+					success: function(data) {
+						if(0 > data.flag) {
+							location.href = "{:url('member/edit')}";
+						}
+					}
+				});
+		}
+	</script>
+{include file="common/footer" /}

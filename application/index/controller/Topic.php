@@ -1,0 +1,369 @@
+<?php
+namespace app\index\controller;
+
+use think\Controller;
+use app\index\model\MemberModel;
+use app\index\model\TopicModel;
+use app\index\model\TopicCollectModel;
+use app\index\model\TopicCommentModel;
+use app\index\model\TopicLikeModel;
+use app\index\model\TopicAlbumModel;
+use app\index\model\TopComAlbumModel;
+use app\index\model\MessageModel;
+
+class Topic extends Controller
+{
+    protected $beforeActionList = [
+        'checkMember' => ['only' => 'index,newTopList,hotTopList,collect,comment,like,createTop,cancel']
+    ];
+
+    public function checkMember()
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+		if(empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        }
+        if($member['member_status'] == 2) {
+            $this->redirect('member/index');
+        }
+    }
+
+    public function index() //话题详情
+    {
+        $topicId = input('param.topic_id');
+        $topicModel = new TopicModel();
+        $topic_info = $topicModel->getInfoByWhere(array('id' => $topicId,'topic_status' => 1));
+        if($topic_info){
+		$memberModel = new MemberModel();
+        $member_info = $memberModel->getInfoById($topic_info['topic_owner_id']);
+        $topic_info['member_name'] = $member_info['member_name'];
+        $topic_info['member_icon'] = $member_info['member_icon'];
+        $time = $topic_info['topic_create_time'] - time();
+        if ($time) {
+            $hour =  floor((time() - $topic_info['topic_create_time'])/ 86400 * 24);
+            if($hour < 1 ){
+                $min =  floor((time() - $topic_info['topic_create_time'])/ 86400 * 24 * 60);
+                $topic_info['topic_create_min'] = $min;
+            }elseif($hour == 24 || $hour > 24){
+                $day =  floor((time() - $topic_info['topic_create_time'])/ 86400);
+                $topic_info['topic_create_day'] = $day;
+            }elseif($hour < 24 && $hour > 1 || $hour == 1 ){
+                $topic_info['topic_create_hour'] = $hour;
+            }
+        }
+        $topicAlbumModel = new TopicAlbumModel();
+        $topicAlbumList = $topicAlbumModel->getListByWhere(array('topic_id' => $topicId));
+        $topicCommentModel = new TopicCommentModel();
+        $topicCommentCounts = $topicCommentModel->getCounts(array('topic_id' => $topicId));
+        $topic_info['topicCommentCounts'] = $topicCommentCounts;
+        $topicCommentList = $topicCommentModel->getListByWhere(array('topic_id' => $topicId));
+        foreach( $topicCommentList as $key=>$val){
+            $memberModel = new MemberModel();
+            $member_info = $memberModel->getInfoById($val['member_id']);
+            $to_member_info = $memberModel->getInfoById($val['to_member_id']);
+            $topicCommentList[$key]['member_name'] = $member_info['member_name'];
+            $topicCommentList[$key]['member_id'] = $member_info['id'];
+            $topicCommentList[$key]['to_member_name'] = $to_member_info['member_name'];
+            $topicCommentList[$key]['to_member_id'] = $to_member_info['id'];
+            $topicCommentList[$key]['member_icon'] = $member_info['member_icon'];
+            $time = $val['comment_create_time'] - time();
+        if ($time) {
+            $hour =  floor((time() - $val['comment_create_time'])/ 86400 * 24);
+            if($hour < 1 ){
+                $min =  floor((time() - $val['comment_create_time'])/ 86400 * 24 * 60);
+                $topicCommentList[$key]['comment_create_min'] = $min;
+            }elseif($hour == 24 || $hour > 24){
+                $day =  floor((time() - $val['comment_create_time'])/ 86400);
+                $topicCommentList[$key]['comment_create_day'] = $day;
+            }elseif($hour < 24 && $hour > 1 || $hour = 1){
+                $topicCommentList[$key]['comment_create_hour'] = $hour;
+            }
+        }
+			$topComAlbumModel = new TopComAlbumModel();
+            $topComAlbumList = $topComAlbumModel->getListByWhere(array('comment_id'=> $val['id']));
+            $topicCommentList[$key]['topComAlbumList'] =  $topComAlbumList;
+        }
+        $topicLikeModel = new TopicLikeModel();
+        $topicLikeCounts = $topicLikeModel->getCounts(array('topic_id' => $topicId,'is_like' => 2));
+        $topic_info['topicLikeCounts'] = $topicLikeCounts;
+        $topicLikeInfo = $topicLikeModel->getInfoByWhere(array('topic_id' => $topicId,'member_id'=>session('memberId')));
+        if(!empty($topicLikeInfo)){
+            $topic_info['topic_is_like'] = $topicLikeInfo['is_like'];
+        }else{
+            $topic_info['topic_is_like'] =1;
+        }
+        $topicCollectModel = new TopicCollectModel();
+        $topicCollectInfo = $topicCollectModel->getInfoByWhere(array('topic_id' => $topicId,'member_id'=>session('memberId')));
+        if(!empty($topicCollectInfo)){
+            $topic_info['topic_is_collect'] = $topicCollectInfo['is_collect'];
+        }else{
+            $topic_info['topic_is_collect'] =1;
+        }
+        $memberId = session('memberId');
+        $this->assign([
+            'topic_info' => $topic_info,
+            'topicCommentList'=>$topicCommentList,
+            'topicAlbumList' =>$topicAlbumList,
+            'memberId' => $memberId
+        ]);
+        return $this->fetch('/topic-detail');
+		}else{
+			$this->redirect('topic/newTopList');
+		}
+    }
+
+    public function newTopList() //最新话题列表
+    {
+        if(request()->isAjax()) {
+            $topicModel = new TopicModel();
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), '', '', 'topic_create_time desc');
+            $topicAlbumModel = new TopicAlbumModel();
+            $topicLikeModel = new TopicLikeModel();
+            $topicCollectModel = new TopicCollectModel();
+            $topicCommentModel = new TopicCommentModel();
+            if (!empty($topic_list)) {
+                foreach ($topic_list as $key => $vo) {
+                    $topicAlbumList = $topicAlbumModel->getListByWhere(array('topic_id' => $vo['id']), '', '', '3');
+                    $topic_list[$key]['topicAlbumList'] = $topicAlbumList;
+                    $time = $vo['topic_create_time'] - time();
+                    if ($time) {
+                        $hour = floor((time() - $vo['topic_create_time']) / 86400 * 24);
+                        if ($hour < 1) {
+                            $min = floor((time() - $vo['topic_create_time']) / 86400 * 24 * 60);
+                            $topic_list[$key]['topic_create_time'] = $min.'分钟前';
+                        } elseif ($hour == 24 || $hour > 24 && $hour < 720) {
+                            $day = floor((time() - $vo['topic_create_time']) / 86400);
+                            $topic_list[$key]['topic_create_time'] = $day.'天前';
+                        } elseif ($hour < 24 && $hour > 1 || $hour == 1) {
+                            $topic_list[$key]['topic_create_time'] = $hour.'小时前';
+                        }elseif($hour > 720){
+                            $topic_list[$key]['topic_create_time'] = date('Y年m月d日', $vo['topic_create_time']);
+                        }else{
+                            $topic_list[$key]['topic_create_time'] = '刚刚';
+                        }
+                    }
+                    $topicAlbumCounts = $topicAlbumModel->getCounts(array('topic_id' => $vo['id']));
+                    $topic_list[$key]['topicAlbumCounts'] = $topicAlbumCounts;
+                    $topicLikeCounts = $topicLikeModel->getCounts(array('topic_id' => $vo['id'], 'is_like' => 2));
+                    $topic_list[$key]['topicLikeCounts'] = $topicLikeCounts;
+                    $topicCollectCounts = $topicCollectModel->getCounts(array('topic_id' => $vo['id'], 'is_collect' => 2));
+                    $topic_list[$key]['topicCollectCounts'] = $topicCollectCounts;
+                    $topicCommentCounts = $topicCommentModel->getCounts(array('topic_id' => $vo['id']));
+                    $topic_list[$key]['topicCommentCounts'] = $topicCommentCounts;
+                    $topicLikeInfo = $topicLikeModel->getInfoByWhere(array('member_id' => session('memberId'), 'topic_id' => $vo['id']));
+                    $topic_list[$key]['is_like'] = $topicLikeInfo['is_like'];
+                    $topicCollectInfo = $topicCollectModel->getInfoByWhere(array('member_id' => session('memberId'), 'topic_id' => $vo['id']));
+                    $topic_list[$key]['is_collect'] = $topicCollectInfo['is_collect'];
+                }
+            }
+            $return['lists'] = $topic_list;
+            return json($return);
+        }
+        return $this->fetch('/topic');
+    }
+
+    public function hotTopList() //热门话题列表
+    {
+        if(request()->isAjax()) {
+            $topicModel = new TopicModel();
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), '', '', 'topic_num desc');
+            $topicAlbumModel = new TopicAlbumModel();
+            $topicLikeModel = new TopicLikeModel();
+            $topicCollectModel = new TopicCollectModel();
+            $topicCommentModel = new TopicCommentModel();
+            if (!empty($topic_list)) {
+                $flag=array();
+                foreach ($topic_list as $key => $vo) {
+                    $topicAlbumList = $topicAlbumModel->getListByWhere(array('topic_id' => $vo['id']), '', '', '3');
+                    $topic_list[$key]['topicAlbumList'] = $topicAlbumList;
+                    $time = $vo['topic_create_time'] - time();
+                    if ($time) {
+                        $hour = floor((time() - $vo['topic_create_time']) / 86400 * 24);
+                        if ($hour < 1) {
+                            $min = floor((time() - $vo['topic_create_time']) / 86400 * 24 * 60);
+                            $topic_list[$key]['topic_create_time'] = $min.'分钟前';
+                        } elseif ($hour == 24 || $hour > 24 && $hour < 720) {
+                            $day = floor((time() - $vo['topic_create_time']) / 86400);
+                            $topic_list[$key]['topic_create_time'] = $day.'天前';
+                        } elseif ($hour < 24 && $hour > 1 || $hour == 1) {
+                            $topic_list[$key]['topic_create_time'] = $hour.'小时前';
+                        }elseif($hour > 720){
+                            $topic_list[$key]['topic_create_time'] = date('Y年m月d日', $vo['topic_create_time']);
+                        }else{
+                            $topic_list[$key]['topic_create_time'] = '刚刚';
+                        }
+                    }
+                    $topicAlbumCounts = $topicAlbumModel->getCounts(array('topic_id' => $vo['id']));
+                    $topic_list[$key]['topicAlbumCounts'] = $topicAlbumCounts;
+                    $topicLikeCounts = $topicLikeModel->getCounts(array('topic_id' => $vo['id'], 'is_like' => 2));
+                    $topic_list[$key]['topicLikeCounts'] = $topicLikeCounts;
+                    $topicCollectCounts = $topicCollectModel->getCounts(array('topic_id' => $vo['id'], 'is_collect' => 2));
+                    $topic_list[$key]['topicCollectCounts'] = $topicCollectCounts;
+                    $topicCommentCounts = $topicCommentModel->getCounts(array('topic_id' => $vo['id']));
+                    $topic_list[$key]['topicCommentCounts'] = $topicCommentCounts;
+                    $topicLikeInfo = $topicLikeModel->getInfoByWhere(array('member_id' => session('memberId'), 'topic_id' => $vo['id']));
+                    $topic_list[$key]['is_like'] = $topicLikeInfo['is_like'];
+                    $topicCollecInfo = $topicCollectModel->getInfoByWhere(array('member_id' => session('memberId'), 'topic_id' => $vo['id']));
+                    $topic_list[$key]['is_collect'] = $topicCollecInfo['is_collect'];
+                    $flag[]=$topic_list[$key]['topicLikeCounts'];
+                }
+                array_multisort($flag, SORT_DESC, $topic_list);
+            }
+            $return['lists'] = $topic_list;
+            return json($return);
+        }
+        return $this->fetch('/topic-hot');
+    }
+
+    public function collect() //收藏话题
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        } else {
+            $topicId = input('param.id');
+            $is_collect = input('param.is_collect');
+            $topicModel = new TopicModel();
+            $topicInfo = $topicModel->getInfoById($topicId);
+            $topicCollectModel = new TopicCollectModel();
+            $topicCollectList = $topicCollectModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
+            if(!empty($topicCollectList)){
+                if($topicInfo&&$topicInfo['topic_status'] = 1){
+                    $return['flag'] = $topicCollectModel->updateCollect(session('memberId'),$topicId,$is_collect);
+                }
+            }else{
+                if($topicInfo&&$topicInfo['topic_status'] = 1){
+                    $return['flag'] = $topicCollectModel->insertCollect(session('memberId'),$topicId,$is_collect);
+                }
+            }
+
+        }
+        return json($return);
+    }
+
+    public function comment() //评论话题
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        } else {
+            $topicId = input('param.topic_id');
+            $comment = input('param.comment');
+            $commentId = input('param.comment_id');
+            $topicCommentModel = new TopicCommentModel();
+            $TopicModel = new TopicModel();
+            $topic = $TopicModel->getInfoById($topicId);
+            $TopicModel->update(array('topic_num'=>$topic['topic_num']+1),array('id'=>$topicId));
+            if(empty($commentId)){
+                $commentId = 0;
+            }
+            $return = $topicCommentModel->insertComment($topicId,$comment,$commentId);
+            if(request()->file()){
+                $album = request()->file('file');
+                $topComAlbumModel = new TopComAlbumModel();
+                foreach($album as $key=>$val){
+                    $album_img = $topComAlbumModel->insertAlbum($val);
+                    $topComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img,'create_time'=>time()));
+                }
+            }
+        }
+    }
+
+    public function like() //点赞话题
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        } else {
+            $topicId = input('param.id');
+            $is_like = input('param.is_like');
+            $topicModel = new TopicModel();
+            $topicInfo = $topicModel->getInfoById($topicId);
+            $topicLikeModel = new TopicLikeModel();
+            $topicLikeList = $topicLikeModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
+            if(!empty($topicLikeList)){
+                if($topicInfo&&$topicInfo['topic_status'] = 1){
+                    $return['flag'] = $topicLikeModel->updateLike(session('memberId'),$topicId,$is_like);
+                }
+            }else{
+                if($topicInfo&&$topicInfo['topic_status'] = 1){
+                    $return['flag'] = $topicLikeModel->insertLike(session('memberId'),$topicId,$is_like);
+                }
+            }
+
+        }
+        return json($return);
+    }
+	
+	public function del() //删除话题
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        } else {
+            $id = input('param.id');
+            $topic = new TopicModel();
+            $topicCollect = new TopicCollectModel();
+            $topicCollect->delByWhere(array('topic_id'=>$id));
+            $topicLike = new TopicLikeModel();
+            $topicLike->delByWhere(array('topic_id'=>$id));
+            $topicComment = new TopicCommentModel();
+            $topicComment->delByWhere(array('topic_id'=>$id));
+            $TopicAlbum = new TopicAlbumModel();
+            $TopicAlbum->delByWhere(array('topic_id'=>$id));
+            $message = new MessageModel();
+            $message->delByWhere(array('topic_id'=>$id));
+            $flag = $topic->del($id);
+            return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
+        }
+    }
+
+    public function createTop() //发布话题
+    {
+       if (request()->isPost()) {
+            $param = input('param.');
+            $topic = new TopicModel();
+			if(empty(session('memberId'))) {
+            $this->redirect('index/show');
+        }
+            $param['topic_owner_id'] = session('memberId');
+            $param['topic_create_time'] = time();
+            $param['topic_release_time'] = time();
+            $topic_id = $topic->insertGetId($param);
+            if(request()->file()){
+               $album = request()->file('file');
+               $topAlbumModel = new TopicAlbumModel();
+               foreach($album as $key=>$val){
+                   $album_img = $topAlbumModel->insertAlbum($val);
+                   $topAlbumModel->insertGetId(array('topic_id'=>$topic_id,'album_img'=>$album_img,'create_time'=>time()));
+               }
+           }
+           $topicLikeModel = new TopicLikeModel();
+           $topicCollectModel = new TopicCollectModel();
+           $topicCollectModel->insert(array('topic_id'=>$topic_id,'member_id'=>session('memberId'),'is_collect'=>2,'apply_time'=>time()));
+           $flag = $topicLikeModel->insert(array('topic_id'=>$topic_id,'member_id'=>session('memberId'),'is_like'=>2,'apply_time'=>time()));
+
+           $return['code'] = $flag['code'];
+           $return['msg'] = $flag['msg'];
+           $this->assign([
+               'return' => $return
+           ]);
+        }
+        if(empty($return)){
+            $return['code'] = 0;
+            $return['msg'] = '';
+        }
+        $this->assign([
+            'return' => $return
+        ]);
+        return $this->fetch('/topic-publish');
+    }
+}

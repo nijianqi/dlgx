@@ -1,0 +1,29 @@
+{include file="common/header" title="社团相册" keywords="社团相册" description="" /}
+	
+	<div id="club-ablum-wrap">
+		{if !empty($clubAlbumList)}
+		{foreach name="$clubAlbumList" item="vo"}
+		<div class="club-ablum-item">
+			<img src="{$vo.album_img}" alt="">
+		</div>
+		{/foreach}
+		{else/}
+		<div id="none-club" class="center">
+			<p>暂时没有社团相册!</p>
+		</div>
+		{/if}
+	</div>
+	<div class="hover-layer none">
+		<img src="__PUBLIC__/images/user1.jpg" alt="" class="center">
+	</div>
+	<script>
+		$(function() {
+			$("#club-ablum-wrap").on('click','.club-ablum-item',function() {
+				$(".hover-layer img").attr('src',$(this).find('img').attr('src')).parent().removeClass('none');
+			});
+			$(".hover-layer").click(function() {
+				$(this).addClass('none');
+			})
+		})
+	</script>
+{include file="common/footer" /}

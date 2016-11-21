@@ -1,0 +1,90 @@
+{include file="common/header" title="我的社团" keywords="我的社团" description="" /}
+
+	<div id="act-top" >
+		<a href="{:url('Member/mineclub')}" class="round-button">我加入的</a><a class="round-button active">我关注的</a>
+	</div>
+	<div id="clubs-wrap">
+		<ul>
+			{if !empty($clubFollowList)}
+			{foreach name="clubFollowList" item="vo"}
+			<a href="{:url('Club/index',['clubId' => $vo.clubInfo.id])}">
+			<li class="club-item clearfix">
+				<div class="club-img">
+					<img src="{$vo.clubInfo.club_icon}" alt="">
+				</div>
+				<div class="club-item-info">
+					<h2>{$vo.clubInfo.club_name}</h2>
+					<p>{$vo.clubInfo.club_school}</p>
+					<span>
+						简介：{$vo.clubInfo.club_intro}
+					</span>
+				</div>
+				{if empty($vo.clubInfo.is_follow)}
+				<a class="club-watch _watch" onclick="follow({$vo.clubInfo.id},1)"><i class="fa fa-plus"></i><span>已关注</span></a>
+				{/if}
+			</li>
+			</a>
+			{/foreach}
+			{else/}
+			<div id="none-club" class="center">
+				<p>暂无关注的社团哦!</p>
+				<a href="{:url('club/clubList')}">点击加入社团</a>
+			</div>
+			{/if}
+		</ul>
+	</div>
+	
+	<div class="center trans-alert none">
+		<img src="__PUBLIC__/images/tick.png" alt="">
+		<p></p>
+	</div>
+	<script>
+		$(function() {
+			$(".round-button").click(function() {
+				$(this).addClass('active');
+				$(this).siblings().removeClass('active');
+			}); 
+
+			$("#clubs-wrap").on('click','.club-watch',function() {
+				if($(this).hasClass('_watch')) {
+					$(this).removeClass('_watch').find('span').text('关注');
+					$(".trans-alert p").text('已取消关注').parent().removeClass('none');
+				} else {
+					$(this).addClass('_watch').find('span').text('已关注');
+					$(".trans-alert p").text('关注成功').parent().removeClass('none');
+				}
+				setTimeout(function() {
+					$(".trans-alert").addClass('none');
+				},1400)
+			})
+		});
+		function follow(id,follow){
+			if(follow == 1){
+				$.ajax({
+					type:'POST',
+					url:"{:url('club/follow')}",
+					data:{'id' : id,'is_follow' : follow},
+					async: false,
+					success: function(data) {
+						if(0 > data.flag) {
+							location.href = "{:url('member/edit')}";
+						}
+					}
+				});
+			}else{
+				$.ajax({
+					type:'POST',
+					url:"{:url('club/follow')}",
+					data:{'id' : id,'is_follow' : follow},
+					async: false,
+					success: function(data) {
+						if(0 > data.flag) {
+							location.href = "{:url('member/edit')}";
+						}
+					}
+				});
+			}
+
+		}
+	</script>
+{include file="common/footer" /}

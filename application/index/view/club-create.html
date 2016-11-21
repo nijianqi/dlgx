@@ -1,0 +1,90 @@
+{include file="common/header" title="创建社团" keywords="创建社团" description="" /}
+<style>
+	.mark-publish-img {height: auto;}
+	.mark-img-button > img {width: 5rem;height: 5rem;}
+	.mark-item-img > img {width: 5rem;height: 5rem;}
+	</style>
+	<div id="ccreate-wrap">
+		<form action="" method="post" enctype="multipart/form-data" onsubmit="return check();">
+			<p class="ccreate-title">
+				填写社团资料
+			</p>
+			<div class="ccreate-detail">
+				<ul>
+					<li>
+						<span>社团名称</span>
+						<div class="cdinput-wrap">
+							<input type="text" name="club_name" placeholder="请输入社团名称">
+						</div>
+					</li>
+					<li class="show-dpicker pr">
+						<span>社团类型</span>
+						<div class="cdinput-wrap">
+							<input type="text" name="club_type" value="{$clubTypeList.0.type_name}" readonly>
+						</div>
+						<i class="fa fa-angle-right"></i>
+					</li>
+					<li>
+						<span>加入口令</span>
+						<div class="cdinput-wrap">
+							<input type="text" name="club_password" placeholder="请设置加入口令">
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="ccreate-detail">
+				<ul>
+					<li>
+						<span>社团相册</span>
+						<div class="cdinput-wrap album-add">
+							<span>添加图片</span>
+						</div>
+					</li>
+					<div class="mark-publish-img">
+						<div class="mark-img-button">
+							<img src="__PUBLIC__/images/add_picture.png" alt="">
+							<input type="file" name="album[]">
+						</div>
+					</div>
+				</ul>
+			</div>
+			<div class="ccreate-detail">
+				<ul>
+					<li>
+						<span>社团简介</span>
+						<div class="cdinput-wrap">
+							<textarea name="club_intro" placeholder="请输入社团简介"></textarea>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="ccreate-detail">
+				<ul>
+					<li class="pr">
+						<span>社团logo</span>
+						<input type="file" name="logo">
+						<img id="club-logo-set" src="__PUBLIC__/images/add.png" alt="" >
+						<i class="fa fa-angle-right"></i>	
+					</li>
+				</ul>
+			</div>
+			<button class="submit">立即创建</button>
+		</form>
+	</div>
+	<div class="date-picker">
+		<p><span class="fl dpicker-cancel">取消</span>选择类型<span class="dpicker-finish fr">完成</span></p>
+		<div class="dpicker-body">
+			<ul>
+				<li class="dpicker-item empty sub-active"></li>
+				{foreach name="clubTypeList" item="vo"}
+				<li class="dpicker-item">{$vo.type_name}</li>
+				{/foreach}
+				<li class="dpicker-item empty"></li>
+			</ul>
+		</div>
+	</div>
+    <div class="info-mask center none" data-status="{$return.code}" data-msg="{$return.msg}"></div>
+    <script src="__PUBLIC__/script/min/mypop.min.js"></script>
+	<script src="__PUBLIC__/script/min/clubCreate.min.js"></script>
+
+{include file="common/footer" /}

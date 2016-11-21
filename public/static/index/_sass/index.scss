@@ -1,0 +1,188 @@
+/*首页*/
+.search-wrap {
+	height: 3.2rem;
+	margin: .8rem;
+	border: .1rem solid #ddd;
+	border-radius: 5px;
+	padding: 0 .5rem;
+	line-height: 3rem;
+	background-color: #fff;
+	overflow: hidden;
+	> img {
+		width: 1.9rem;
+		height: 1.9rem;
+	}
+	> input {
+		height: 3rem;
+		width: 90%;
+		border: none;
+		outline: none;
+		font-size: 1.4rem;
+		color: #444 ;
+		padding-left: .5rem;
+	}
+}
+.acttype-head {
+	padding: .7rem 1rem;
+	padding-top: 1.4rem;
+	font-size: 1.7rem;
+	color: #666;
+	div {
+		font-size: 1.4rem;
+		color: #999;
+	}
+	img {
+		height: 1.4rem;
+		vertical-align: -.2rem;
+		margin-left: .5rem;
+	} 
+}
+.online-act {
+	text-align: center;
+	padding: 0 0 1rem .6rem;
+	background-color: #fff;
+	img {
+		margin: 1rem .6rem 0 0;
+		width: 47%;
+		border-radius: 6px;
+	}
+}
+.imgbox {
+	overflow: hidden;
+	li {
+		float: left;
+		width: 100vw;
+		height: 19.2rem;
+	}
+	img {
+		width: 100vw;
+		height: 19.2rem;
+		margin:0 auto;
+	}
+}
+.page {
+	position: relative;
+	ol {
+		position: absolute;
+		left: 50%;
+		bottom: .3rem;
+		z-index: 10;
+	}
+	li {
+		position: relative;
+		left: -50%;
+		display: inline-block;
+		width: 1rem;
+		height: 1rem;
+		margin: 0px .4rem;
+		text-align: center;
+		border-radius:50%;
+		border: 1px solid #fff;
+		background-color:transparent;
+		&.active {
+			background:#fff;
+		}
+	}
+}
+
+/*index-club*/
+.club-item {
+	position: relative;
+	margin: .5rem .7rem;
+	background-color: #fff;
+	overflow: hidden;
+	padding: .7rem 0;
+}
+.club-img {
+	float: left;
+	width: 10rem;
+	padding: 0 1rem;
+	height: 100%;
+	line-height: 100%;
+	text-align: center;
+	> img {
+		width: 8rem;
+		height: 8rem;
+		border-radius: 100%;
+	}
+}
+.club-item-info {
+	overflow: hidden;
+	padding-right: .5rem;
+	> h2 {
+		color: #111;
+		font-size: 1.7rem;
+	}
+	> p {
+		color: #777;
+		margin: .5rem 0;
+		font-size: 1.4rem;
+	}
+	> span {
+		color: #555;
+		word-break: break-all;
+	}
+}
+.club-watch {
+	position: absolute;
+	display: inline-block;
+	top: 1.2rem;
+	right: .8rem;
+	color: $mainColor;
+	padding: .2rem .5rem;
+	padding-top: .4rem;
+	border: 2px solid $mainColor;
+	border-radius: 3px;
+	font-size: 0;
+	> span {
+		font-size: 1.3rem;
+	}
+	> .fa {
+		font-size: 1.2rem;
+		margin-right: .5rem;
+	}
+	&._watch {
+		color: #ccc;
+		border-color: #ccc;
+		> .fa {
+			display: none;
+		}
+	}
+	&:active {
+		color: $mainColor;
+	}
+}
+.club-create-button {
+	position: absolute;
+	top: 1.1rem;
+	right: 1.6rem;
+	color: #fff;
+	padding: 0 .5rem;
+	padding-top: .1rem;
+	line-height: 2.6rem;
+	background-color: $mainColor;
+	border-radius: 3px;
+	> i {
+		margin-right: .5rem;
+	}
+	&:active {
+		color: #fff;
+	}
+}
+.trans-alert {
+	position: fixed;
+	width: 10.5rem;
+	padding: 1rem 0;
+	overflow: hidden;
+	color: #fff;
+	font-size: 1.5rem;
+	text-align: center;
+	border-radius: 6px;
+	background-color: rgba(100,100,100,.7);
+	transition: bottom .3s;
+	> img {
+		width: 4rem;
+		max-height: 4rem;
+		margin-bottom: .5rem;
+	}
+}

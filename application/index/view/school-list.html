@@ -1,0 +1,20 @@
+{include file="common/header" title="选择学校" keywords="大乐个学" description="大乐个学" /}
+
+<div id="school-list">
+	{if !empty($areaList)}
+	{foreach name="areaList" item="vo"}
+	<p class="school-city">{$vo.area_name}</p>
+	<ul>
+		{if !empty($schoolList)}
+		{foreach name="schoolList" item="v"}
+		{if $vo.id == $v.area_id}
+		<a href="{:url('member/infomodify', ['schoolName' => $v.school_name, 'memberForm' => $memberForm])}"><li class="school-item"><p>{$v.school_name}</p></li></a>
+		{/if}
+		{/foreach}
+		{/if}
+	</ul>
+	{/foreach}
+	{/if}
+</div>
+
+{include file="common/footer" /}

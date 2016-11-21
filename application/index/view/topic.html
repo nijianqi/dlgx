@@ -1,0 +1,202 @@
+{include file="common/header" title="话题" keywords="话题" description="" /}
+
+<div id="act-top">
+    <a href="{:url('Topic/hotTopList')}" class="round-button">热门</a>
+    <button class="round-button active">最新</button>
+    <a href="{:url('Topic/createTop')}" class="club-create-button"><i class="fa fa-plus"></i>发布</a>
+</div>
+
+<div id="topic-list" class="pre-navbt">
+    <ul class="lists"></ul>
+    <div class="hover-layer none"><img src="__PUBLIC__/images/user1.jpg" alt="" class="center"></div></div>
+</div>
+<div class="nav-bottom">
+    <div class="navbt-item">
+        <a href="{:url('Index/show')}">
+            <img src="__PUBLIC__/images/home_gray.png" alt="">
+
+            <p>首页</p>
+        </a>
+    </div>
+    <div class="navbt-item active">
+        <a href="{:url('Topic/newTopList')}">
+            <img src="__PUBLIC__/images/topic.png" alt="">
+
+            <p>话题</p>
+        </a>
+    </div>
+    <div class="navbt-item">
+        <a href="{:url('Member/index')}">
+            <img src="__PUBLIC__/images/person_gray.png" alt="">
+
+            <p>我的</p>
+        </a>
+    </div>
+</div>
+<form name="uploadFrom" id="uploadFrom" action="{:url('Topic/comment')}" method="post" target="tarframe"
+      enctype="multipart/form-data">
+    <input id="topic_id" name="topic_id" type="hidden" value="">
+
+    <div class="mark-publish-wrap">
+        <p class="mark-publish-head">
+            <span class="fl">取消</span>
+            <span class="fr">发布</span>
+        </p>
+
+        <div class="mark-publish-body">
+            <textarea id="comment" name="comment" placeholder="写评论..."></textarea>
+            <div class="mark-publish-img">
+                <div class="mark-img-button">
+                    <img src="__PUBLIC__/images/add_picture.png" alt="">
+                    <input type="file" name="file[]">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<iframe src="" width="0" height="0" style="display:none;" name="tarframe"></iframe>
+
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script src="__PUBLIC__/script/min/topic.min.js"></script>
+<script>
+    $(function(){
+        var counter = 0;
+        // 每页展示6个
+        var num = 6;
+        var pageStart = 0,pageEnd = 0;
+
+        // dropload
+        $('#topic-list').dropload({
+            scrollArea : window,
+            loadDownFn : function(me){
+                $.ajax({
+                    type: 'post',
+                    url: "{:url('Topic/newTopList')}",
+                    dataType: 'json',
+                    success: function(data){
+				if(data.lists.length ==0){
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                                me.resetload();
+                            }
+                        var result = '';
+                        counter++;
+                        pageEnd = num * counter;
+                        pageStart = pageEnd - num;
+
+                        for(var i = pageStart; i < pageEnd; i++){
+                            result += '<li class="topic-item">';
+                            result +='<div class="topic-item-head"><a href="/index.php/index/member/personhomepage/member_id/'+data.lists[i].topic_owner_id+'.html"><img src="'+data.lists[i].member_icon+'" alt="" class="mark-portrait"> <span>'+data.lists[i].member_name+'</span></a> <span class="fr">'+data.lists[i].topic_create_time+'</span> ' + '</div>';
+                            result +='<div class="topic-item-body"> <a href="/index.php/index/Topic/index/topic_id/'+data.lists[i].id+'.html"><h2>'+data.lists[i].topic_name+'</h2><p>'+data.lists[i].topic_content+'</p></a>';
+                            result += '<div class="topic-item-imgs clearfix">';
+                            var topicAlbumList=data.lists[i].topicAlbumList;
+                            if(topicAlbumList.length>0){
+                                for(var j in topicAlbumList){
+                                    result +='<div class="topic-iimg-wrap"><img src="'+topicAlbumList[j].album_img+'" alt="">';
+                                    if(data.lists[i].topicAlbumCounts>3&&j==2){
+                                        result +='<p class="topic-iimg-bottom">共'+data.lists[i].topicAlbumCounts+'张</p></div>';
+                                    }else{
+                                        result +='</div>';
+                                    }
+                                }
+                            }
+                            result +='</div>';
+                            result +='<div class="topic-item-bottom clearfix"><ul>';
+                            result +='<li class="topic-ibottom-item" value="'+data.lists[i].id+'"><i class="fa fa-commenting-o"></i><span>'+data.lists[i].topicCommentCounts+'</span></li>';
+                            if(data.lists[i].is_like == 2){
+                                result +='<li class="topic-ibottom-item active"><i class="fa fa-heart" onclick="like('+data.lists[i].id+',1)"></i><span>'+data.lists[i].topicLikeCounts+'</span></li>';
+                            }else{
+                                result +='<li class="topic-ibottom-item"><i class="fa fa-heart-o" onclick="like('+data.lists[i].id+',2)"></i><span>'+data.lists[i].topicLikeCounts+'</span></li>';
+                            }
+                            if(data.lists[i].is_collect == 2){
+                                result +='<li class="topic-ibottom-item active" onclick="collect('+data.lists[i].id+',1)"><i class="fa fa-star"></i>收藏</li>';
+                            }else{
+                                result +='<li class="topic-ibottom-item" onclick="collect('+data.lists[i].id+',2)"><i class="fa fa-star-o"></i>收藏</li>';
+                            }
+                            result +='</ul></div></li>';
+                            if((i + 1) >= data.lists.length){
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                                break;
+                            }
+                        }
+                        // 为了测试，延迟1秒加载
+                     
+                            $('.lists').append(result);
+                            // 每次数据加载完，必须重置
+                            me.resetload();
+                       
+                    },
+                    error: function(xhr, type){
+                        // 即使加载出错，也得重置
+                        me.resetload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+<script>
+    $(function () {
+        window.flag=0;
+        $("#topic-list").on('click', '.topic-iimg-wrap', function () {
+            $(".hover-layer img").attr('src', $(this).find('img').attr('src')).parent().removeClass('none');
+        });
+        $(".hover-layer").click(function () {
+            $(".hover-layer img").attr('src', $(this).find('img').attr('src')).parent().addClass('none');
+        });
+        $(".mark-publish-head span.fr").click(function () {
+            var text = $(".mark-publish-body > textarea").val().trim();
+            if (text == '') {
+                myalert("评论不能为空！");
+                return false;
+            } else {
+                if(window.flag == 0){
+                    window.flag = 1;
+                    $("#uploadFrom").submit();
+                    setTimeout(function () {
+                        myalert('评论成功！');
+                        $(".mark-publish-wrap").css("bottom", '-21rem');
+                        $(".alert-operate").click(function () {
+                            location.reload();
+                        });
+                    }, 1400);
+                }else{
+                    myalert('手速这么快，点一次就好了哦~！');
+                    return false;
+                }
+            }
+        });
+    });
+    function like(id, like) {
+        $.ajax({
+            type: 'POST',
+            url: "{:url('Topic/like')}",
+            data: {'id': id, 'is_like': like},
+            async: false,
+            success: function (data) {
+                if (0 > data.flag) {
+                    location.href = "{:url('member/edit')}";
+                }
+            }
+        });
+    }
+    function collect(id, collect) {
+        $.ajax({
+            type: 'POST',
+            url: "{:url('Topic/collect')}",
+            data: {'id': id, 'is_collect': collect},
+            async: false,
+            success: function (data) {
+                if (0 > data.flag) {
+                    location.href = "{:url('member/edit')}";
+                }
+            }
+        });
+    }
+</script>
+{include file="common/footer" /}

@@ -1,0 +1,191 @@
+// #account-top {
+// 	height: 14.2rem;
+// 	text-align: center;
+// 	background-color: $mainColor;
+// 	> .portrait {
+// 		width: 8rem;
+// 		height: 8rem;
+// 		margin: 1.8rem 0 1rem;
+// 	}
+// 	> p{
+// 		color: #fff;
+// 		font-size: 1.7rem;
+// 	}
+// }
+// #account-list {
+// 	font-size: 1.6rem;
+// 	a {
+// 		color: #111;
+// 	}
+// 	p {
+// 		margin: .5rem 0;
+// 		padding: 1rem;
+// 		background-color: #fff;
+// 	}
+// 	> ul {
+// 		background-color: #fff;
+// 		padding: 0 1rem;
+// 	}
+// 	li {
+// 		padding: 1rem 0;
+// 		border-bottom: 1px solid #f0f0f0;
+// 	}
+// 	img {
+// 		float: right;
+// 		width: .8rem;
+// 		margin-top: .5rem;
+// 	}
+// }
+.nav-bottom {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	background-color: #fff;
+	border-top: 1px solid #eee;
+}
+.navbt-item {
+	float: left;
+	width: 33.3%;
+	padding: .6rem 0;
+	text-align: center;
+	font-size: 1.5rem;
+	color: #999;
+	> a {
+		color: #999;
+	}
+	&.active {
+		color: $mainColor;
+	}
+	p {
+		height: 1.5rem;
+	}
+	img {
+		max-width: 2rem;
+		height: 2rem;
+	}
+	&:nth-of-type(2) img {
+		height: 1.8rem;
+	}
+}
+
+/*userhomepage*/
+#uhome-top {
+	background-color: $mainColor;
+	padding: 1.8rem 0 1.2rem;
+	text-align: center;
+	color: #fff;
+	> img {
+		width: 10rem;
+		height: 10rem;
+		border-radius: 100%;
+	}
+	> h2 {
+		font-size: 1.8rem;
+		margin: 1rem 0 .5rem;
+	}
+}
+.topic-homepage-bottom {
+	color: #999;
+	padding: 0 1.1rem 1rem;
+	font-size: 1.5rem;
+	border-bottom: 1px solid #eee;
+	> p.fr {
+		display: inline-block;
+		> .fa {
+			font-size: 1.9rem;
+			vertical-align: -.1rem;
+			&:first-child {
+				vertical-align: 0;
+				font-size: 1.8rem;
+			}
+			&:nth-of-type(2) {
+				font-size: 1.7rem;
+			}
+		}
+		> span {
+			margin: 0 .6rem 0 .3rem;
+		}
+	}
+}
+#uhome-topic-list {
+	.topic-item {
+		margin-bottom: 0;
+	}
+	> .uhome-detail-item {
+		padding: 1rem 1.1rem;
+		background-color: #fff;
+	}
+}
+#uhome-info {
+	margin: .8rem 0;
+	padding: 0 1.1rem;
+	background-color: #fff;
+}
+.uhome-info-item {
+	padding: .9rem	0;
+	font-size: 1.5rem;
+	border-bottom: 1px solid #eee;
+	
+	&:last-child {
+		text-align: center;
+		color: #aaa;
+		padding: 1rem 0;
+		border-bottom: none;
+	}
+	> span {
+		display: inline-block;
+		color: #999;
+		width: 4rem;
+		margin-right: 1rem;
+	}
+	> p {
+		display: inline-block;
+		color: #222;
+	}
+}
+#uhome-detail {
+	padding: 0 1.1rem;
+	margin-bottom: .8rem;
+	background-color: #fff;
+}
+.uhome-detail-item {
+	padding: .9rem 0;
+	border-bottom: 1px solid #eee;
+	&:last-child {
+		border-bottom: none;
+	}
+	> span {
+		color: #111;
+		font-size: 1.5rem;
+	}
+	.fa {
+		font-size: 2.2rem;
+		vertical-align: -.3rem;
+		margin-left: .2rem;
+	}
+	> .fr {
+		padding-top: .1em;
+		color: #aaa;
+		font-size: 1.4rem;
+	}
+}
+#uhomepage-watch {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	> button {
+		width: 100%;
+		height: 4.3rem;
+		outline: none;
+		border: none;
+		color: #fff;
+		font-size: 1.6rem;
+		background-color: #ccc;
+	}
+	.active {
+		background-color: $mainColor;
+	}
+}

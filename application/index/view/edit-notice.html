@@ -1,0 +1,19 @@
+{include file="common/header" title="编辑公告" keywords="编辑公告" description="" /}
+
+	<form action="" onsubmit="return check();" method="post">
+
+		<div class="edit-textarea">
+			<textarea name="notice" placeholder="请输入社团公告"></textarea>
+		</div>
+		<button class="submit">确认提交</button>
+	</form>
+	<script>
+		function check() {
+			if($("textarea").val().trim() == '') {
+				alert("社团公告不能为空！");
+				return false;
+			}
+			return true;
+		}
+	</script>
+{include file="common/footer" /}

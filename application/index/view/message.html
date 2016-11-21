@@ -1,0 +1,38 @@
+{include file="common/header" title="我的" keywords="我的" description="" /}
+	
+	<div id="message-type">
+		<ul>
+			<a href="{:url('Member/officialMessage')}">
+				<li class="message-type-item">
+					<div class="message-type-img">
+						<img src="__PUBLIC__/images/official-information.png" alt="">
+						{if $messageOfficialCounts >5 }<span class="badge">5+</span>{elseif $messageOfficialCounts > 0}<span class="badge">{$messageOfficialCounts}</span>{/if}
+					</div>
+					<span>官方消息</span>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</a>
+			<a href="{:url('Member/aboutMe')}">
+				<li class="message-type-item">
+					<div class="message-type-img">
+						<img src="__PUBLIC__/images/about-me.png" alt="">
+						{if $messageRelateCounts >5 }<span class="badge">5+</span>{elseif $messageRelateCounts > 0}<span class="badge">{$messageRelateCounts}</span>{/if}
+					</div>
+					<span>与我相关</span>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</a>
+			<a href="{:url('Member/societyDynamics')}">
+				<li class="message-type-item">
+					<div class="message-type-img">
+						<img src="__PUBLIC__/images/society-dynamics.png" alt="">
+						{if $messageClubCounts >5 }<span class="badge">5+</span>{elseif $messageClubCounts > 0}<span class="badge">{$messageClubCounts}</span>{/if}
+					</div>
+					<span>社团动态</span>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</a>
+		</ul>
+	</div>
+
+{include file="common/footer" /}

@@ -1,0 +1,139 @@
+{include file="common/header" title="首页" keywords="首页" description="" /}
+<div id="act-top">
+    <a class="round-button active">活动</a>
+    <a href="{:url('Index/showClub')}" class="round-button">社团</a>
+</div>
+<form method="post" action="{:url('Activity/actList')}" enctype="multipart/form-data">
+    <div class="search-wrap">
+        <img src="__PUBLIC__/images/search.png" alt=""><input type="text" id="act_name" name="act_name"
+                                                              placeholder="搜索活动">
+    </div>
+</form>
+<div id="banner-wrap" class="none">
+    <div class="imgbox">
+        <ul class="clearfix">
+            {foreach name="bannerList" item="vo"}
+            <li><a href="{$vo.banner_url}">
+                <img src="{$vo.banner_img}" alt="{$vo.banner_title}">
+            </a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div class="page">
+        <ol>
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+        </ol>
+    </div>
+</div>
+<div class="acttype-head">
+    <span>线上活动</span>
+    <a href="{:url('Activity/actList',['act_type' => '1'])}">
+        <div class="fr">
+            <span>更多</span>
+            <img src="__PUBLIC__/images/arrow_right.png" alt="">
+        </div>
+    </a>
+</div>
+<div class="online-act">
+    {foreach name="$activityOnlineList" item="vo"}
+    <a href="{:url('Activity/index',['act_id' => $vo['id']])}"><img src="{$vo.act_detail_img}" alt=""></a>
+    {/foreach}
+</div>
+<div class="acttype-head">
+    <span>线下活动</span>
+    <a href="{:url('Activity/actList',['act_type' => '2'])}">
+        <div class="fr">
+            <span>更多</span>
+            <img src="__PUBLIC__/images/arrow_right.png" alt="">
+        </div>
+    </a>
+</div>
+<div id="act-list" class="pre-navbt">
+    {foreach name="activityLineList" item="vo"}
+    <a href="{:url('Activity/index',['act_id' => $vo['id']])}">
+        <div class="act-item clearfix">
+            <div class="act-img">
+                <img src="{$vo.act_detail_img}" alt=""></div>
+            <div class="act-info">
+                <h2 class="act-title one-line">
+                    {$vo.act_name}
+                </h2>
+
+                <div class="act-organize clearfix">
+                    {if $vo.act_from_icon}
+                    <img src="{$vo.act_from_icon}" alt="">
+                    {else}
+                    <img src="__PUBLIC__/images/actorg1.png" alt="">
+                    {/if}
+                    <span class="one-line">发起人({$vo.act_from_name})</span>
+                </div>
+                <p class="act-time one-line">活动时间: {$vo.act_start_time} - {$vo.act_end_time}</p>
+
+                <div class="act-operate">
+                    <span>{$vo.act_release_time}发布</span>
+                    {if $vo.act_status == 1}
+                    <img src="__PUBLIC__/images/activity_notstart.png" alt="">
+                    {elseif $vo.act_status == 2}
+                    <img src="__PUBLIC__/images/activity_ing.png" alt="">
+                    {elseif $vo.act_status == 3}
+                    <img src="__PUBLIC__/images/activity_over.png" alt="">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </a>
+    {/foreach}
+    {foreach name="$videoList" item="vo"}
+    <div class="act-item act-video-wrap">
+        <div class="act-video">
+            <video src="{$vo.video_url}" poster="{$vo.video_img}" controls></video>
+            <p><span class="fl one-line">{$vo.video_name}</span><span class="fr">2.33</span></p>
+        </div>
+        <div class="video-bottom">
+            <img src="__PUBLIC__/images/actorg1.png" alt="">
+            <span>大了个学</span>
+            <span class="fr">{$vo.video_release_time}发布</span>
+        </div>
+    </div>
+    {/foreach}
+</div>
+<div class="nav-bottom">
+    <div class="navbt-item active"><img src="__PUBLIC__/images/home.png" alt="">
+
+        <p>首页</p>
+    </div>
+    <div class="navbt-item">
+        <a href="{:url('Topic/newTopList')}">
+            <img src="__PUBLIC__/images/topic_gray.png" alt="">
+
+            <p>话题</p>
+        </a>
+    </div>
+    <div class="navbt-item">
+        <a href="{:url('Member/index')}">
+            <img src="__PUBLIC__/images/person_gray.png" alt="">
+
+            <p>我的</p>
+        </a>
+    </div>
+</div>
+
+<script src="__PUBLIC__/script/min/swipe.min.js"></script>
+<script>
+    $(function () {
+        $("#banner-wrap").removeClass('none');
+        var scrollImg = $.mggScrollImg('.imgbox ul', {
+            loop: true,//循环切换
+            auto: true,//自动切换
+            callback: function (ind) {
+                $('.page li').eq(ind).addClass('active').siblings().removeClass('active');
+            }
+        });
+        $(".act-video > p").click(function () {
+            $(this).css('bottom', '-40px');
+        });
+    });
+</script>
+{include file="common/footer" /}

@@ -1,0 +1,111 @@
+{include file="common/header" title="完善个人信息" keywords="完善个人信息" description="" /}
+
+	<div id="uinfo-top">
+		完善个人信息才能加入社团或创建属于自己的社团哦！
+	</div>
+	<div id="uinfo-detail" onsubmit="return toValid();">
+		<form id="memberForm" >
+        <input type="text" value="{$memberInfo.id}" name="id" style="display: none;">
+			<div id="uinfo-wrap" class="ccreate-detail">
+				<ul>
+					<li>
+						<span>姓名</span>
+						<div class="cdinput-wrap">
+							<input type="text" value="{$memberInfo.real_name}" name="real_name" placeholder="请输入您的真实姓名">
+						</div>
+					</li>
+					<li>
+						<span>性别</span>
+						<div class="radio-wrap cdinput-wrap">
+							<input id="uitem-man" type="radio" name="member_sex" value="1" {if $memberInfo.member_sex == 1} checked {/if}>
+							<p class="radio-temp"></p>
+							<label for="uitem-man">男</label>
+						</div>
+						<div class="radio-wrap">
+							<input id="uitem-woman" type="radio" name="member_sex" value="2" {if $memberInfo.member_sex == 2} checked {/if}>
+							<p class="radio-temp"></p>
+							<label for="uitem-woman">女</label>
+						</div>
+					</li>
+					<a href="javascript:;" onclick="chooseSchool();">
+						<li class="pr">
+							<span>学校</span>
+							<div class="cdinput-wrap">
+								<input type="text" value="{$memberInfo.member_school}"  name="member_school" placeholder="请输入您所在的学校" readonly>
+							</div>
+							<i class="fa fa-angle-right"></i>
+						</li>
+					</a>
+					<li>
+						<span>学院院系</span>
+						<div class="cdinput-wrap">
+							<input type="text" value="{$memberInfo.member_department}" placeholder="请输入您所在的院系名称" name="member_department">
+						</div>
+					</li>
+					<li>
+						<span>专业班级</span>
+						<div class="cdinput-wrap">
+							<input type="text" value="{$memberInfo.member_class}"  placeholder="请输入您所在的专业班级" name="member_class">
+						</div>
+					</li>
+					<li class="scode-send-wrap pr">
+						<span>手机号码</span>
+						<div class="cdinput-wrap">
+							<input type="text" value="{$memberInfo.member_tel}" placeholder="请输入手机号码" name="member_tel">
+						</div>
+						<button onclick="sendCode();">发送验证码</button>
+					</li>
+					<li>
+						<span>验证码</span>
+						<div class="cdinput-wrap">
+							<input type="text" placeholder="请输入您收到的验证码" name="code">
+						</div>
+					</li>
+				</ul>
+			</div>
+				
+			<button class="submit">确认修改</button>
+		</form>
+	</div>
+	
+	<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+	<script src="__PUBLIC__/script/min/validate.min.js"></script>
+<script>
+		function chooseSchool() {
+			var url = "{:url('school/index')}";
+			url = url.replace(".html", "/memberForm/") + $('#memberForm').serialize();
+			location.href = url;
+		}
+		function sendCode() {
+			$.ajax({
+				type:"POST",
+				url:"{:url('member/sendCode')}",
+				data:{'memberTel' : $("input[name='member_tel']").val()},
+				async:false,
+				success: function(data) {
+					myalert(data.msg);
+				}
+			});
+			return false;
+		}
+		//表单提交
+		function toValid(){
+			$.ajax({
+				type:"POST",
+				url:"{:url('member/edit')}",
+				data:{'data' : $('#memberForm').serialize()},
+				async:false,
+				success: function(data) {
+					myalert(data.msg);
+					if(data.code == 1) {
+						$(".alert-operate").click(function() {
+							location.href = "{:url('index/index')}";
+						})
+					}
+				}
+			});
+			return false;
+		}
+	</script>
+
+{include file="common/footer" /}

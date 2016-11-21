@@ -1,0 +1,86 @@
+{include file="common/header" title="发布话题" keywords="发布话题" description="" /}
+<style>
+.mark-img-button > img {width:5rem;height:5rem}
+.mark-publish-img{height:auto}
+.mark-item-img > img {width:5rem;height:5rem}
+</style>
+<div id="topic-publish-wrap">
+    <form action="" method="post" enctype="multipart/form-data" onsubmit="return check();">
+        <div class="ccreate-detail">
+            <ul>
+                <li class="topic-publish-item">
+                    <span>标题</span>
+                    <div class="cdinput-wrap">
+                        <input type="text" name="topic_name" placeholder="请输入标题">
+                    </div>
+                </li>
+                <li class="topic-publish-item">
+                    <span>内容</span>
+                    <div class="cdinput-wrap">
+                        <textarea name="topic_content" placeholder="请输入话题详情"></textarea>
+                    </div>
+                </li>
+                <div class="mark-publish-img">
+                    <div class="mark-img-button">
+                        <img src="__PUBLIC__/images/add_picture.png" alt="">
+                        <input type="file" name="file[]">
+                    </div>
+                </div>
+            </ul>
+        </div>
+        <button class="submit">立即发布</button>
+    </form>
+</div>
+<div class="info-mask center none" data-status="{$return.code}" data-msg="{$return.msg}"></div>
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script>
+    $(function () {
+        var status = $(".info-mask").attr('data-status');
+        var msg = $(".info-mask").attr('data-msg');
+        if (status === '1' || status === '-1') {
+            myalert(msg);
+            $(".alert-operate").click(function () {
+                var url = "{:url('Topic/newTopList')}";
+                location.replace(url);
+            });
+        }
+        $(".mark-img-button").on("change", "input[type='file']", function () {
+            var i, e = $(this).val(), t = e.substring(e.lastIndexOf(".") + 1);
+            if (["jpg", "png", "gif", "jpeg", "bmp"].indexOf(t.toLowerCase()) == -1)return myalert("请上传图片文件！"), void $(this).val("");
+            if ($(".mark-publish-img img").length >= 7)return myalert("最多上传6张图片"), void $(this).val("");
+            i = getObjectURL(this.files[0]);
+            var r = $("<div class='mark-item-img'>");
+            r.append("<div class='mark-item-mask'>删除</div>"), $("<img>").appendTo(r).attr("src", i), r.prependTo($(".mark-publish-img")), $(this).after($("<input type='file' name='file[]'>"))
+        }), $(".mark-publish-img").on("click", ".mark-item-img", function () {
+            for (var i = $(this), e = 0; ;) {
+                if (i = i.prev(".mark-item-img"), 0 == i.length)break;
+                e++
+            }
+            confirm("确认删除？") && ($(this).remove(), $(".mark-img-button input[type='file']").eq(e).remove())
+        });
+    });
+    function check() {
+        if (!$("input[name='topic_name']").val().trim()) {
+            alert("标题不能为空！");
+            return false;
+        }
+        if (!$("textarea[name='topic_content']").val().trim()) {
+            alert("内容不能为空！");
+            return false;
+        }
+		$(".submit").attr("disabled","disabled");
+         return true;
+    }
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+</script>
+{include file="common/footer" /}

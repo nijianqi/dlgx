@@ -1,0 +1,58 @@
+{include file="common/header" title="关注列表" keywords="关注列表" description="" /}
+	
+	<div id="fans-list">
+		<ul>
+			{if !empty($memberFollowList)}
+			{foreach name="memberFollowList" item="vo"}
+			<a href="{:url('Member/personHomepage', ['member_id' => $vo.member_id])}">
+			<li class="fans-item">
+				<div class="fans-item-img">
+					<img src="{$vo.member_icon}" alt="">
+				</div>
+				<div class="fans-item-detail">
+					<h1>{$vo.member_name}</h1>
+					<h4>{$vo.member_school}</h4>
+					<p>简介：{$vo.member_intro}</p>
+				</div>
+				{if !empty($vo.is_follow) && $vo.is_follow == 2}
+				<a class="club-watch _watch" onclick="follow({$vo.member_id},1)"><i class="fa fa-plus"></i><span>已关注</span></a>
+				{else/}
+				<a class="club-watch" onclick="follow({$vo.member_id},2)"><i class="fa fa-plus"></i><span>关注</span></a>
+				{/if}
+			</li>
+				</a>
+			{/foreach}
+			{else/}
+			<div id="none-club" class="center">
+				<p>暂时没有关注的会员!</p>
+			</div>
+			{/if}
+		</ul>
+	</div>
+	<script>
+		$(function() {
+			$("#fans-list").on('click','.club-watch',function() {
+				if($(this).hasClass('_watch')) {
+					$(this).removeClass('_watch').find('span').text('关注');
+				} else {
+					$(this).addClass('_watch').find('span').text('已关注');	
+				}
+				
+			});
+
+		});
+		function follow(id,follow){
+			$.ajax({
+				type:'POST',
+				url:"{:url('Member/follow')}",
+				data:{'id' : id,'is_follow' : follow},
+				async: false,
+				success: function(data) {
+					if(0 > data.flag) {
+						location.href = "{:url('member/edit')}";
+					}
+				}
+			})
+		}
+	</script>
+{include file="common/footer" /}

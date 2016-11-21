@@ -1,0 +1,60 @@
+{include file="common/header" title="我的" keywords="我的" description="" /}
+{if empty($memberInfo)}
+<p>您因为违反规定发布或进行不正当言论被封禁，请联系管理员解封</p>
+{else}
+<div id="mine-top">
+    <a href="{:url('Member/infoModify')}">
+        <div class="fl">
+            <img src="{$memberInfo.member_icon}" alt="">
+        </div>
+        <div class="mine-intro">
+            <h2>{$memberInfo.member_name}</h2>
+           <!-- <p>{$memberInfo.member_intro}</p>-->
+        </div>
+        <i class="fa fa-angle-right"></i>
+    </a>
+    <div class="watch-fans clearfix">
+        <a href="{:url('Member/followList')}"><p>关注 {$memberFollowCounts}</p></a>
+        <a href="{:url('Member/fansList')}"><p>粉丝 {$memberIsFollowCounts}</p></a>
+    </div>
+</div>
+<div class="mine-info">
+    <ul>
+        <a href="{:url('Member/mineClub')}">
+            <li class="mine-info-item">我的社团<i class="fa fa-angle-right"></i></li>
+        </a>
+        <a href="{:url('Member/mineActivity',['act_type'=>1])}">
+            <li class="mine-info-item">我的活动<i class="fa fa-angle-right"></i></li>
+        </a>
+        <a href="{:url('Member/mineTopic')}">
+            <li class="mine-info-item">我的话题<i class="fa fa-angle-right"></i></li>
+        </a>
+    </ul>
+</div>
+<div class="mine-info">
+    <a href="{:url('Member/message')}">
+        <div class="mine-info-item">我的消息<i class="fa fa-angle-right"></i>{if $messageCounts > 9}<span
+                class="badge"> 9+ </span>{elseif $messageCounts > 0 }<span class="badge"> {$messageCounts} </span>{/if}
+        </div>
+    </a>
+</div>
+<div class="nav-bottom">
+    <div class="navbt-item">
+        <a href="{:url('Index/show')}">
+            <img src="__PUBLIC__/images/home_gray.png" alt="">
+            <p>首页</p>
+        </a>
+    </div>
+    <div class="navbt-item">
+        <a href="{:url('Topic/newTopList')}">
+            <img src="__PUBLIC__/images/topic_gray.png" alt="">
+            <p>话题</p>
+        </a>
+    </div>
+    <div class="navbt-item active">
+        <img src="__PUBLIC__/images/person.png" alt="">
+        <p>我的</p>
+    </div>
+</div>
+{/if}
+{include file="common/footer" /}

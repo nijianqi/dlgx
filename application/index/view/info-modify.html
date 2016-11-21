@@ -1,0 +1,87 @@
+{include file="common/header" title="我的" keywords="我的" description="" /}
+
+<form id="memberForm" action="{:url('member/infomodify')}" method="post" enctype="multipart/form-data">
+		<input type="text" value="{$memberInfo.id}" name="id" style="display: none;">
+	<div class="portrait-modify">
+		<img src="{$memberInfo.member_icon}" alt="">
+		<span>更改头像</span>
+		<i class="fa fa-angle-right"></i>
+		<input type="file" name="portrait">
+	</div>
+
+	<div class="info-modify">
+		<ul>
+			<li class="imodify-item">
+				<p>昵称</p>
+				<div class="imodify-item-detail">
+					<span>{$memberInfo.member_name}</span>
+					<input type="text" name="member_name" value="{$memberInfo.member_name}">
+					<i class="fa fa-angle-right"></i>
+				</div>
+			</li>
+			<li class="imodify-item change-sex">
+				<p>性别</p>
+				<div class="imodify-item-detail">
+					{if $memberInfo.member_sex == 1}
+					<span>男</span>
+					{else/}
+					<span>女</span>
+					{/if}
+					<input type="text" name="member_sex" {if $memberInfo.member_sex == 1}value="1"{else/}value="2"{/if}>
+					<i class="fa fa-angle-right"></i>
+				</div>
+			</li>
+			<a href="javascript:;" onclick="chooseSchool();">
+			<li class="imodify-item">
+				<p>学校</p>
+				<div class="imodify-item-detail">
+					<span>{$memberInfo.member_school}</span>
+					<input type="text" name="member_school" value="{$memberInfo.member_school}" readonly>
+					<i class="fa fa-angle-right"></i>
+				</div>
+			</li>
+			</a>
+			<li class="imodify-item">
+				<p>学院/院系</p>
+				<div class="imodify-item-detail">
+					<span>{$memberInfo.member_department}</span>
+					<input type="text" name="member_department" value="{$memberInfo.member_department}">
+					<i class="fa fa-angle-right"></i>
+				</div>
+			</li>
+			<li class="imodify-item">
+				<p>专业班级</p>
+				<div class="imodify-item-detail">
+					<span>{$memberInfo.member_class}</span>
+					<input type="text" name="member_class" value="{$memberInfo.member_class}">
+					<i class="fa fa-angle-right"></i>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<button class="submit">确认修改</button>
+</form>
+<div class="panel-wrap none"></div>
+<div class="input-panel">
+	<div class="input-wrap">
+		<input type="text">
+		<i class="fa fa-close"></i>
+	</div>
+	<button class="input-button">修改</button>
+</div>
+<div class="sex-panel">
+	<div class="sex-panel-type">
+		<p>男</p>
+		<p>女</p>
+	</div>
+	<p>取消</p>
+</div>
+<script src="__PUBLIC__/script/min/infoModify.min.js"></script>
+<script>
+	function chooseSchool() {
+		var url = "{:url('school/show')}";
+		url = url.replace(".html", "/memberForm/") + $('#memberForm').serialize();
+		location.href = url;
+	}
+</script>
+{include file="common/footer" /}

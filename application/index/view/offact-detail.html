@@ -1,0 +1,234 @@
+{include file="common/header" title="线下活动详情" keywords="活动详情" description="" /}
+<div id="adetail-img">
+    <div id="banner-wrap" class="none">
+        <div class="imgbox">
+            <ul class="clearfix">
+                {if empty($actAlbum_list)}
+                <li><img src="{$activityInfo.act_detail_img}" alt=""></img></li>
+                <li><img src="{$activityInfo.act_list_img}" alt=""></img></li>
+                {else/}
+                {foreach name="actAlbum_list" item="vo"}
+                <li><img src="{$vo.album_img}" alt=""></img></li>
+                {/foreach}
+                {/if}
+            </ul>
+        </div>
+        <div class="page">
+            <ol>
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div class="adetail-wrap">
+    <p class="adetail-head">{$activityInfo.act_name}</p>
+
+    <div class="detail-info">
+        <ul>
+            <li class="clearfix">
+                <span>发起人</span>
+
+                <p>{$activityInfo.act_from_name}{if
+                    !empty($activityInfo.act_club_name)}({$activityInfo.act_school}){/if}</p>
+            </li>
+            <li class="clearfix">
+                <span>活动时间</span>
+
+                <p>{$activityInfo.act_start_time} - {$activityInfo.act_end_time}</p>
+            </li>
+            <li class="clearfix">
+                <span>活动地点</span>
+
+                <p>{$activityInfo.act_address}</p>
+            </li>
+            <li class="clearfix">
+                <span>活动费用</span>
+
+                <p>{$activityInfo.act_money}</p>
+            </li>
+            <li class="clearfix">
+                <span id="adetail-count">参与人员({$memberCounts}人)<a
+                        href="{:url('Activity/actMember',['act_id'=>$activityInfo.id])}" class="fr">更多 <i
+                        class="fa fa-angle-right"></i></a></span>
+            </li>
+            {if $actJoinList}
+            <li id="uportrait-list">
+                {foreach name="actJoinList" item="vo"}
+                <div class="uportrait-wrap">
+                    <a href="{:url('Member/personHomepage', ['member_id' => $vo.member_id])}"><img
+                            src="{$vo.member_icon}" alt=""></a>
+                </div>
+                {/foreach}
+            </li>
+            {/if}
+        </ul>
+    </div>
+</div>
+<div class="adetail-wrap">
+    <p class="adetail-head">活动介绍</p>
+
+    <div id="adetail-intro">
+        <span>{$activityInfo.act_intro}</span>
+    </div>
+</div>
+<div class="adetail-wrap">
+    <p class="adetail-head">活动评论 <span class="fr">{$actCommentCounts}条</span></p>
+
+    <div class="mark-list pre-navbt">
+        <ul>
+            {if empty($actComment_list)}
+            <div class="mark-body">暂无评论</div>
+            {else/}
+            {foreach name="actComment_list" item="vo"}
+            <li class="mark-item">
+                <div class="mark-head">
+                    <a href="{:url('Member/personHomepage', ['member_id' => $vo.member_id])}">
+                        <img src="{$vo.member_icon}" alt="" class="mark-portrait">
+                    <span class="mark-name">{$vo.member_name}</span></a>
+                    <span class="mark-date">
+					{if !empty($vo.comment_create_min) }{$vo.comment_create_min}分钟前
+			{elseif !empty($vo.comment_create_day) }{$vo.comment_create_day}天前
+			{elseif !empty($vo.comment_create_hour) }{$vo.comment_create_hour}小时前
+			{else/}刚刚
+			{/if}
+					</span>
+                </div>
+                <div class="mark-body">{if !empty($vo.to_member_id)}@<a
+                        href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}
+                    {if !empty($vo.actComAlbumList)}
+                    <div class="topic-item-imgs clearfix">
+                        {foreach name="$vo.actComAlbumList" item="volist"}
+                        <div class="topic-detail-wrap">
+                            <img src="{$volist.album_img}" alt="">
+                        </div>
+                        {/foreach}
+                    </div>
+                    <div class="hover-layer none">
+                        <img src="__PUBLIC__/images/user1.jpg" alt="" class="center">
+                    </div>
+                    {/if}
+                </div>
+                <p class="mark-reply">{if $vo.member_id != $memberId}<span value="{$vo.id}">回复</span>{/if}</p>
+            </li>
+            {/foreach}
+            {/if}
+        </ul>
+    </div>
+</div>
+
+<div id="adetail-navbt" class="nav-bottom">
+    <div class="navbt-item"><span>评论</span>
+    </div>
+    {if $activityInfo.act_status == 1}
+    <div class="navbt-item active" style="background-color: grey;"><span>未开始</span></div>
+    {elseif $activityInfo.act_status == 2}
+    {if $is_join == 0}
+    <div id="act-apply" class="navbt-item active"><span>立即报名</span></div>
+    {else/}
+    <div id="act-edit" class="navbt-item active"><span>取消报名</span></div>
+    {/if}
+    {elseif $activityInfo.act_status == 3}
+    <div class="navbt-item active" style="background-color: grey;"><span>已结束</span></div>
+    {/if}
+</div>
+</div>
+<form name="uploadFrom" id="uploadFrom" action="{:url('Activity/comment')}" method="post" target="tarframe"
+      enctype="multipart/form-data">
+    <input id="act_id" name="act_id" type="hidden" value="{$activityInfo.id}">
+    <input id="comment_id" name="comment_id" type="hidden" value="">
+
+    <div class="mark-publish-wrap">
+        <p class="mark-publish-head">
+            <span class="fl">取消</span>
+            发表评论
+            <span class="fr">发布</span>
+        </p>
+
+        <div class="mark-publish-body">
+            <textarea id="comment" name="comment" placeholder="写评论..."></textarea>
+
+            <div class="mark-publish-img">
+                <div class="mark-img-button">
+                    <img src="__PUBLIC__/images/add_picture.png" alt="">
+                    <input type="file" name="file[]">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<iframe src="" width="0" height="0" style="display:none;" name="tarframe"></iframe>
+
+<script src="__PUBLIC__/script/min/touch.min.js"></script>
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script src="__PUBLIC__/script/min/swipe.min.js"></script>
+<script src="__PUBLIC__/script/min/actdetail.min.js"></script>
+<script>
+    $(function () {
+        $("#act-apply").click(function () {
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/join')}",
+                data: {'id': $("#act_id").val()},
+                async: false,
+                success: function (data) {
+                    if (0 > data.flag) {
+                        location.href = "{:url('member/edit')}";
+                    } else if (0 == data.flag) {
+                        myalert('您已经报过名了！');
+                    } else {
+                        myalert('报名成功！');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1400);
+                    }
+                }
+            })
+        });
+        $("#act-edit").click(function () {
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/cancel')}",
+                data: {'id': $("#act_id").val()},
+                async: false,
+                success: function (data) {
+                    if (0 > data.flag) {
+                        location.href = "{:url('member/edit')}";
+                    } else if (0 == data.flag) {
+                        myalert('取消报名失败！');
+                    } else {
+                        myalert('您已成功取消活动报名！');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1400);
+                    }
+                }
+            })
+        });
+        $(".mark-publish-head span.fr").click(function () {
+            var text = $(".mark-publish-body > textarea").val().trim();
+            if (text == '') {
+                myalert("评论不能为空！");
+                return false;
+            } else {
+                $("#uploadFrom").submit();
+                setTimeout(function () {
+                    myalert('评论成功！');
+                    $(".mark-publish-wrap").css("bottom", '-21rem');
+                }, 1400);
+                setTimeout(function () {
+                    location.reload();
+                }, 1400);
+            }
+        });
+        $(".mark-list").on('click', '.topic-detail-wrap', function () {
+            $(".hover-layer img").attr('src', $(this).find('img').attr('src')).parent().removeClass('none');
+        });
+        $(".hover-layer").click(function () {
+            $(this).addClass('none');
+        })
+    })
+
+</script>
+{include file="common/footer" /}

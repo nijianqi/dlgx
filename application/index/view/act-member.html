@@ -1,0 +1,19 @@
+{include file="common/header" title="活动成员" keywords="我的" description="" /}
+	<div id="amember-list" class="clearfix">
+		{foreach name="actJoinList" item="vo"}
+		<div class="act-member-item">
+			<img src="{$vo.member_icon}" alt="">
+			<a href="{:url('Member/personHomepage', ['member_id' => $vo.member_id])}"><h2>{$vo.member_name}</h2></a>
+		</div>
+		{/foreach}
+	</div>
+	
+	<script>
+		$(function() {
+			$(".act-member-item > img").each(function(index, item){
+				$(this).css('height', $(this).css('width'));
+			})
+		})
+	</script>
+
+{include file="common/footer" /}

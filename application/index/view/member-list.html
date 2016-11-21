@@ -1,0 +1,58 @@
+{include file="common/header" title="成员列表" keywords="成员列表" description="" /}
+	<div id="member-list">
+		<!--<p class="name-initial">A</p>-->
+		<ul>
+			{foreach name="clubJoinList" item="vo"}
+			<a href="{:url('Member/personHomepage', ['member_id' => $vo.member_id])}">
+			<li class="member-item clearfix">
+				<div class="member-portrait">
+					<img src="{$vo.member_icon}" alt="">
+				</div>
+				<div class="member-item-detail">
+					<h1 class="member-item-name">{$vo.member_name}</h1>
+					<p>{$vo.member_school}</p>
+					<div>简介：{$vo.member_intro}</div>
+				</div>
+				<div class="member-item-delete" value="{$vo.member_id}">删除</div>
+			</li>
+			</a>
+			{/foreach}
+		</ul>
+	</div>
+	
+	<script src="__PUBLIC__/script/min/touch.min.js"></script>
+	<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+	<script>
+		$(function() {
+			$("#member-list").on('swipeLeft','.member-item',function() {
+				$(".member-item").css('left','0');
+				$(this).css('left','-8.2rem');
+			}).on('swipeRight','.member-item',function() {
+				$(this).css('left','0');
+			});
+
+			$("#member-list").on('click','.member-item-delete',function() {
+				var that = $(this);
+				myconfirm("确定删除该成员吗？",function() {
+					$.ajax({
+						type: 'POST',
+						url: "{:url('Club/del_member')}",
+						data: {'member_id': that.attr("value")},
+						async: false,
+						success: function (data) {
+							if (0 > data.flag) {
+								myalert("删除失败！");
+							} else {
+								myalert("删除成功！");
+								that.parent('.member-item').remove();
+								/*setTimeout(function () {
+									location.reload();
+								}, 1400);*/
+							}
+						}
+					})
+				})
+			});
+		});
+	</script>
+{include file="common/footer" /}

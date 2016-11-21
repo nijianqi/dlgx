@@ -1,0 +1,125 @@
+{include file="common/header" title="个人主页" keywords="个人主页" description="" /}
+<input type="hidden" id="member_id" value="{$memberInfo.id}">
+	<div id="uhome-top">
+		<img src="{$memberInfo.member_icon}" alt="">
+		<h2>{$memberInfo.member_name}</h2>
+		<p><span>关注 {$memberFollowCounts}</span></a> &nbsp;&nbsp;|&nbsp;&nbsp;<span>粉丝 {$memberIsFollowCounts}</span></p>
+	</div>
+	<div id="uhome-info">
+		<ul>
+			<li class="uhome-info-item">
+				<span>学校</span>
+				<p>{$memberInfo.member_school}</p>
+			</li>
+			<li class="uhome-info-item">
+				<span>院系</span>
+				<p>{$memberInfo.member_department}</p>
+			</li>
+			<li class="uhome-info-item"></li>
+			<!--<li class="uhome-info-item">更多基本资料</li>-->
+		</ul>
+	</div>
+
+	<div id="uhome-detail">
+		<ul>
+			<a href="{:url('Member/userClub', ['member_id' => $memberInfo.id])}">
+				<li class="uhome-detail-item">
+					<span>TA的社团</span>
+					<p class="fr">{$clubCounts}个 <i class="fa fa-angle-right"></i></p>
+				</li>
+			</a>
+			<a href="{:url('Member/userActivity', ['member_id' => $memberInfo.id,'act_type'=>2])}">
+				<li class="uhome-detail-item">
+					<span>TA的活动</span>
+					<p class="fr">{$activityCounts}个 <i class="fa fa-angle-right"></i></p>
+				</li>
+			</a>
+		</ul>
+	</div>
+	
+	<div id="uhome-topic-list" class="pre-navbt">
+		<div class="uhome-detail-item">
+			<span>TA的话题</span>
+			<p class="fr">{$topicCounts}个 <i class="fa fa-angle-right"></i></p>
+		</div>
+		<ul>
+			{if !empty($topicList)}
+			{foreach name="topicList" item="vo"}
+			<li class="topic-item">
+					<div class="topic-item-head">
+						<img src="{$vo.member_icon}" alt="">
+						<span>{$vo.member_name}</span>
+						</div>
+				<a href="{:url('Topic/index', ['topic_id' => $vo.id])}">
+					<div class="topic-item-body">
+						<h2>{$vo.topic_name}</h2>
+						<p>{$vo.topic_content}</p>
+						<div class="topic-item-imgs clearfix">
+							{foreach name="$vo.topicAlbumList" item="voList" key="key"}
+							<div class="topic-iimg-wrap">
+								<img src="{$voList.album_img}">
+								{if $vo.topicAlbumCounts > 3 && $key == 2}<p class="topic-iimg-bottom">共{$vo.topicAlbumCounts}张</p>{/if}
+							</div>
+							{/foreach}
+						</div>
+					</div>
+				</a>
+				<div class="topic-homepage-bottom">
+					<span>{$vo.topic_create_time}</span>
+					<p class="fr">
+						<i class="fa fa-commenting-o"></i><span>{$vo.topic_comment_counts}</span>
+						<i class="fa fa-heart-o"></i><span>{$vo.topic_like_counts}</span>
+						<i class="fa fa-star-o"></i><span>{$vo.topic_collect_counts}</span>
+					</p>
+				</div>
+			</li>
+			{/foreach}
+			{else/}
+			<div id="none-club" class="center">
+				<p>暂时没有发表话题哦!</p>
+			</div>
+			{/if}
+		</ul>
+	</div>
+	<div id="uhomepage-watch">
+		{if empty($memberFollowInfo) || $memberFollowInfo.is_follow == 1}
+		<button class="active">关注TA</button>
+		{else/}
+		<button>已关注</button>
+		{/if}
+	</div>
+	<script>
+		$(function() {
+			$("#uhomepage-watch button").click(function() {
+				if($(this).hasClass('active')) {
+					$(this).removeClass("active").text("已关注");
+							$.ajax({
+								type:'POST',
+								url:"{:url('Member/follow')}",
+								data:{'id' : $("#member_id").val(),'is_follow' : 2},
+								async: false,
+								success: function(data) {
+									if(0 > data.flag.code) {
+										location.href = "{:url('member/edit')}";
+									}
+								}
+							});
+				}else{
+					$(this).addClass("active").text("关注TA");
+					$.ajax({
+						type:'POST',
+						url:"{:url('Member/follow')}",
+						data:{'id' : $("#member_id").val(),'is_follow' : 1},
+						async: false,
+						success: function(data) {
+							if(0 > data.flag.code) {
+								location.href = "{:url('member/edit')}";
+							}
+						}
+					});
+				}
+
+			})
+		})
+	</script>
+{include file="common/footer" /}

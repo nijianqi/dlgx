@@ -1,0 +1,20 @@
+{include file="common/header" title="官方消息" keywords="官方消息" description="" /}
+	
+	<div class="message-list">
+		<ul>
+			{if !empty($messageOfficialList)}
+			{foreach name="$messageOfficialList" item="vo"}
+			<li class="message-item">
+				<p class="message-time">{$vo.act_days} {$vo.create_time}</p>
+				<div class="message-body">
+					<h2 class="message-title">大了个学提醒您</h2>
+					{$vo.message_content}
+				</div>
+			</li>
+			{/foreach}
+			{else/}
+			<p>暂无官方消息</p>
+			{/if}
+		</ul>
+	</div>
+{include file="common/footer" /}
