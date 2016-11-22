@@ -914,6 +914,7 @@
 .mark-item {
   border-bottom: 1px solid #ddd; }
   .mark-item:last-child {
+    padding-bottom: 3rem;
     border-bottom: none; }
 
 .mark-head {
