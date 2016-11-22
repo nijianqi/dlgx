@@ -7,7 +7,7 @@ class ActJoinModel extends BaseModel
 
     public function getJoinMember($where = array(), $offset = 0, $limit = 0)
     {
-        return $this->field('dlgx_act_join.*,member_icon,member_name')
+        return $this->field('dlgx_act_join.*,member_icon,member_name,member_school,real_name,member_sex,member_department,member_class,member_tel')
             ->join('dlgx_member', 'dlgx_act_join.member_id = dlgx_member.id')
             ->where($where)->limit($offset, $limit)->order('id desc')->select();
     }
