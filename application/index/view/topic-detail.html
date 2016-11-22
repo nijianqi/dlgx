@@ -21,11 +21,11 @@
 <div class="topic-detail-body">
     {$topic_info.topic_content}
     <div class="topic-item-imgs clearfix">
-    {foreach name="topicAlbumList" item="vo"}
-    <div class="topic-detail-wrap">
-    <img src="{$vo.album_img}" alt="">
+        {foreach name="topicAlbumList" item="vo"}
+        <div class="topic-detail-wrap">
+            <img src="{$vo.album_img}" alt="">
         </div>
-    {/foreach}
+        {/foreach}
     </div>
     <div class="hover-layer none">
         <img src="__PUBLIC__/images/user1.jpg" alt="" class="center">
@@ -58,15 +58,22 @@
                         href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}
                     {if !empty($vo.topComAlbumList)}
                     <div class="topic-item-imgs clearfix">
-                    {foreach name="$vo.topComAlbumList" item="volist"}
+                        {foreach name="$vo.topComAlbumList" item="volist"}
                         <div class="topic-detail-wrap">
-                    <img src="{$volist.album_img}" alt="" >
-                            </div>
-                    {/foreach}
+                            <img src="{$volist.album_img}" alt="">
                         </div>
+                        {/foreach}
+                    </div>
                     {/if}
                 </div>
-                <p class="mark-reply">{if $vo.member_id != $memberId}<span value="{$vo.id}">回复</span>{/if}</p>
+                <div class="mark-reply">
+                    {if $vo.is_comLike == 2}
+                    <div class="mark-zan active"  onclick="comLike({$vo.id},1)"><i class="fa fa-thumbs-o-up"></i><span>{$vo.topicComLike_Counts}</span></div>
+                    {else/}
+                    <div class="mark-zan"  onclick="comLike({$vo.id},2)"><i class="fa fa-thumbs-o-up"></i><span>{$vo.topicComLike_Counts}</span></div>
+                    {/if}
+                    {if $vo.member_id != $memberId}<span value="{$vo.id}">回复</span>{/if}
+                </div>
             </li>
             {/foreach}
             {/if}
@@ -87,7 +94,7 @@
         </li>
         {/if}
         {if $topic_info.topic_is_collect == 2}
-        <li class="topic-ibottom-item active"  onclick="collect({$topic_info.id},1)"><i class="fa fa-star"></i>收藏</li>
+        <li class="topic-ibottom-item active" onclick="collect({$topic_info.id},1)"><i class="fa fa-star"></i>收藏</li>
         {else/}
         <li class="topic-ibottom-item" onclick="collect({$topic_info.id},2)"><i class="fa fa-star-o"></i>收藏</li>
         {/if}
@@ -109,7 +116,7 @@
         <div class="mark-publish-body">
             <textarea id="comment" name="comment" placeholder="写评论..."></textarea>
 
-           <div class="mark-publish-img">
+            <div class="mark-publish-img">
                 <div class="mark-img-button">
                     <img src="__PUBLIC__/images/add_picture.png" alt="">
                     <input type="file" name="file[]">
@@ -122,22 +129,24 @@
 <script src="__PUBLIC__/script/min/mypop.min.js"></script>
 <script>
     $(function () {
-        window.flag=0;
+        window.flag = 0;
         $(".mark-publish-head span.fr").click(function () {
             var text = $(".mark-publish-body > textarea").val().trim();
             if (text == '') {
                 myalert("评论不能为空！");
                 return false;
             } else {
-                if(window.flag == 0){
+                if (window.flag == 0) {
                     window.flag = 1;
                     $("#uploadFrom").submit();
+                    setTimeout(function () {
                         myalert('评论成功！');
                         $(".mark-publish-wrap").css("bottom", '-21rem');
                         $(".alert-operate").click(function () {
                             location.reload();
                         });
-                }else{
+                    }, 1400);
+                } else {
                     myalert('手速这么快，点一次就好了哦~！');
                     return false;
                 }
@@ -161,7 +170,7 @@
             async: false,
             success: function (data) {
                 if (0 > data.flag) {
-                    location.href = "{:url('member/edit')}";
+                    myalert(data.flag.msg);
                 }
             }
         });
@@ -174,7 +183,20 @@
             async: false,
             success: function (data) {
                 if (0 > data.flag) {
-                    location.href = "{:url('member/edit')}";
+                    myalert(data.flag.msg);
+                }
+            }
+        });
+    }
+    function comLike(id, like) {
+        $.ajax({
+            type: 'POST',
+            url: "{:url('Topic/com_like')}",
+            data: {'id': id, 'is_like': like},
+            async: false,
+            success: function (data) {
+                if (0 > data.flag) {
+                    myalert(data.flag.msg);
                 }
             }
         });

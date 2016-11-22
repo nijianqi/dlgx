@@ -264,18 +264,24 @@ class Activity extends Controller
             $actId = input('param.act_id');
             $comment = input('param.comment');
             $commentId = input('param.comment_id');
-            if(empty($commentId)){
-                $commentId = 0;
-            }
-            $actCommentModel = new ActCommentModel();
-            $return = $actCommentModel->insertComment($actId,$comment,$commentId);
-            if(request()->file()){
-                $album = request()->file('file');
-                $actComAlbumModel = new ActComAlbumModel();
-                foreach($album as $key=>$val){
-                    $album_img = $actComAlbumModel->insertAlbum($val);
-                    $actComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img,'create_time'=>time()));
+            $ActivityModel = new ActivityModel();
+            $activity = $ActivityModel->getInfoById($actId);
+            if($activity) {
+                if (empty($commentId)) {
+                    $commentId = 0;
                 }
+                $actCommentModel = new ActCommentModel();
+                $return = $actCommentModel->insertComment($actId, $comment, $commentId);
+                if (request()->file()) {
+                    $album = request()->file('file');
+                    $actComAlbumModel = new ActComAlbumModel();
+                    foreach ($album as $key => $val) {
+                        $album_img = $actComAlbumModel->insertAlbum($val);
+                        $actComAlbumModel->insertGetId(array('comment_id' => $return, 'album_img' => $album_img, 'create_time' => time()));
+                    }
+                }
+            }else{
+                echo "<script>alert('活动不存在');</script>";
             }
         }
 

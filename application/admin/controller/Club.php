@@ -57,8 +57,11 @@ class Club extends Base
             return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
         }
         $id = input('param.id');
+        $clubType= new ClubTypeModel();
+        $clubTypeList = $clubType->getListByWhere();
         $this->assign([
             'club' => $club->getInfoById($id),
+            'clubTypeList' =>$clubTypeList,
             'club_status' => config('club_status')
         ]);
         return $this->fetch();

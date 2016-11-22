@@ -19,10 +19,8 @@ class TopicLikeModel extends BaseModel
         $param['apply_time'] = time();
         $return['flag'] = $this->insert($param);
         if($return['flag']['code'] = 1){
-            if($is_like == 2){
-                $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
-                $comment_content = '赞了你的话题';
-            }
+            $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+            $comment_content = '赞了你的话题';
             $messageModel = new MessageModel();
             $toMemberId = $topic_info['topic_owner_id'];
             $messageModel->insertMessage(session('memberId'),$toMemberId,$message_content,'1',$comment_content,'0',$topicId);

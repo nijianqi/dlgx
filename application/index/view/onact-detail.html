@@ -186,20 +186,27 @@
                 }
             })
         });
+        window.flag=0;
         $(".mark-publish-head span.fr").click(function () {
             var text = $(".mark-publish-body > textarea").val().trim();
             if (text == '') {
                 myalert("评论不能为空！");
                 return false;
             }else{
+                if(window.flag == 0){
+                    window.flag = 1;
                 $("#uploadFrom").submit();
-                setTimeout(function () {
-                    myalert('评论成功！');
-                    $(".mark-publish-wrap").css("bottom", '-21rem');
-                }, 1400);
-                setTimeout(function () {
-                    location.reload();
-                }, 1400);
+                    setTimeout(function () {
+                            myalert('评论成功！');
+                            $(".mark-publish-wrap").css("bottom", '-21rem');
+                            $(".alert-operate").click(function () {
+                                location.reload();
+                            });
+                    }, 1400);
+                }else{
+                    myalert('手速这么快，点一次就好了哦~！');
+                    return false;
+                }
             }
         });
         $(".mark-list").on('click', '.topic-detail-wrap', function () {

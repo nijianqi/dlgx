@@ -19,11 +19,8 @@
         </a>
     </div>
     <div class="navbt-item active">
-        <a href="{:url('Topic/newTopList')}">
             <img src="__PUBLIC__/images/topic.png" alt="">
-
             <p>话题</p>
-        </a>
     </div>
     <div class="navbt-item">
         <a href="{:url('Member/index')}">
@@ -102,7 +99,7 @@
                                     }
                                 }
                             }
-                            result +='</div>';
+                            result +='</div></div>';
                             result +='<div class="topic-item-bottom clearfix"><ul>';
                             result +='<li class="topic-ibottom-item" value="'+data.lists[i].id+'"><i class="fa fa-commenting-o"></i><span>'+data.lists[i].topicCommentCounts+'</span></li>';
                             if(data.lists[i].is_like == 2){

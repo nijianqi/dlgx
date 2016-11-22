@@ -10,6 +10,12 @@
     <link href="__CSS__/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="__CSS__/style.min.css?v=4.1.0" rel="stylesheet">
     <link href="__CSS__/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="__JS__/plugins/simditor/styles/simditor.css" rel="stylesheet">
+    <script type="text/javascript" src="__JS__/plugins/simditor/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="__JS__/plugins/simditor/scripts/module.js"></script>
+    <script type="text/javascript" src="__JS__/plugins/simditor/scripts/hotkeys.js"></script>
+    <script type="text/javascript" src="__JS__/plugins/simditor/scripts/uploader.js"></script>
+    <script type="text/javascript" src="__JS__/plugins/simditor/scripts/simditor.js"></script>
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -22,6 +28,51 @@
                 <div class="ibox-content">
                     <form class="form-horizontal m-t" id="commentForm" method="post" onsubmit="return toVaild()">
                         <input type="hidden" name="id" value="{$club.id}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团团标：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="club_icon" type="text" class="form-control" name="club_icon" required="" aria-required="true" value="{$club.club_icon}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团名称：</label>
+                            <div class="input-group col-sm-7">
+                                <input id="club_name" type="text" class="form-control" name="club_name" required="" aria-required="true" value="{$club.club_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团类型：</label>
+                            <div class="input-group col-sm-4">
+                                <select class="form-control" name="club_type" required="" aria-required="true">
+                                    <option value="0">请选择</option>
+                                    {if !empty($clubTypeList)}
+                                    {foreach name="clubTypeList" item="vo"}
+                                    <option value="{$vo.id}" {if condition="$club['club_type'] eq $vo['id']"}selected{/if}>{$vo.type_name}</option>
+                                    {/foreach}
+                                    {/if}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团口令：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="club_password" type="text" class="form-control" name="club_password" required="" aria-required="true" value="{$club.club_password}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团简介：</label>
+                            <div class="input-group col-sm-8">
+                                <textarea id="club_intro" name="club_intro"  placeholder="Balabala" maxlength="500" autofocus >{$club.club_intro}</textarea>
+                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i>字数限制为0~500个字</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团公告：</label>
+                            <div class="input-group col-sm-8">
+                                <textarea id="club_notice" name="club_notice"  placeholder="Balabala" maxlength="500" autofocus >{$club.club_notice}</textarea>
+                                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i>字数限制为0~500个字</span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">社团状态：</label>
                             <div class="input-group col-sm-4">
@@ -89,6 +140,12 @@
         $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green"});
         //绑定时间控件
         $('[data-dp]').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+    var editor = new Simditor({
+        textarea: $('#club_intro')
+    });
+    var editor = new Simditor({
+        textarea: $('#club_notice')
     });
     $.validator.setDefaults({
         highlight: function(e) {

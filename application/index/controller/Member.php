@@ -377,6 +377,8 @@ class Member extends Controller
                         $topComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img,'create_time'=>time()));
                     }
                 }
+            }else{
+                echo "<script>alert('活动或话题不存在');</script>";
             }
         }
 

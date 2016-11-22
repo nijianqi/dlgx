@@ -6,6 +6,7 @@ use app\index\model\MemberModel;
 use app\index\model\TopicModel;
 use app\index\model\TopicCollectModel;
 use app\index\model\TopicCommentModel;
+use app\index\model\TopicComLikeModel;
 use app\index\model\TopicLikeModel;
 use app\index\model\TopicAlbumModel;
 use app\index\model\TopComAlbumModel;
@@ -61,6 +62,7 @@ class Topic extends Controller
         $topicCommentCounts = $topicCommentModel->getCounts(array('topic_id' => $topicId));
         $topic_info['topicCommentCounts'] = $topicCommentCounts;
         $topicCommentList = $topicCommentModel->getListByWhere(array('topic_id' => $topicId));
+        $flag=array();
         foreach( $topicCommentList as $key=>$val){
             $memberModel = new MemberModel();
             $member_info = $memberModel->getInfoById($val['member_id']);
@@ -70,6 +72,16 @@ class Topic extends Controller
             $topicCommentList[$key]['to_member_name'] = $to_member_info['member_name'];
             $topicCommentList[$key]['to_member_id'] = $to_member_info['id'];
             $topicCommentList[$key]['member_icon'] = $member_info['member_icon'];
+            $topicComLikeModel = new TopicComLikeModel();
+            $topicComLike_info = $topicComLikeModel->getInfoByWhere(array('comment_id'=>$val['id']));
+            if(!empty($topicComLike_info)){
+                $topicCommentList[$key]['is_comLike'] = $topicComLike_info['is_like'];
+            }else{
+                $topicCommentList[$key]['is_comLike'] = '1';
+            }
+            $topicComLike_Counts= $topicComLikeModel->getCounts(array('comment_id'=>$val['id'],'is_like'=>'2'));
+            $topicCommentList[$key]['topicComLike_Counts'] = $topicComLike_Counts;
+            $flag[]=$topicCommentList[$key]['topicComLike_Counts'];
             $time = $val['comment_create_time'] - time();
         if ($time) {
             $hour =  floor((time() - $val['comment_create_time'])/ 86400 * 24);
@@ -87,6 +99,7 @@ class Topic extends Controller
             $topComAlbumList = $topComAlbumModel->getListByWhere(array('comment_id'=> $val['id']));
             $topicCommentList[$key]['topComAlbumList'] =  $topComAlbumList;
         }
+            array_multisort($flag, SORT_DESC, $topicCommentList);
         $topicLikeModel = new TopicLikeModel();
         $topicLikeCounts = $topicLikeModel->getCounts(array('topic_id' => $topicId,'is_like' => 2));
         $topic_info['topicLikeCounts'] = $topicLikeCounts;
@@ -230,17 +243,22 @@ class Topic extends Controller
             $is_collect = input('param.is_collect');
             $topicModel = new TopicModel();
             $topicInfo = $topicModel->getInfoById($topicId);
-            $topicCollectModel = new TopicCollectModel();
-            $topicCollectList = $topicCollectModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
-            if(!empty($topicCollectList)){
-                if($topicInfo&&$topicInfo['topic_status'] = 1){
-                    $return['flag'] = $topicCollectModel->updateCollect(session('memberId'),$topicId,$is_collect);
+            if($topicInfo){
+                $topicCollectModel = new TopicCollectModel();
+                $topicCollectList = $topicCollectModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
+                if(!empty($topicCollectList)){
+                    if($topicInfo&&$topicInfo['topic_status'] = 1){
+                        $return['flag'] = $topicCollectModel->updateCollect(session('memberId'),$topicId,$is_collect);
+                    }
+                }else{
+                    if($topicInfo&&$topicInfo['topic_status'] = 1){
+                        $return['flag'] = $topicCollectModel->insertCollect(session('memberId'),$topicId,$is_collect);
+                    }
                 }
             }else{
-                if($topicInfo&&$topicInfo['topic_status'] = 1){
-                    $return['flag'] = $topicCollectModel->insertCollect(session('memberId'),$topicId,$is_collect);
-                }
+                $return['flag']  = ['code' => -1, 'data' =>'', 'msg' => '收藏失败，话题不存在'];
             }
+
 
         }
         return json($return);
@@ -259,19 +277,24 @@ class Topic extends Controller
             $topicCommentModel = new TopicCommentModel();
             $TopicModel = new TopicModel();
             $topic = $TopicModel->getInfoById($topicId);
-            $TopicModel->update(array('topic_num'=>$topic['topic_num']+1),array('id'=>$topicId));
-            if(empty($commentId)){
-                $commentId = 0;
-            }
-            $return = $topicCommentModel->insertComment($topicId,$comment,$commentId);
-            if(request()->file()){
-                $album = request()->file('file');
-                $topComAlbumModel = new TopComAlbumModel();
-                foreach($album as $key=>$val){
-                    $album_img = $topComAlbumModel->insertAlbum($val);
-                    $topComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img,'create_time'=>time()));
+            if($topic){
+                $TopicModel->update(array('topic_num'=>$topic['topic_num']+1),array('id'=>$topicId));
+                if(empty($commentId)){
+                    $commentId = 0;
                 }
+                $return = $topicCommentModel->insertComment($topicId,$comment,$commentId);
+                if(request()->file()){
+                    $album = request()->file('file');
+                    $topComAlbumModel = new TopComAlbumModel();
+                    foreach($album as $key=>$val){
+                        $album_img = $topComAlbumModel->insertAlbum($val);
+                        $topComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img,'create_time'=>time()));
+                    }
+                }
+            }else{
+                echo "<script>alert('话题不存在');</script>";
             }
+
         }
     }
 
@@ -286,17 +309,53 @@ class Topic extends Controller
             $is_like = input('param.is_like');
             $topicModel = new TopicModel();
             $topicInfo = $topicModel->getInfoById($topicId);
-            $topicLikeModel = new TopicLikeModel();
-            $topicLikeList = $topicLikeModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
-            if(!empty($topicLikeList)){
-                if($topicInfo&&$topicInfo['topic_status'] = 1){
-                    $return['flag'] = $topicLikeModel->updateLike(session('memberId'),$topicId,$is_like);
+            if($topicInfo){
+                $topicLikeModel = new TopicLikeModel();
+                $topicLikeList = $topicLikeModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
+                if(!empty($topicLikeList)){
+                    if($topicInfo&&$topicInfo['topic_status'] = 1){
+                        $return['flag'] = $topicLikeModel->updateLike(session('memberId'),$topicId,$is_like);
+                    }
+                }else{
+                    if($topicInfo&&$topicInfo['topic_status'] = 1){
+                        $return['flag'] = $topicLikeModel->insertLike(session('memberId'),$topicId,$is_like);
+                    }
                 }
             }else{
-                if($topicInfo&&$topicInfo['topic_status'] = 1){
-                    $return['flag'] = $topicLikeModel->insertLike(session('memberId'),$topicId,$is_like);
-                }
+                $return['flag']  = ['code' => -1, 'data' =>'', 'msg' => '点赞失败，话题不存在'];
             }
+
+        }
+        return json($return);
+    }
+
+    public function com_like() //点赞评论
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        } else {
+            $commentId = input('param.id');
+            $is_like = input('param.is_like');
+            $topicCommentModel = new TopicCommentModel();
+            $commentInfo = $topicCommentModel->getInfoById($commentId);
+            if($commentInfo){
+                $topicComLikeModel = new TopicComLikeModel();
+                $topicLikeComList = $topicComLikeModel->getListByWhere(array('comment_id' => $commentId, 'member_id' => session('memberId')));
+                if(!empty($topicLikeComList)){
+                    if($commentInfo&&$topicInfo['topic_status'] = 1){
+                        $return['flag'] = $topicComLikeModel->updateLike(session('memberId'),$commentId,$is_like);
+                    }
+                }else{
+                    if($commentInfo&&$topicInfo['topic_status'] = 1){
+                        $return['flag'] = $topicComLikeModel->insertLike(session('memberId'),$commentId,$is_like);
+                    }
+                }
+            }else{
+                $return['flag']  = ['code' => -1, 'data' =>'', 'msg' => '点赞失败，话题评论不存在'];
+            }
+
 
         }
         return json($return);
