@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑活动</title>
+    <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__CSS__/animate.min.css" rel="stylesheet">
+    <link href="__CSS__/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css?v=4.1.0" rel="stylesheet">
+    <link href="__CSS__/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        {foreach name="$list" item="vo"}
+        <div class="col-sm-4">
+            <div class="contact-box">
+                <a href="#">
+                    <div class="col-sm-4">
+                        <div class="text-center">
+                            <img alt="image" class="img-circle m-t-xs img-responsive" src="{$vo.member_icon}">
+                            <div class="m-t-xs font-bold">{$vo.real_name}</div>
+                        </div>
+                    </div>
+                </a><div class="col-sm-8"><a href="#">
+                <h4><strong>{$vo.member_name}</strong></h4>
+                <p><i class="fa fa-map-marker"></i> {$vo.member_school}</p>
+            </a><address><a href="#">
+                <strong>{$vo.member_department}</strong><br>
+                {$vo.member_class}<br>
+               </a>
+                <abbr title="Phone">Tel:</abbr> {$vo.member_tel}
+            </address>
+            </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </div>
+        {/foreach}
+    </div>
+</div>
+<script src="__JS__/jquery.min.js?v=2.1.4"></script>
+<script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
+<script src="__JS__/content.min.js?v=1.0.0"></script>
+<script>
+    $(document).ready(function(){$(".contact-box").each(function(){animationHover(this,"pulse")})});
+</script>
+</body>
+</html>

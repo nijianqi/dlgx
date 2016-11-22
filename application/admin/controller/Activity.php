@@ -49,6 +49,7 @@ class Activity extends Base
                     $selectResult[$key]['act_from_id']='官方';
                 }
                 $operate = [
+                    '查看活动成员' => url('activity/show', ['id' => $vo['id']]),
                     '编辑' => url('activity/edit', ['id' => $vo['id']]),
                     '删除' => "javascript:del('" . $vo['id'] . "')"
                 ];
@@ -130,6 +131,17 @@ class Activity extends Base
 		$message->delByWhere(array('act_id'=>$id));
         $flag = $activity->del($id);
         return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
+    }
+    //编辑活动
+    public function show()
+    {
+        $actJoin = new ActJoinModel();
+        $id = input('param.id');
+        $list = $actJoin ->getJoinMember(array('act_id'=>$id));
+        $this->assign([
+            'list' => $list
+        ]);
+        return $this->fetch();
     }
     //活动审核列表
     public function apply()
