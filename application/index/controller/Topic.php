@@ -288,7 +288,7 @@ class Topic extends Controller
                     $topComAlbumModel = new TopComAlbumModel();
                     foreach($album as $key=>$val){
                         $album_img = $topComAlbumModel->insertAlbum($val);
-                        $topComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img.'?imageMogr2/quality/100!/size-limit/300k/interlace/1','create_time'=>time()));
+                        $topComAlbumModel->insertGetId(array('comment_id'=>$return,'album_img'=>$album_img.'?imageMogr2/size-limit/300k','create_time'=>time()));
                     }
                 }
             }else{
@@ -402,7 +402,7 @@ class Topic extends Controller
                $topAlbumModel = new TopicAlbumModel();
                foreach($album as $key=>$val){
                    $album_img = $topAlbumModel->insertAlbum($val);
-                   $topAlbumModel->insertGetId(array('topic_id'=>$topic_id,'album_img'=>$album_img.'?imageMogr2/quality/100!/size-limit/300k/interlace/1','create_time'=>time()));
+                   $topAlbumModel->insertGetId(array('topic_id'=>$topic_id,'album_img'=>$album_img.'?imageMogr2/size-limit/300k','create_time'=>time()));
                }
            }
            $topicLikeModel = new TopicLikeModel();
