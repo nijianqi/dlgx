@@ -3,31 +3,7 @@ function getObjectURL(c) {
 	return void 0 != window.createObjectURL ? b = window.createObjectURL(c) : void 0 != window.URL ? b = window.URL.createObjectURL(c) : void 0 != window.webkitURL && (b = window.webkitURL.createObjectURL(c)), b
 }
 $(function() {
-	$("#topic-detail-bottom").on("click", ".fa-heart", function(c) {
-		var b = $(this);
-		setTimeout(function() {
-			b.removeClass("fa-heart").addClass("fa-heart-o").parent().removeClass("active");
-			var a = b.parent().children("span").text();
-			b.parent().children("span").text(parseInt(a) - 1)
-		}, 10)
-	}), $("#topic-detail-bottom").on("click", ".fa-heart-o", function() {
-		var a = $(this);
-		setTimeout(function() {
-			a.addClass("fa-heart").removeClass("fa-heart-o").parent().addClass("active");
-			var b = a.parent().children("span").text();
-			a.parent().children("span").text(parseInt(b) + 1)
-		}, 10)
-	}), $("#topic-detail-bottom").on("click", ".fa-star-o", function() {
-		var a = $(this);
-		setTimeout(function() {
-			a.removeClass("fa-star-o").addClass("fa-star").parent().addClass("active")
-		}, 10)
-	}), $("#topic-detail-bottom").on("click", ".fa-star", function() {
-		var a = $(this);
-		setTimeout(function() {
-			a.removeClass("fa-star").addClass("fa-star-o").parent().removeClass("active")
-		}, 10)
-	}), $(".topic-ibottom-item").eq(0).click(function() {
+	$(".topic-ibottom-item").eq(0).click(function() {
 		$(".mark-publish-wrap").css("bottom", "0")
 	}), $(".mark-publish-head span.fl").click(function() {
 		$(".mark-publish-wrap").css("bottom", "-21rem")
@@ -55,18 +31,5 @@ $(function() {
 			b++
 		}
 		confirm("确认删除？") && ($(this).remove(), $(".mark-img-button input[type='file']").eq(b).remove())
-	}),
-			$(".mark-zan").click(function() {
-				if ($(this).hasClass('active')) {
-					var b = $(this);
-					$(this).removeClass('active');
-					var a = b.children("span").text();
-					b.children("span").text(parseInt(a) - 1)
-				} else {
-					var b = $(this);
-					$(this).addClass('active');
-					var a = b.children("span").text();
-					b.children("span").text(parseInt(a) + 1)
-				}
-			})
+	})
 });

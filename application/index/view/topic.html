@@ -103,14 +103,14 @@
                             result +='<div class="topic-item-bottom clearfix"><ul>';
                             result +='<li class="topic-ibottom-item" value="'+data.lists[i].id+'"><i class="fa fa-commenting-o"></i><span>'+data.lists[i].topicCommentCounts+'</span></li>';
                             if(data.lists[i].is_like == 2){
-                                result +='<li class="topic-ibottom-item active"><i class="fa fa-heart" onclick="like('+data.lists[i].id+',1)"></i><span>'+data.lists[i].topicLikeCounts+'</span></li>';
+                                result +='<li class="topic-ibottom-item active"><i class="fa fa-heart"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
                             }else{
-                                result +='<li class="topic-ibottom-item"><i class="fa fa-heart-o" onclick="like('+data.lists[i].id+',2)"></i><span>'+data.lists[i].topicLikeCounts+'</span></li>';
+                                result +='<li class="topic-ibottom-item"><i class="fa fa-heart-o"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
                             }
                             if(data.lists[i].is_collect == 2){
-                                result +='<li class="topic-ibottom-item active" onclick="collect('+data.lists[i].id+',1)"><i class="fa fa-star"></i>收藏</li>';
+                                result +='<li class="topic-ibottom-item active"><i class="fa fa-star"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
                             }else{
-                                result +='<li class="topic-ibottom-item" onclick="collect('+data.lists[i].id+',2)"><i class="fa fa-star-o"></i>收藏</li>';
+                                result +='<li class="topic-ibottom-item"><i class="fa fa-star-o"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
                             }
                             result +='</ul></div></li>';
                             if((i + 1) >= data.lists.length){
@@ -168,32 +168,86 @@
                 }
             }
         });
-    });
-    function like(id, like) {
-        $.ajax({
-            type: 'POST',
-            url: "{:url('Topic/like')}",
-            data: {'id': id, 'is_like': like},
-            async: false,
-            success: function (data) {
-                if (0 > data.flag) {
-                    location.href = "{:url('member/edit')}";
-                }
-            }
+        $("#topic-list").on("click", ".fa-heart", function () {
+            var b = $(this);
+            var id = b.parent().children("span").attr("value");
+            setTimeout(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('Topic/like')}",
+                    data: {'id': id, 'is_like': 1},
+                    async: false,
+                    success: function (data) {
+                        if (0 > data.flag) {
+                            myalert(data.flag.msg);
+                        } else {
+                            b.removeClass("fa-heart").addClass("fa-heart-o").parent().removeClass("active");
+                            var a = b.parent().children("span").text();
+                            b.parent().children("span").text(parseInt(a) - 1);
+                        }
+                    }
+                });
+            }, 10)
         });
-    }
-    function collect(id, collect) {
-        $.ajax({
-            type: 'POST',
-            url: "{:url('Topic/collect')}",
-            data: {'id': id, 'is_collect': collect},
-            async: false,
-            success: function (data) {
-                if (0 > data.flag) {
-                    location.href = "{:url('member/edit')}";
-                }
-            }
+        $("#topic-list").on("click", ".fa-heart-o", function () {
+            var a = $(this);
+            var id = a.parent().children("span").attr("value");
+            setTimeout(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('Topic/like')}",
+                    data: {'id': id, 'is_like': 2},
+                    async: false,
+                    success: function (data) {
+                        if (0 > data.flag) {
+                            myalert(data.flag.msg);
+                        } else {
+                            a.addClass("fa-heart").removeClass("fa-heart-o").parent().addClass("active");
+                            var b = a.parent().children("span").text();
+                            a.parent().children("span").text(parseInt(b) + 1)
+                        }
+                    }
+                });
+            }, 10)
         });
-    }
+        $("#topic-list").on("click", ".fa-star-o", function () {
+            var a = $(this);
+            var id = a.parent().children("span").attr("value");
+            setTimeout(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('Topic/collect')}",
+                    data: {'id': id, 'is_collect': 2},
+                    async: false,
+                    success: function (data) {
+                        if (0 > data.flag) {
+                            myalert(data.flag.msg);
+                        } else {
+                            a.removeClass("fa-star-o").addClass("fa-star").parent().addClass("active")
+                        }
+                    }
+                });
+            }, 10)
+        });
+        $("#topic-list").on("click", ".fa-star", function () {
+            var a = $(this);
+            var id = a.parent().children("span").attr("value");
+            setTimeout(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('Topic/collect')}",
+                    data: {'id': id, 'is_collect': 1},
+                    async: false,
+                    success: function (data) {
+                        if (0 > data.flag) {
+                            myalert(data.flag.msg);
+                        } else {
+                            a.removeClass("fa-star").addClass("fa-star-o").parent().removeClass("active")
+                        }
+                    }
+                });
+            }, 10)
+        });
+    })
 </script>
 {include file="common/footer" /}
