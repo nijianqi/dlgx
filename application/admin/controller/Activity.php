@@ -186,6 +186,7 @@ class Activity extends Base
         $actJoinModel = new ActJoinModel();
         $activity = new ActivityModel();
         $activityAlbum = new ActivityAlbumModel();
+        $messageModel = new MessageModel();
         if (request()->isPost()) {
             $param = input('post.');
             $param = parseParams($param['data']);
@@ -215,7 +216,6 @@ class Activity extends Base
                 $params['join_time'] = time();
                 $actJoinModel->insert($params,'ActivityValidate');
 
-                $messageModel = new MessageModel();
                 $clubModel = new ClubModel();
                 $clubJoinModel = new ClubJoinModel();
                 $clubInfo = $clubModel->getInfoByWhere(array('club_owner_id'=>$activityInfo['act_from_id']));
@@ -223,6 +223,8 @@ class Activity extends Base
                 foreach($clubJoinList as $key=>$vo){
                         $messageModel->insertMessage($activityInfo['act_from_id'],$vo['member_id'],'发布了活动'.$param['act_name'],'4');
                     }
+            }else{
+                $messageModel->insertMessage('0',$param['club_owner_id'],'拒绝了活动"'.$param['act_name'].'"活动的申请",拒绝理由为:'.$param['verify_idea'],'3');
             }
             return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
         }

@@ -1,145 +1,173 @@
 {include file="common/header" title="发起活动" keywords="发起活动" description="" /}
 <style>
-		.mark-publish-img {height: auto;}
-		.mark-img-button > img {width: 5rem;height: 5rem;}
-		.mark-item-img > img {width: 5rem;height: 5rem;}
+    .mark-publish-img {
+        height: auto;
+    }
+
+    .mark-img-button > img {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .mark-item-img > img {
+        width: 5rem;
+        height: 5rem;
+    }
 </style>
 
-	<div id="ccreate-wrap">
-		<form  method="post" enctype="multipart/form-data" onsubmit="return check();">
-			<p class="ccreate-title">
-				填写活动资料
-			</p>
-			<div class="ccreate-detail">
-				<ul>
-					<li><span>活动名称</span>
-						<div class="cdinput-wrap">
-							<input type="text" name="act_name" placeholder="请输入活动名称">
-						</div>
-					</li>
-					<li class="show-dpicker pr" data-id="0">
-						<span>开始时间</span>
-						<div class="cdinput-wrap">
-							<input type="text" name="act_start_time" value="{$act_start_time}" readonly>
-						</div>
-						<i class="fa fa-angle-right"></i>
-					</li>
-					<li class="show-dpicker pr" data-id="1">
-						<span>结束时间</span>
-						<div class="cdinput-wrap">
-							<input type="text" name="act_end_time" value="{$act_end_time}" readonly>
-						</div>
-						<i class="fa fa-angle-right"></i>
-					</li>
-					<li>
-						<span>活动地点</span>
-						<div class="cdinput-wrap">
-							<input type="text" name="act_address" placeholder="请输入活动地点">
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div class="ccreate-detail">
-				<ul>
-					<li>
-						<span>添加图片</span>
-						<div class="cdinput-wrap album-add">
-												<span>添加图片</span>
-											</div>
-										</li>
-					<div class="mark-publish-img">
-									    <div class="mark-img-button">
-									        <img src="__PUBLIC__/images/add_picture.png" alt="">
-									        <input type="file" name="album[]">
-									    </div>
-					</div>
-								</ul>
-							</div>
-					<div class="ccreate-detail">
-					<ul>
-							<li>
-						<span>活动介绍</span>
-						<div class="cdinput-wrap">
-							<textarea name="act_intro" placeholder="请输入活动介绍"></textarea>
-						</div>
-					</li>
-				</ul>
-			</div>
+<div id="ccreate-wrap">
+    <form method="post" enctype="multipart/form-data" onsubmit="return check();">
+        <p class="ccreate-title">
+            填写活动资料
+        </p>
 
-			<button class="submit">立即发起</button>
-		</form>
-	</div>
-	<div id="ladate-picker" class="date-picker">
-		<p><span class="fl dpicker-cancel">取消</span>选择类型<span class="dpicker-finish fr">完成</span></p>
-		<div class="dpicker-body">
-			<ul>
-				<li class="dpicker-item empty sub-active"></li>
-				<li class="dpicker-item active">2016</li>
-				<li class="dpicker-item sub-active">2017</li>
-				<li class="dpicker-item">2018</li>
-				<li class="dpicker-item">2019</li>
-				<li class="dpicker-item empty"></li>
-			</ul>
-		</div>
-		<div class="dpicker-info">年</div>
-		<div class="dpicker-body">
-			<ul>
-				<li class="dpicker-item empty sub-active"></li>
-				<li class="dpicker-item active">01</li>
-				<li class="dpicker-item sub-active">02</li>
-				<li class="dpicker-item">03</li>
-				<li class="dpicker-item">04</li>
-				<li class="dpicker-item">05</li>
-				<li class="dpicker-item">06</li>
-				<li class="dpicker-item">07</li>
-				<li class="dpicker-item">08</li>
-				<li class="dpicker-item">09</li>
-				<li class="dpicker-item">10</li>
-				<li class="dpicker-item">11</li>
-				<li class="dpicker-item">12</li>
-				<li class="dpicker-item empty"></li>
-			</ul>
-		</div>
-		<div class="dpicker-info">月</div>
-		<div class="dpicker-body">
-			<ul>
-				<li class="dpicker-item empty sub-active"></li>
-				<li class="dpicker-item active">01</li>
-				<li class="dpicker-item sub-active">02</li>
-				<li class="dpicker-item">03</li>
-				<li class="dpicker-item">04</li>
-				<li class="dpicker-item">05</li>
-				<li class="dpicker-item">06</li>
-				<li class="dpicker-item">07</li>
-				<li class="dpicker-item">08</li>
-				<li class="dpicker-item">09</li>
-				<li class="dpicker-item">10</li>
-				<li class="dpicker-item">11</li>
-				<li class="dpicker-item">12</li>
-				<li class="dpicker-item">13</li>
-				<li class="dpicker-item">15</li>
-				<li class="dpicker-item">16</li>
-				<li class="dpicker-item">17</li>
-				<li class="dpicker-item">18</li>
-				<li class="dpicker-item">19</li>
-				<li class="dpicker-item">20</li>
-				<li class="dpicker-item">21</li>
-				<li class="dpicker-item">22</li>
-				<li class="dpicker-item">23</li>
-				<li class="dpicker-item">24</li>
-				<li class="dpicker-item">25</li>
-				<li class="dpicker-item">26</li>
-				<li class="dpicker-item">27</li>
-				<li class="dpicker-item">28</li>
-				<li class="dpicker-item">29</li>
-				<li class="dpicker-item">30</li>
-				<li class="dpicker-item">31</li>
-				<li class="dpicker-item empty"></li>
-			</ul>
-		</div>
-		<div class="dpicker-info">日</div>
-	</div>
+        <div class="ccreate-detail">
+            <ul>
+                <li><span>活动名称</span>
+
+                    <div class="cdinput-wrap">
+                        <input type="text" name="act_name" placeholder="请输入活动名称">
+                    </div>
+                </li>
+                <li class="show-dpicker pr" data-id="0">
+                    <span>开始时间</span>
+
+                    <div class="cdinput-wrap">
+                        <input type="text" name="act_start_time" value="{$act_start_time}" readonly>
+                    </div>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="show-dpicker pr" data-id="1">
+                    <span>结束时间</span>
+
+                    <div class="cdinput-wrap">
+                        <input type="text" name="act_end_time" value="{$act_end_time}" readonly>
+                    </div>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span>活动地点</span>
+
+                    <div class="cdinput-wrap">
+                        <input type="text" name="act_address" placeholder="请输入活动地点">
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="ccreate-detail">
+            <ul>
+                <li>
+                    <span>添加图片</span>
+
+                    <div class="cdinput-wrap album-add">
+                        <span>添加图片</span>
+                    </div>
+                </li>
+                <div class="mark-publish-img">
+                    <div class="mark-img-button">
+                        <img src="__PUBLIC__/images/add_picture.png" alt="">
+                        <input type="file" name="album[]">
+                    </div>
+                </div>
+            </ul>
+        </div>
+        <div class="ccreate-detail">
+            <ul>
+                <li>
+                    <span>活动介绍</span>
+
+                    <div class="cdinput-wrap">
+                        <textarea name="act_intro" placeholder="请输入活动介绍"></textarea>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="ccreate-detail">
+            <ul>
+                <li>
+                    <span>赞助需求</span>
+                    <div class="cdinput-wrap">
+                        <textarea name="act_sponsor" placeholder="请输入详细赞助需求"></textarea>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <button class="submit">立即发起</button>
+    </form>
+</div>
+<div id="ladate-picker" class="date-picker">
+    <p><span class="fl dpicker-cancel">取消</span>选择类型<span class="dpicker-finish fr">完成</span></p>
+
+    <div class="dpicker-body">
+        <ul>
+            <li class="dpicker-item empty sub-active"></li>
+            <li class="dpicker-item active">2016</li>
+            <li class="dpicker-item sub-active">2017</li>
+            <li class="dpicker-item">2018</li>
+            <li class="dpicker-item">2019</li>
+            <li class="dpicker-item empty"></li>
+        </ul>
+    </div>
+    <div class="dpicker-info">年</div>
+    <div class="dpicker-body">
+        <ul>
+            <li class="dpicker-item empty sub-active"></li>
+            <li class="dpicker-item active">01</li>
+            <li class="dpicker-item sub-active">02</li>
+            <li class="dpicker-item">03</li>
+            <li class="dpicker-item">04</li>
+            <li class="dpicker-item">05</li>
+            <li class="dpicker-item">06</li>
+            <li class="dpicker-item">07</li>
+            <li class="dpicker-item">08</li>
+            <li class="dpicker-item">09</li>
+            <li class="dpicker-item">10</li>
+            <li class="dpicker-item">11</li>
+            <li class="dpicker-item">12</li>
+            <li class="dpicker-item empty"></li>
+        </ul>
+    </div>
+    <div class="dpicker-info">月</div>
+    <div class="dpicker-body">
+        <ul>
+            <li class="dpicker-item empty sub-active"></li>
+            <li class="dpicker-item active">01</li>
+            <li class="dpicker-item sub-active">02</li>
+            <li class="dpicker-item">03</li>
+            <li class="dpicker-item">04</li>
+            <li class="dpicker-item">05</li>
+            <li class="dpicker-item">06</li>
+            <li class="dpicker-item">07</li>
+            <li class="dpicker-item">08</li>
+            <li class="dpicker-item">09</li>
+            <li class="dpicker-item">10</li>
+            <li class="dpicker-item">11</li>
+            <li class="dpicker-item">12</li>
+            <li class="dpicker-item">13</li>
+            <li class="dpicker-item">15</li>
+            <li class="dpicker-item">16</li>
+            <li class="dpicker-item">17</li>
+            <li class="dpicker-item">18</li>
+            <li class="dpicker-item">19</li>
+            <li class="dpicker-item">20</li>
+            <li class="dpicker-item">21</li>
+            <li class="dpicker-item">22</li>
+            <li class="dpicker-item">23</li>
+            <li class="dpicker-item">24</li>
+            <li class="dpicker-item">25</li>
+            <li class="dpicker-item">26</li>
+            <li class="dpicker-item">27</li>
+            <li class="dpicker-item">28</li>
+            <li class="dpicker-item">29</li>
+            <li class="dpicker-item">30</li>
+            <li class="dpicker-item">31</li>
+            <li class="dpicker-item empty"></li>
+        </ul>
+    </div>
+    <div class="dpicker-info">日</div>
+</div>
 <div class="info-mask center none" data-status="{$return.code}" data-msg="{$return.msg}"></div>
-	<script src="__PUBLIC__/script/min/mypop.min.js"></script>
-	<script src="__PUBLIC__/script/min/launchAct.min.js"></script>
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script src="__PUBLIC__/script/min/launchAct.min.js"></script>
 {include file="common/footer" /}
