@@ -63,7 +63,7 @@ class Topic extends Controller
         $topic_info['topicCommentCounts'] = $topicCommentCounts;
         $topicCommentList = $topicCommentModel->getListByWhere(array('topic_id' => $topicId));
         $flag=array();
-        foreach( $topicCommentList as $key=>$val){
+        foreach($topicCommentList as $key=>$val){
             $memberModel = new MemberModel();
             $member_info = $memberModel->getInfoById($val['member_id']);
             $to_member_info = $memberModel->getInfoById($val['to_member_id']);
@@ -73,7 +73,7 @@ class Topic extends Controller
             $topicCommentList[$key]['to_member_id'] = $to_member_info['id'];
             $topicCommentList[$key]['member_icon'] = $member_info['member_icon'];
             $topicComLikeModel = new TopicComLikeModel();
-            $topicComLike_info = $topicComLikeModel->getInfoByWhere(array('comment_id'=>$val['id']));
+            $topicComLike_info = $topicComLikeModel->getInfoByWhere(array('comment_id'=>$val['id'],'member_id'=>session('memberId')));
             if(!empty($topicComLike_info)){
                 $topicCommentList[$key]['is_comLike'] = $topicComLike_info['is_like'];
             }else{
