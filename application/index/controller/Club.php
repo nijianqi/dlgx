@@ -137,7 +137,7 @@ class Club extends Controller
                     $param['club_id'] = $clubInfo['id'];
                     $param['club_name'] = $clubInfo['club_name'];
                     $param['image_name'] = $album_img[1];
-                    $param['album_img'] = $album_img[0].'?imageMogr2/quality/100/size-limit/100k/interlace/1';
+                    $param['album_img'] = $album_img[0].'?imageMogr2/quality/100!/size-limit/300k/interlace/1';
                     $param['create_time'] = time();
                     $clubAlbumModel->insert($param);
                  $this->redirect('club/AlbumManager','', 3, '页面跳转中~');
@@ -285,7 +285,7 @@ class Club extends Controller
                         $clubAlbumModel = new ClubAlbumModel();
                         foreach($album as $key=>$val){
                                 $album_img = $clubAlbumModel->insertAlbum($val);
-                                $clubAlbumModel->insertGetId(array('club_id'=>0,'club_name'=>$params['club_name'],'album_img'=>$album_img[0],'image_name'=>$album_img[1],'create_time'=>time()));
+                                $clubAlbumModel->insertGetId(array('club_id'=>0,'club_name'=>$params['club_name'],'album_img'=>$album_img[0].'?imageMogr2/quality/100!/size-limit/300k/interlace/1','image_name'=>$album_img[1],'create_time'=>time()));
                             }
                         $logo = request()->file('logo');
                         if($logo){
