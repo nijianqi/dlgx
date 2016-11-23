@@ -137,7 +137,7 @@ class Club extends Controller
                     $param['club_id'] = $clubInfo['id'];
                     $param['club_name'] = $clubInfo['club_name'];
                     $param['image_name'] = $album_img[1];
-                    $param['album_img'] = $album_img[0];
+                    $param['album_img'] = $album_img[0].'?imageMogr2/quality/100/size-limit/100k/interlace/1';
                     $param['create_time'] = time();
                     $clubAlbumModel->insert($param);
                  $this->redirect('club/AlbumManager','', 3, '页面跳转中~');

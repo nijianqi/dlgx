@@ -277,7 +277,7 @@ class Activity extends Controller
                     $actComAlbumModel = new ActComAlbumModel();
                     foreach ($album as $key => $val) {
                         $album_img = $actComAlbumModel->insertAlbum($val);
-                        $actComAlbumModel->insertGetId(array('comment_id' => $return, 'album_img' => $album_img, 'create_time' => time()));
+                        $actComAlbumModel->insertGetId(array('comment_id' => $return, 'album_img' => $album_img.'?imageMogr2/quality/100/size-limit/100k/interlace/1', 'create_time' => time()));
                     }
                 }
             }else{
@@ -296,7 +296,7 @@ class Activity extends Controller
                 $activityAlbumModel = new ActivityAlbumModel();
                 foreach($album as $key=>$val){
                     $album_img = $activityAlbumModel->insertAlbum($val);
-                    $activityAlbumModel->insertGetId(array('act_id'=>0,'act_name'=>$param['act_name'],'album_img'=>$album_img,'create_time'=>time()));
+                    $activityAlbumModel->insertGetId(array('act_id'=>0,'act_name'=>$param['act_name'],'album_img'=>$album_img.'?imageMogr2/quality/100/size-limit/100k/interlace/1','create_time'=>time()));
                     $param['act_detail_img'] = $album_img;
 				}
             }
