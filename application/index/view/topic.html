@@ -168,27 +168,6 @@
                 }
             }
         });
-        $("#topic-list").on("click", ".fa-heart", function () {
-            var b = $(this);
-            var id = b.parent().children("span").attr("value");
-            setTimeout(function () {
-                $.ajax({
-                    type: 'POST',
-                    url: "{:url('Topic/like')}",
-                    data: {'id': id, 'is_like': 1},
-                    async: false,
-                    success: function (data) {
-                        if (0 > data.flag) {
-                            myalert(data.flag.msg);
-                        } else {
-                            b.removeClass("fa-heart").addClass("fa-heart-o").parent().removeClass("active");
-                            var a = b.parent().children("span").text();
-                            b.parent().children("span").text(parseInt(a) - 1);
-                        }
-                    }
-                });
-            }, 10)
-        });
         $("#topic-list").on("click", ".fa-heart-o", function () {
             var a = $(this);
             var id = a.parent().children("span").attr("value");
@@ -199,7 +178,7 @@
                     data: {'id': id, 'is_like': 2},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
                             a.addClass("fa-heart").removeClass("fa-heart-o").parent().addClass("active");
@@ -220,7 +199,7 @@
                     data: {'id': id, 'is_collect': 2},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
                             a.removeClass("fa-star-o").addClass("fa-star").parent().addClass("active")
@@ -239,7 +218,7 @@
                     data: {'id': id, 'is_collect': 1},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
                             a.removeClass("fa-star").addClass("fa-star-o").parent().removeClass("active")

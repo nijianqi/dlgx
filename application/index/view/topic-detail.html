@@ -68,9 +68,9 @@
                 </div>
                 <div class="mark-reply">
                     {if $vo.is_comLike == 2}
-                    <div class="mark-zan active"><i class="fa fa-thumbs-o-up"></i><span value="{$topic_info.id}">{$vo.topicComLike_Counts}</span></div>
+                    <div class="mark-zan active"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></div>
                     {else/}
-                    <div class="mark-zan"><i class="fa fa-thumbs-o-up"></i><span value="{$topic_info.id}">{$vo.topicComLike_Counts}</span></div>
+                    <div class="mark-zan"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></div>
                     {/if}
                     {if $vo.member_id != $memberId}<span value="{$vo.id}">回复</span>{/if}
                 </div>
@@ -161,27 +161,6 @@
         $(".hover-layer").click(function () {
             $(this).addClass('none');
         });
-        $("#topic-detail-bottom").on("click", ".fa-heart", function () {
-            var b = $(this);
-            var id = b.parent().children("span").attr("value");
-            setTimeout(function () {
-                $.ajax({
-                    type: 'POST',
-                    url: "{:url('Topic/like')}",
-                    data: {'id': id, 'is_like': 1},
-                    async: false,
-                    success: function (data) {
-                        if (0 > data.flag) {
-                            myalert(data.flag.msg);
-                        } else {
-                            b.removeClass("fa-heart").addClass("fa-heart-o").parent().removeClass("active");
-                            var a = b.parent().children("span").text();
-                            b.parent().children("span").text(parseInt(a) - 1);
-                        }
-                    }
-                });
-            }, 10)
-        });
         $("#topic-detail-bottom").on("click", ".fa-heart-o", function () {
             var a = $(this);
             var id = a.parent().children("span").attr("value");
@@ -192,7 +171,7 @@
                     data: {'id': id, 'is_like': 2},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
                             a.addClass("fa-heart").removeClass("fa-heart-o").parent().addClass("active");
@@ -213,7 +192,7 @@
                     data: {'id': id, 'is_collect': 2},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
                             a.removeClass("fa-star-o").addClass("fa-star").parent().addClass("active")
@@ -232,7 +211,7 @@
                     data: {'id': id, 'is_collect': 1},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
                             a.removeClass("fa-star").addClass("fa-star-o").parent().removeClass("active")
@@ -242,25 +221,7 @@
             }, 10)
         });
         $(".mark-zan").click(function() {
-            if ($(this).hasClass('active')) {
-                var b = $(this);
-                var id = b.children("span").attr("value");
-                $.ajax({
-                    type: 'POST',
-                    url: "{:url('Topic/com_like')}",
-                    data: {'id': id, 'is_like': 1},
-                    async: false,
-                    success: function (data) {
-                        if (0 > data.flag) {
-                            myalert(data.flag.msg);
-                        }else{
-                            b.removeClass('active');
-                            var a = b.children("span").text();
-                            b.children("span").text(parseInt(a) - 1)
-                        }
-                    }
-                });
-            } else {
+            if (!$(this).hasClass('active'))  {
                 var b = $(this);
                 var id = b.children("span").attr("value");
                 $.ajax({
@@ -269,7 +230,7 @@
                     data: {'id': id, 'is_like': 2},
                     async: false,
                     success: function (data) {
-                        if (0 > data.flag) {
+                        if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         }else{
                             b.addClass('active');
