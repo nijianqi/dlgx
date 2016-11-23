@@ -196,6 +196,7 @@ class Activity extends Base
                 unset($param['id']);
                 unset($param['verify_idea']);
                 unset($param['apply_time']);
+				unset($param['act_sponsor']);
                 $param['act_from_id'] =  $param['club_owner_id'];
                 unset($param['club_owner_id']);
                 $param['act_type'] = 2;
