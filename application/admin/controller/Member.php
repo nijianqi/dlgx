@@ -14,7 +14,7 @@ class Member extends Base
             $offset = ($param['pageNumber'] - 1) * $limit;
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
-                $where['image_name'] = ['like', '%' . $param['searchText'] . '%'];
+                $where['member_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $member = new MemberModel();
             $selectResult = $member->getListByWhere($where,'*', $offset, $limit);
