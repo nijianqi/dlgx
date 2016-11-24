@@ -147,7 +147,11 @@ class Topic extends Controller
                         $hour = floor((time() - $vo['topic_create_time']) / 86400 * 24);
                         if ($hour < 1) {
                             $min = floor((time() - $vo['topic_create_time']) / 86400 * 24 * 60);
-                            $topic_list[$key]['topic_create_time'] = $min.'分钟前';
+                            if($min == 0){
+                                $topic_list[$key]['topic_create_time'] = '刚刚';
+                            }else{
+                                $topic_list[$key]['topic_create_time'] = $min.'分钟前';
+                            }
                         } elseif ($hour == 24 || $hour > 24 && $hour < 720) {
                             $day = floor((time() - $vo['topic_create_time']) / 86400);
                             $topic_list[$key]['topic_create_time'] = $day.'天前';
@@ -183,7 +187,7 @@ class Topic extends Controller
     {
         if(request()->isAjax()) {
             $topicModel = new TopicModel();
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), '', '', 'topic_num desc');
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1,'topic_create_time'=>array(array('gt',strtotime(date('Y-m-d',strtotime('-1 day')))),array('lt',strtotime(date('Y-m-d'))))), '', '', 'topic_num desc');
             $topicAlbumModel = new TopicAlbumModel();
             $topicLikeModel = new TopicLikeModel();
             $topicCollectModel = new TopicCollectModel();
@@ -198,7 +202,11 @@ class Topic extends Controller
                         $hour = floor((time() - $vo['topic_create_time']) / 86400 * 24);
                         if ($hour < 1) {
                             $min = floor((time() - $vo['topic_create_time']) / 86400 * 24 * 60);
-                            $topic_list[$key]['topic_create_time'] = $min.'分钟前';
+                            if($min == 0){
+                                $topic_list[$key]['topic_create_time'] = '刚刚';
+                            }else{
+                                $topic_list[$key]['topic_create_time'] = $min.'分钟前';
+                            }
                         } elseif ($hour == 24 || $hour > 24 && $hour < 720) {
                             $day = floor((time() - $vo['topic_create_time']) / 86400);
                             $topic_list[$key]['topic_create_time'] = $day.'天前';
