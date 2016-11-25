@@ -107,14 +107,14 @@
                             result +='<div class="topic-item-bottom clearfix"><ul>';
                             result +='<li class="topic-ibottom-item" value="'+data.lists[i].id+'"><i class="fa fa-commenting-o"></i><span>'+data.lists[i].topicCommentCounts+'</span></li>';
                             if(data.lists[i].is_like == 2){
-                                result +='<li class="topic-ibottom-item active"><i class="fa fa-heart"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
+                                result +='<li class="topic-ibottom-item heart active"><i class="fa fa-heart"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
                             }else{
-                                result +='<li class="topic-ibottom-item"><i class="fa fa-heart-o"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
+                                result +='<li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
                             }
                             if(data.lists[i].is_collect == 2){
-                                result +='<li class="topic-ibottom-item active"><i class="fa fa-star"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
+                                result +='<li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
                             }else{
-                                result +='<li class="topic-ibottom-item"><i class="fa fa-star-o"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
+                                result +='<li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
                             }
                             result +='</ul></div></li>';
                             if((i + 1) >= data.lists.length){
@@ -172,9 +172,9 @@
                 }
             }
         });
-        $("#topic-list").on("click", ".fa-heart-o", function () {
+        $("#topic-list").on("click", ".heart-o", function () {
             var a = $(this);
-            var id = a.parent().children("span").attr("value");
+            var id = a.children("span").attr("value");
             setTimeout(function () {
                 $.ajax({
                     type: 'POST',
@@ -185,17 +185,17 @@
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
-                            a.addClass("fa-heart").removeClass("fa-heart-o").parent().addClass("active");
-                            var b = a.parent().children("span").text();
-                            a.parent().children("span").text(parseInt(b) + 1)
+                            a.addClass("active").removeClass("heart-o").addClass("heart").children("i").addClass("fa-heart").removeClass("fa-heart-o");
+                            var b = a.children("span").text();
+                            a.children("span").text(parseInt(b) + 1)
                         }
                     }
                 });
             }, 10)
         });
-        $("#topic-list").on("click", ".fa-star-o", function () {
+        $("#topic-list").on("click", ".star-o", function () {
             var a = $(this);
-            var id = a.parent().children("span").attr("value");
+            var id = a.children("span").attr("value");
             setTimeout(function () {
                 $.ajax({
                     type: 'POST',
@@ -206,15 +206,15 @@
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
-                            a.removeClass("fa-star-o").addClass("fa-star").parent().addClass("active")
+                            a.addClass("active").removeClass("star-o").addClass("star").children("i").addClass("fa-star").removeClass("fa-star-o");
                         }
                     }
                 });
             }, 10)
         });
-        $("#topic-list").on("click", ".fa-star", function () {
+        $("#topic-list").on("click", ".star", function () {
             var a = $(this);
-            var id = a.parent().children("span").attr("value");
+            var id = a.children("span").attr("value");
             setTimeout(function () {
                 $.ajax({
                     type: 'POST',
@@ -225,7 +225,7 @@
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
-                            a.removeClass("fa-star").addClass("fa-star-o").parent().removeClass("active")
+                            a.removeClass("active").removeClass("star").addClass("star-o").children("i").addClass("fa-star-o").removeClass("fa-star");
                         }
                     }
                 });

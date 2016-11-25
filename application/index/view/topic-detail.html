@@ -87,16 +87,16 @@
             评论
         </li>
         {if $topic_info.topic_is_like == 2}
-        <li class="topic-ibottom-item active"><i class="fa fa-heart" ></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
+        <li class="topic-ibottom-item heart active"><i class="fa fa-heart" ></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
         </li>
         {else/}
-        <li class="topic-ibottom-item"><i class="fa fa-heart-o" ></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
+        <li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o" ></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
         </li>
         {/if}
         {if $topic_info.topic_is_collect == 2}
-        <li class="topic-ibottom-item active"><i class="fa fa-star"></i><span value="{$topic_info.id}">收藏</span></li>
+        <li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span value="{$topic_info.id}">收藏</span></li>
         {else/}
-        <li class="topic-ibottom-item"><i class="fa fa-star-o"></i><span value="{$topic_info.id}">收藏</span></li>
+        <li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="{$topic_info.id}">收藏</span></li>
         {/if}
     </ul>
 </div>
@@ -161,9 +161,9 @@
         $(".hover-layer").click(function () {
             $(this).addClass('none');
         });
-        $("#topic-detail-bottom").on("click", ".fa-heart-o", function () {
+        $("#topic-detail-bottom").on("click", ".heart-o", function () {
             var a = $(this);
-            var id = a.parent().children("span").attr("value");
+            var id = a.children("span").attr("value");
             setTimeout(function () {
                 $.ajax({
                     type: 'POST',
@@ -174,17 +174,17 @@
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
-                            a.addClass("fa-heart").removeClass("fa-heart-o").parent().addClass("active");
-                            var b = a.parent().children("span").text();
-                            a.parent().children("span").text(parseInt(b) + 1)
+                            a.addClass("active").removeClass("heart-o").addClass("heart").children("i").addClass("fa-heart").removeClass("fa-heart-o");
+                            var b = a.children("span").text();
+                            a.children("span").text(parseInt(b) + 1)
                         }
                     }
                 });
             }, 10)
         });
-        $("#topic-detail-bottom").on("click", ".fa-star-o", function () {
+        $("#topic-detail-bottom").on("click", ".star-o", function () {
             var a = $(this);
-            var id = a.parent().children("span").attr("value");
+            var id = a.children("span").attr("value");
             setTimeout(function () {
                 $.ajax({
                     type: 'POST',
@@ -195,15 +195,15 @@
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
-                            a.removeClass("fa-star-o").addClass("fa-star").parent().addClass("active")
+                            a.addClass("active").removeClass("star-o").addClass("star").children("i").addClass("fa-star").removeClass("fa-star-o");
                         }
                     }
                 });
             }, 10)
         });
-        $("#topic-detail-bottom").on("click", ".fa-star", function () {
+        $("#topic-detail-bottom").on("click", ".star", function () {
             var a = $(this);
-            var id = a.parent().children("span").attr("value");
+            var id = a.children("span").attr("value");
             setTimeout(function () {
                 $.ajax({
                     type: 'POST',
@@ -214,7 +214,7 @@
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
                         } else {
-                            a.removeClass("fa-star").addClass("fa-star-o").parent().removeClass("active")
+                            a.removeClass("active").removeClass("star").addClass("star-o").children("i").addClass("fa-star-o").removeClass("fa-star");
                         }
                     }
                 });
