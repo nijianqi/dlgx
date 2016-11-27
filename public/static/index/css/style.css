@@ -288,6 +288,7 @@
   left: 0;
   bottom: -17.5rem;
   width: 100%;
+  z-index: 99;
   text-align: center;
   border-top: 1px solid #eee;
   background-color: #fff;
@@ -916,7 +917,8 @@
   .mark-item:last-child {
     padding-bottom: 3rem;
     border-bottom: none; }
-
+.mark-list > p {
+  padding: .6rem 0; }
 .mark-head {
   padding: .8rem 0; }
 
