@@ -1,0 +1,189 @@
+{include file="common/header" title=" 我正在参加大乐个学“最佳CP”线上活动，快来为我投上一票吧！————{$voteJoinInfo.cp_id}号 {$voteJoinInfo.cp_name}" keywords=" 我正在参加大乐个学“最佳CP”线上活动，快来为我投上一票吧！————{$voteJoinInfo.cp_id}号 {$voteJoinInfo.cp_name}" description="" /}
+
+<style>body {padding: .8rem}</style>
+<input type="hidden" id="vote_id" value="{$voteId}">
+<input type="hidden" id="join_id" value="{$voteJoinInfo.member_id}">
+<input type="hidden" id="comment_id" value="">
+<div id="player-rank">
+	<p>{$voteJoinInfo.cp_id}号 {$voteJoinInfo.cp_name}</p>
+	<p class="fr">排名:{$paiMing}  &nbsp;票数: {$voteJoinInfo.vote_num}票</p>
+</div>
+<div id="player-detail-banner">
+	<div id="banner-wrap" class="none">
+		<div class="imgbox">
+		    <ul class="clearfix">
+				{foreach name="$voteJoinInfo.album_img" item="vo"}
+		        <li><img src="{$vo}" alt=""></img></li>
+				{/foreach}
+		    </ul>
+		</div>
+		<div class="page">
+		    <ol>
+		        <li class="active"></li>
+		        <li></li>
+		        <li></li>
+		    </ol>
+		</div>
+	</div>
+</div>
+<div id="player-detail" class="pre-navbt">
+	<p id="pdetail-head">
+		选手资料
+	</p>
+	<div id="pdetail-body">
+		<p>{$voteJoinInfo.cp_slogan}</p>
+		<div id="pdetail-mark-top">
+			<i class="fa fa-commenting-o"></i>{$voteCommentCounts}
+		</div>
+		<div id="pdetail-mark-list">
+			{if !empty($voteComList)}
+			{foreach name="$voteComList" item="vo"}
+			{if $key < 3 }
+			<div class="pdmark-item">
+				<div class="pdmark-item-portrait"><img src="{$vo.member_icon}" alt=""></div>
+				<div class="pdmark-item-detail">
+					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}</p>
+					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.member_id != $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
+				</div>
+			</div>
+			{/if}
+			{/foreach}
+			<div class="pdetail-mark-bottom">
+				<p>查看全部评论</p>
+			</div>
+			{foreach name="$voteComList" item="vo"}
+			{if $key >= 3 }
+			<div class="pdmark-item none">
+				<div class="pdmark-item-portrait"><img src="{$vo.member_icon}" alt=""></div>
+				<div class="pdmark-item-detail">
+					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}</p>
+					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.member_id != $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
+				</div>
+			</div>
+			{/if}
+			{/foreach}
+			{else/}
+			<p style="text-align: center">评论为空</p>
+			{/if}
+		</div>
+	</div>
+	<div class="vote-button">
+		<button>为TA投票</button>
+	</div>
+</div>
+
+<div class="nav-bottom">
+	<div class="navbt-item active">
+		<a href="{:url('Vote/index',['vote_id'=>$voteId])}">
+		<img src="__PUBLIC__/images/home_gray.png" alt=""><p>投票首页</p>
+		</a>
+	</div>
+	<div class="navbt-item">
+		<a href="{:url('Vote/apply',['vote_id'=>$voteId])}">
+			<img src="__PUBLIC__/images/add_gray.png" alt=""><p>报名</p>
+		</a>
+	</div>
+	<div class="navbt-item">
+		<a href="{:url('Vote/rankingList',['vote_id'=>$voteId])}">
+			<img src="__PUBLIC__/images/chart_gray.png" alt=""><p>排行榜</p>
+		</a>
+	</div>
+</div>
+
+<div class="mark-publish-wrap">
+		<p class="mark-publish-head">
+			<span class="fl">取消</span>
+			<span class="fr"><input type="submit" class="submit">发表</span>
+		</p>
+		<div class="mark-publish-body">
+			<textarea name="comment" id="comment" placeholder="写评论..."></textarea>
+		</div>
+</div>
+<script src="__PUBLIC__/script/min/swipe.min.js"></script>
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script>
+$(function() {
+	$("#banner-wrap").removeClass('none');
+	var scrollImg = $.mggScrollImg('.imgbox ul',{
+        loop: true,//循环切换
+        auto: true,//自动切换
+        callback: function(ind){
+            $('.page li').eq(ind).addClass('active').siblings().removeClass('active');
+        }
+    });
+	$(".pdmark-item-reply").on('click', function() {
+		var t = $(this).attr("value");
+		$("#comment_id").attr('value', t);
+		$(".mark-publish-wrap").css('bottom', '0');
+	});
+	$(".fa-commenting-o").on('click', function() {
+		$(".mark-publish-wrap").css('bottom', '0');
+	});
+	$(".pdetail-mark-bottom").on('click', function() {
+		$(this).addClass('none');
+		$('.pdmark-item').removeClass('none');
+	});
+	$(".mark-publish-head span.fl").click(function() {
+		$(".mark-publish-wrap").css("bottom", '-21rem');
+	});
+	$(".submit").on('click', function() {
+		window.flag = 0;
+		var text = $(".mark-publish-body > textarea").val().trim();
+		if (text == '') {
+			myalert("评论不能为空！");
+			return false;
+		}else{
+			if (window.flag == 0) {
+				window.flag = 1;
+			$.ajax({
+				type: 'POST',
+				url: "{:url('Vote/comment')}",
+				data: {'vote_id': $("#vote_id").val(),'comment':$("#comment").val(),'comment_id':$("#comment_id").val(),'join_id':$("#join_id").val()},
+				async: false,
+				success: function (data) {
+					if (0 > data.code) {
+						myalert(data.msg);
+					} else {
+						myalert('评论成功');
+						$(".alert-operate").click(function () {
+							location.reload();
+						});
+					}
+				}
+			});
+			} else {
+				myalert('手速这么快，点一次就好了哦~！');
+				return false;
+			}
+		}
+	})
+	$(".vote-button").on('click', function() {
+		    window.vote = 0;
+			if (window.vote == 0) {
+				window.vote = 1;
+				$.ajax({
+					type: 'POST',
+					url: "{:url('Vote/vote')}",
+					data: {'vote_id': $("#vote_id").val(),'join_id':$("#join_id").val()},
+					async: false,
+					success: function (data) {
+						if (0 > data.code) {
+							myalert(data.msg);
+						} else {
+							myalert('投票成功');
+							$(".alert-operate").click(function () {
+								location.reload();
+							});
+						}
+					}
+				});
+			} else {
+				myalert('手速这么快，点一次就好了哦~！');
+				return false;
+			}
+	});
+})
+</script>
+
+
+{include file="common/footer" /}

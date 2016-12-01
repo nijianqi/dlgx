@@ -1,0 +1,78 @@
+{include file="common/header" title="谁是我的“最佳CP”，是锄禾还是当午？快来报名吧！" keywords="谁是我的“最佳CP”，是锄禾还是当午？快来报名吧！" description="" /}
+
+<style>.mark-img-button > img {width: 5rem;height: 5rem;}.mark-item-img > img {width: 5rem;height: 5rem;}.mark-publish-img{height: auto}</style>
+<form action="" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<div class="ccreate-detail">
+		<ul>
+			<li>
+				<span>“CP”名称</span>
+				<div class="cdinput-wrap">
+					<input type="text" name="cp_name" placeholder="请输入“CP”名称">
+				</div>
+			</li>
+			<li class="show-dpicker pr">
+				<span>“CP”关系</span>
+				<div class="cdinput-wrap">
+					<input type="text" name="cp_type" value="闺蜜" readonly="">
+				</div>
+				<i class="fa fa-angle-right"></i>
+			</li>
+		</ul>
+	</div>
+	<div class="ccreate-detail">
+		<ul>
+			<li>
+				<span style="width:100%;float: none">参赛照片（至少合照一张，最多三张）</span>
+			</li>
+			<div class="mark-publish-img">
+			    <div class="mark-img-button">
+			        <img src="__PUBLIC__/images/add_picture.png" alt="">
+			        <input type="file" name="album[]">
+			    </div>
+			</div>
+		</ul>
+	</div>
+	<div class="ccreate-detail">
+		<ul>
+			<li>
+				<span>参赛口号</span>
+				<div class="cdinput-wrap">
+					<textarea name="cp_slogan" placeholder="请输入参赛口号"></textarea>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<button class="submit">立即报名</button>
+</form>
+<div class="info-mask center none" data-status="{$return.code}" data-msg="{$return.msg}"></div>
+<div class="date-picker">
+	<p><span class="fl dpicker-cancel">取消</span>选择关系<span class="dpicker-finish fr">完成</span></p>
+	<div class="dpicker-body">
+		<ul>
+			<li class="dpicker-item empty sub-active"></li>
+			<li class="dpicker-item active">基友</li>
+			<li class="dpicker-item sub-active">闺蜜</li>
+			<li class="dpicker-item">情侣</li>
+			<li class="dpicker-item">其他</li>
+			<li class="dpicker-item empty"></li>
+		</ul>
+	</div>
+</div>
+<div class="nav-bottom">
+	<div class="navbt-item">
+		<a href="{:url('Vote/index',['vote_id'=>$voteId])}">
+			<img src="__PUBLIC__/images/home_gray.png" alt=""><p>投票首页</p>
+		</a>
+	</div>
+	<div class="navbt-item active">
+		<img src="__PUBLIC__/images/add-tp.png" alt=""><p>报名</p>
+	</div>
+	<div class="navbt-item">
+		<a href="{:url('Vote/rankingList',['vote_id'=>$voteId])}">
+			<img src="__PUBLIC__/images/chart_gray.png" alt=""><p>排行榜</p>
+		</a>
+	</div>
+</div>
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script src="__PUBLIC__/script/min/apply.min.js"></script>
+{include file="common/footer" /}

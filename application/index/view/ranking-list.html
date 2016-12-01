@@ -1,0 +1,113 @@
+{include file="common/header" title="谁是我的“最佳CP”，是锄禾还是当午？———排行榜" keywords="谁是我的“最佳CP”，是锄禾还是当午？————排行榜" description="" /}
+
+<form action="" onsubmit="return check();">
+	<div class="vsearch-wrap">
+		<button>搜索</button>
+		<div class="vinput-wrap">
+			<input type="text" name="cp_id" placeholder="请输入编号进入投票">
+		</div>
+	</div>
+</form>
+
+<div id="rank-list" class="pre-navbt">
+	{if !empty($voteJoinList)}
+	{foreach name="$voteJoinList" item="vo"}
+	<div class="rank-item">
+		<div class="rank-head">
+			<div class="fr">
+				票数：{$vo.vote_num}票
+			</div>
+			<a href="{:url('Vote/playerDetail',['member_id'=>$vo.member_id,'vote_id'=>$voteId])}">
+				<div class="rank-name">
+					<span>No.{$key+1}</span>
+					{$vo.cp_name}（{$vo.cp_id}号）
+				</div>
+			</a>
+		</div>
+		<div class="rank-body">
+			<img src="{$vo.album_img[0]}" alt="">
+			<p>{$vo.cp_slogan}</p>
+			<div class="vote-button">
+				<button>投TA一票</button>
+			</div>
+		</div>
+	</div>
+	{/foreach}
+	{elseif !empty($voteJoinInfo)}
+	<div class="rank-item">
+		<div class="rank-head">
+			<div class="fr">
+				票数：{$voteJoinInfo.vote_num}票
+			</div>
+			<a href="{:url('Vote/playerDetail',['member_id'=>$voteJoinInfo.member_id,'vote_id'=>$voteId])}">
+				<div class="rank-name">
+					<span>No.{$paiMing}</span>
+					{$voteJoinInfo.cp_name}（{$voteJoinInfo.cp_id}号）
+				</div>
+			</a>
+		</div>
+		<div class="rank-body">
+			<img src="{$voteJoinInfo.album_img[0]}" alt="">
+			<p>{$voteJoinInfo.cp_slogan}</p>
+			<div class="vote-button">
+				<button>投TA一票</button>
+			</div>
+		</div>
+	</div>
+	{else/}
+	<p style="text-align: center">参赛选手不存在</p>
+	{/if}
+</div>
+
+<div class="nav-bottom">
+	<div class="navbt-item">
+		<a href="{:url('Vote/index',['vote_id'=>$voteId])}">
+			<img src="__PUBLIC__/images/home_gray.png" alt=""><p>投票首页</p>
+		</a>
+	</div>
+	<div class="navbt-item">
+		<a href="{:url('Vote/apply',['vote_id'=>$voteId])}">
+			<img src="__PUBLIC__/images/add_gray.png" alt=""><p>报名</p>
+		</a>
+	</div>
+	<div class="navbt-item active">
+		<img src="__PUBLIC__/images/chart.png" alt=""><p>排行榜</p>
+	</div>
+</div>
+<script src="__PUBLIC__/script/min/mypop.min.js"></script>
+<script>
+function check() {
+	if($(".input-wrap input").val().trim() == '') {
+		alert('搜索内容不能为空！');
+		return false;
+	}
+	return true;
+}
+$(".vote-button").on('click', function() {
+	var t = $(this).find('button').attr("value");
+	window.vote = 0;
+	if (window.vote == 0) {
+		window.vote = 1;
+		$.ajax({
+			type: 'POST',
+			url: "{:url('Vote/vote')}",
+			data: {'vote_id': {$voteId},'join_id':t},
+			async: false,
+			success: function (data) {
+				if (0 > data.code) {
+					myalert(data.msg);
+				} else {
+					myalert('投票成功');
+					$(".alert-operate").click(function () {
+						location.reload();
+					});
+				}
+			}
+		});
+	} else {
+		myalert('手速这么快，点一次就好了哦~！');
+		return false;
+	}
+});
+</script>
+{include file="common/footer" /}
