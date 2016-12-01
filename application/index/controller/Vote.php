@@ -208,6 +208,11 @@ class Vote extends Controller
     public function apply() //我要报名
     {
         $voteId = input('param.vote_id');
+		$VoteModel = new VoteModel();
+		$voteInfo = $VoteModel->getInfoById($voteId);
+		if (empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
         if (request()->isPost()) {
             $param = input('param.');
             $VoteApply = new VoteApplyModel();
@@ -218,7 +223,7 @@ class Vote extends Controller
                 $this->assign([
                     'return' => $return
                 ]);
-            } elseif ($Vote['vote_end_time'] < time()) {
+            } elseif ($voteInfo['vote_end_time'] < time()) {
                 $return['code'] = -1;
                 $return['msg'] = '活动已结束！';
                 $this->assign([
@@ -260,6 +265,9 @@ class Vote extends Controller
     {
         if (request()->isAjax()) {
             $voteId = input('param.vote_id');
+			if(empty(session('memberId'))) {
+            $this->redirect('index/index');
+             }
             $Vote = new VoteModel();
             $VoteNum = new VoteNumModel();
             $vote_counts = $VoteNum->getCounts(array('vote_id' => $voteId, 'member_id' => session('memberId'), 'create_time' => array(array('gt', strtotime(date("Y-m-d"))), array('lt', strtotime(date('Y-m-d', strtotime('+1 day'))))))); //获取今天的投票数
