@@ -295,6 +295,9 @@ class Club extends Controller
                     }
                     $params['club_type'] = $clubTypeInfo['id'];
                     $params['club_school'] = $member['member_school'];
+					if(empty($member['member_school'])) {
+                        $this->redirect('member/edit');
+                       }
                     $params['club_owner_id'] = session('memberId');
                     $params['apply_time'] = time();
                     $flag = $clubApplyModel->insert($params, 'ClubValidate');
