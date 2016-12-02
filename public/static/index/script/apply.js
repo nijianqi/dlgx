@@ -4,9 +4,9 @@ $(function() {
 	if (status === '1' || status === '-1') {
 		$(".submit").attr("disabled", "disabled");
 		if (status === '1') {
-			$(".info-mask").text('报名成功,请等待审核!');
+			myalert('报名成功,请等待审核!');
 		} else {
-			$(".info-mask").text(msg);
+			myalert(msg);
 		}
 		$(".info-mask").removeClass('none');
 		setTimeout(function() {

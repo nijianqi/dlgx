@@ -43,7 +43,7 @@
 				<div class="pdmark-item-portrait"><img src="{$vo.member_icon}" alt=""></div>
 				<div class="pdmark-item-detail">
 					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}</p>
-					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.member_id != $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
+					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.to_member_id !== $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
 				</div>
 			</div>
 			{/if}
@@ -57,7 +57,7 @@
 				<div class="pdmark-item-portrait"><img src="{$vo.member_icon}" alt=""></div>
 				<div class="pdmark-item-detail">
 					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}</p>
-					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.member_id != $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
+					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.to_member_id !== $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
 				</div>
 			</div>
 			{/if}
