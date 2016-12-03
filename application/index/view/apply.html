@@ -13,7 +13,7 @@
 			<li class="show-dpicker pr">
 				<span>“CP”关系</span>
 				<div class="cdinput-wrap">
-					<input type="text" name="cp_type" value="闺蜜" readonly="">
+					<input type="text" name="cp_type" value="闺蜜" readonly>
 				</div>
 				<i class="fa fa-angle-right"></i>
 			</li>
@@ -34,10 +34,21 @@
 	</div>
 	<div class="ccreate-detail">
 		<ul>
-			<li>
-				<span>参赛口号</span>
+<li class="show-dpicker1 pr">
+ 			<span>参赛话题</span>
+		<div class="cdinput-wrap">
+ 				<input type="text" name="topic" value="1" readonly>
+</div>
+			<i class="fa fa-angle-right"></i>
+ 		</li>
+ 	</ul>
+ </div>
+ <div class="ccreate-detail">
+ 	<ul>
+	<li>
+				<span>话题内容</span>
 				<div class="cdinput-wrap">
-					<textarea name="cp_slogan" placeholder="请输入参赛口号"></textarea>
+					<textarea name="cp_slogan" placeholder="请输入话题内容"></textarea>
 				</div>
 			</li>
 		</ul>
@@ -45,9 +56,9 @@
 	<button class="submit">立即报名</button>
 </form>
 <div class="info-mask center none" data-status="{$return.code}" data-msg="{$return.msg}"></div>
-<div class="date-picker">
+<div class="date-picker date-picker0">
 	<p><span class="fl dpicker-cancel">取消</span>选择关系<span class="dpicker-finish fr">完成</span></p>
-	<div class="dpicker-body">
+	<div class="dpicker-body dpicker-body0">
 		<ul>
 			<li class="dpicker-item empty sub-active"></li>
 			<li class="dpicker-item active">基友</li>
@@ -58,6 +69,19 @@
 		</ul>
 	</div>
 </div>
+<div class="date-picker date-picker1">
+	<p><span class="fl dpicker-cancel">取消</span>选择关系<span class="dpicker-finish dpicker-finish1 fr">完成</span></p>
+ 	<div class="dpicker-body dpicker-body1">
+ 		<ul>
+ 			<li class="dpicker-item empty sub-active"></li>
+ 			<li class="dpicker-item active">1</li>
+ 			<li class="dpicker-item sub-active">2</li>
+ 			<li class="dpicker-item">3</li>
+			<li class="dpicker-item">4</li>
+ 		<li class="dpicker-item empty"></li>
+ 	</ul>
+ </div>
+ </div>
 <div class="nav-bottom">
 	<div class="navbt-item">
 		<a href="{:url('Vote/index',['vote_id'=>$voteId])}">

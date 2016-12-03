@@ -13,31 +13,54 @@ $(function() {
 			$(".info-mask").addClass('none');
 		}, 1500);
 	}
-	var rate = 0;
-	$(".dpicker-body").scroll(function() {
-		rate = setPickerStyle(rate)
+var rate0 = 0,
+ 	rate1 = 0;
+ 	$(".dpicker-body0").scroll(function() {
+ 	rate0 = setPickerStyle(rate0, 0)
+ 	});
+ $(".dpicker-body1").scroll(function() {
+ 	rate1 = setPickerStyle(rate1, 1)
 	});
 
 	$(".dpicker-finish").click(function() {
-		var text = $(".dpicker-item.active").text();
-		$(".date-picker").css({
-			'bottom': '-17.5rem'
-		});
-		$(".show-dpicker input").val(text);
+	var text = $(this).parents('.date-picker').find('.dpicker-item.active').text();
+ if ($(this).hasClass('dpicker-finish1')) {
+ $(".date-picker1").css({
+ 'bottom': '-17.5rem'
+ });
+ $(".show-dpicker1 input").val(text);
+ } else {
+ $(".date-picker0").css({
+ 'bottom': '-17.5rem'
+ });
+ $(".show-dpicker input").val(text);
+}
 	});
 
 	$(".dpicker-cancel").click(function() {
-		$(".date-picker").css({
+		$(this).parents('.date-picker').css({
 			'bottom': '-17.5rem'
 		});
 	});
 
 	$(".show-dpicker").click(function() {
-		$(".date-picker").css({
+		$(".date-picker1").css({
+ 			'bottom': '-17.5rem'
+ 		});
+ 		$(".date-picker0").css({
 			'bottom': 0
 		});
 	});
 
+	$(".show-dpicker1").click(function() {
+ $(".date-picker1").css({
+ 'bottom': 0
+ });
+ $(".date-picker0").css({
+ 'bottom': '-17.5rem'
+ });
+ });
+ 
 	$(".mark-img-button").on("change", "input[type='file']", function() {
 		var i, e = $(this).val(),
 			t = e.substring(e.lastIndexOf(".") + 1);
@@ -69,22 +92,23 @@ function getObjectURL(file) {
 	return url;
 }
 
-function setPickerStyle(rate) {
+function setPickerStyle(rate, flag) {
 	var i, len,
-		scrollTop = $(".dpicker-body").scrollTop(),
+		scrollTop = flag == 0 ? $(".dpicker-body0").scrollTop() : $(".dpicker-body1").scrollTop(),
 		newRate = parseInt(scrollTop / 38);
 
 	if (newRate === rate) {
 		return rate;
 	}
 
-	var itemList = $(".dpicker-item");
+var itemList = flag == 0 ? $(".date-picker0 .dpicker-item") : $(".date-picker1 .dpicker-item");
 
 	if ($(itemList[newRate + 1]).hasClass('empty')) {
 		return newRate;
 	}
 
-	itemList = $(".dpicker-item").removeClass('active').removeClass('sub-active');
+	itemList = flag == 0 ? $(".date-picker0 .dpicker-item").removeClass('active').removeClass('sub-active') : $(".date-picker1 .dpicker-item").removeClass('active').removeClass('sub-active');
+  
 
 	$(itemList[newRate + 1]).addClass('active').prev().addClass('sub-active').next().next().addClass('sub-active');
 
@@ -104,7 +128,7 @@ function check() {
 		return false;
 	}
 	if (!$("textarea[name='cp_slogan']").val().trim()) {
-		alert("参赛口号不能为空！");
+		alert("话题内容不能为空！");
 		$(".submit").removeAttr("disabled");
 		return false;
 	}
