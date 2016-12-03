@@ -96,6 +96,9 @@ $(".vote-button").on('click', function() {
 			success: function (data) {
 				if (0 > data.code) {
 					myalert(data.msg);
+					$(".alert-operate").click(function () {
+                         location.href = "{:url('index/index')}";
+                    });
 				} else {
 					myalert('投票成功');
 					$(".alert-operate").click(function () {

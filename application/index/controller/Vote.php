@@ -266,7 +266,9 @@ class Vote extends Controller
         if (request()->isAjax()) {
             $voteId = input('param.vote_id');
 			if(empty(session('memberId'))) {
-            $this->redirect('index/index');
+             $return['code'] = -1;
+                $return['msg'] = '投票失败,请先登录!';
+                return json($return);
              }
             $Vote = new VoteModel();
             $VoteNum = new VoteNumModel();
