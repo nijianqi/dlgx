@@ -615,6 +615,7 @@
     float: left;
     width: 3rem;
     height: 3rem;
+    margin-right: .5rem;
     border-radius: 100%;
 }
 
@@ -1172,13 +1173,6 @@
     border-bottom: 1px solid #eee;
 }
 
-.uhome-info-item:last-child {
-    text-align: center;
-    color: #aaa;
-    padding: 1rem 0;
-    border-bottom: none;
-}
-
 .uhome-info-item > span {
     display: inline-block;
     color: #999;
@@ -1290,7 +1284,6 @@
 }
 
 .online-act {
-    text-align: center;
     padding: 0 0 1rem .6rem;
     background-color: #fff;
 }
@@ -1308,13 +1301,13 @@
 .imgbox li {
     float: left;
     width: 100vw;
-    height: 19.2rem;
+    max-height: 25rem;
 }
 
 .imgbox img {
     width: 100vw;
-    height: 19.2rem;
     margin: 0 auto;
+    max-height: 25rem;
 }
 
 .page {
@@ -1648,6 +1641,7 @@
 .mark-body {
     color: #666;
     font-size: 1.6rem;
+    padding: .8rem 0;
     word-break: break-word;
 }
 
@@ -2507,6 +2501,10 @@
     border-bottom: 1px solid #eee;
 }
 
+.none-club {
+    background-color: #fff;
+    padding: .7rem 1.1rem;
+}
 @media screen and (max-width: 350px) {
     .portrait {
         width: 6rem;
