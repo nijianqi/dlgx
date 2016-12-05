@@ -352,13 +352,9 @@ class Topic extends Controller
                 $topicComLikeModel = new TopicComLikeModel();
                 $topicLikeComList = $topicComLikeModel->getListByWhere(array('comment_id' => $commentId, 'member_id' => session('memberId')));
                 if(!empty($topicLikeComList)){
-                    if($commentInfo&&$topicInfo['topic_status'] = 1){
                         $return['flag'] = $topicComLikeModel->updateLike(session('memberId'),$commentId,$is_like);
-                    }
                 }else{
-                    if($commentInfo&&$topicInfo['topic_status'] = 1){
                         $return['flag'] = $topicComLikeModel->insertLike(session('memberId'),$commentId,$is_like);
-                    }
                 }
             }else{
                 $return['flag']  = ['code' => -1, 'data' =>'', 'msg' => '点赞失败，话题评论不存在'];

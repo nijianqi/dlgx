@@ -37,7 +37,7 @@
 <li class="show-dpicker1 pr">
  			<span>参赛话题</span>
 		<div class="cdinput-wrap">
- 				<input type="text" name="topic" value="1" readonly>
+ 				<input type="text" name="topic_type" value="{$topicTypeList.0.type_name}" readonly>
 </div>
 			<i class="fa fa-angle-right"></i>
  		</li>
@@ -48,7 +48,7 @@
 	<li>
 				<span>话题内容</span>
 				<div class="cdinput-wrap">
-					<textarea name="cp_slogan" placeholder="请输入话题内容"></textarea>
+					<textarea name="cp_topic——统一" placeholder="请输入话题内容"></textarea>
 				</div>
 			</li>
 		</ul>
@@ -74,10 +74,9 @@
  	<div class="dpicker-body dpicker-body1">
  		<ul>
  			<li class="dpicker-item empty sub-active"></li>
- 			<li class="dpicker-item active">1</li>
- 			<li class="dpicker-item sub-active">2</li>
- 			<li class="dpicker-item">3</li>
-			<li class="dpicker-item">4</li>
+ 			{foreach name="topicTypeList" item="vo"}
+				<li class="dpicker-item">{$vo.type_name}</li>
+				{/foreach}
  		<li class="dpicker-item empty"></li>
  	</ul>
  </div>

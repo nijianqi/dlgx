@@ -127,7 +127,7 @@ function check() {
 		$(".submit").removeAttr("disabled");
 		return false;
 	}
-	if (!$("textarea[name='cp_slogan']").val().trim()) {
+	if (!$("textarea[name='cp_topic']").val().trim()) {
 		alert("话题内容不能为空！");
 		$(".submit").removeAttr("disabled");
 		return false;

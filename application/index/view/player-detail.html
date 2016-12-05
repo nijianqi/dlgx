@@ -31,7 +31,7 @@
 		选手资料
 	</p>
 	<div id="pdetail-body">
-		<p>{$voteJoinInfo.cp_slogan}</p>
+		<p><span class="pre-showmore">{$voteJoinInfo.cp_topic}</span><a class="show-more-wrap none">显示全部</a><span class="show-more none"></span></p>
 		<div id="pdetail-mark-top">
 			<i class="fa fa-commenting-o"></i>{$voteCommentCounts}
 		</div>
@@ -42,7 +42,13 @@
 			<div class="pdmark-item">
 				<div class="pdmark-item-portrait"><img src="{$vo.member_icon}" alt=""></div>
 				<div class="pdmark-item-detail">
-					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}</p>
+					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}
+					 {if $vo.is_comLike == 2}
+                   <span class="pdmark-item-zan active"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></span>
+                    {else/}
+                    <span class="pdmark-item-zan"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></span>
+                    {/if}
+					</p>
 					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.to_member_id !== $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
 				</div>
 			</div>
@@ -56,7 +62,13 @@
 			<div class="pdmark-item none">
 				<div class="pdmark-item-portrait"><img src="{$vo.member_icon}" alt=""></div>
 				<div class="pdmark-item-detail">
-					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}</p>
+					<p><a>{$vo.member_name}</a>  {if $vo.member_id != $MemberId}<span class="pdmark-item-reply" value="{$vo.id}">回复</span>{/if}
+					 {if $vo.is_comLike == 2}
+                   <span class="pdmark-item-zan active"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></span>
+                    {else/}
+                    <span class="pdmark-item-zan"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></span>
+                    {/if}
+					</p>
 					<div class="pdmark-item-body">{if !empty($vo.to_member_id)&&$vo.to_member_id !== $voteJoinInfo.member_id}@<a href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}</div>
 				</div>
 			</div>
@@ -111,6 +123,17 @@ $(function() {
             $('.page li').eq(ind).addClass('active').siblings().removeClass('active');
         }
     });
+	var text = $(".pre-showmore").text();
+    if(text.length > 10) {
+ 	$(".show-more-wrap").removeClass('none');
+ 	$(".pre-showmore").text(text.substr(0, 65));
+	$(".show-more").text(text.substr(65))
+  }
+
+ $(".show-more-wrap").click(function() {
+	$(this).addClass('none');
+ 	$(".show-more").removeClass('none');
+  })
 	$(".pdmark-item-reply").on('click', function() {
 		var t = $(this).attr("value");
 		$("#comment_id").attr('value', t);
@@ -185,6 +208,28 @@ $(function() {
 				return false;
 			}
 	});
+	
+	$(".pdmark-item-zan").click(function() {
+            if (!$(this).hasClass('active'))  {
+                var b = $(this);
+                var id = b.children("span").attr("value");
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('Vote/com_like')}",
+                    data: {'id': id, 'is_like': 2},
+                    async: false,
+                    success: function (data) {
+                        if (0 > data.flag.code) {
+                            myalert(data.flag.msg);
+                        }else{
+                            b.addClass('active');
+                            var a = b.children("span").text();
+                            b.children("span").text(parseInt(a) + 1)
+                        }
+                    }
+                });
+            }
+        })
 })
 </script>
 

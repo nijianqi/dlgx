@@ -116,7 +116,7 @@ class Vote extends Base
         $flag = $vote->del($id);
         return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
     }
-    //投票参赛人员
+     //投票参赛人员
     public function show()
     {
         $voteJoin = new VoteJoinModel();

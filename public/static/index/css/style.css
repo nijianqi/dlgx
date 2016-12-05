@@ -393,7 +393,18 @@
     color: #aaa;
     font-size: 1.1rem;
 }
+.show-more-wrap {
+  font-size: 1.4rem;
+  color: #999;
+  margin-left: .7rem; }
+ 
+ .pdmark-item-zan {
+   float: right;
+   font-size: 1.7rem;
+  margin-right: 1.6rem; }
 
+  .pdmark-item-zan.active {
+    color: #80d6c1; }
 .submit {
     display: block;
     width: 95%;

@@ -5,9 +5,11 @@ use think\Controller;
 use app\index\model\MemberModel;
 use app\index\model\VoteModel;
 use app\index\model\VoteCommentModel;
+use app\index\model\VoteComLikeModel;
 use app\index\model\VoteJoinModel;
 use app\index\model\VoteApplyModel;
 use app\index\model\VoteNumModel;
+use app\index\model\TopicTypeModel;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
 
@@ -160,6 +162,15 @@ class Vote extends Controller
             $voteComList[$key]['to_member_name'] = $to_member_info['member_name'];
             $voteComList[$key]['to_member_id'] = $to_member_info['id'];
             $voteComList[$key]['member_icon'] = $member_info['member_icon'];
+			$voteComLikeModel = new VoteComLikeModel();
+            $voteComLike_info = $voteComLikeModel->getInfoByWhere(array('comment_id'=>$val['id'],'member_id'=>session('memberId')));
+            if(!empty($voteComLike_info)){
+                $voteComList[$key]['is_comLike'] = $voteComLike_info['is_like'];
+            }else{
+                $voteComList[$key]['is_comLike'] = '1';
+            }
+            $voteComLike_Counts= $voteComLikeModel->getCounts(array('comment_id'=>$val['id'],'is_like'=>'2'));
+            $voteComList[$key]['topicComLike_Counts'] = $voteComLike_Counts;
         }
         if (empty($return)) {
             $return['code'] = 0;
@@ -205,6 +216,34 @@ class Vote extends Controller
 
     }
 
+	    public function com_like() //点赞评论
+    {
+        $memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        } else {
+            $commentId = input('param.id');
+            $is_like = input('param.is_like');
+            $voteCommentModel = new VoteCommentModel();
+            $commentInfo = $voteCommentModel->getInfoById($commentId);
+            if($commentInfo){
+                $voteComLikeModel = new VoteComLikeModel();
+                $voteLikeComList = $voteComLikeModel->getListByWhere(array('comment_id' => $commentId, 'member_id' => session('memberId')));
+                if(!empty($voteLikeComList)){
+                        $return['flag'] = $voteComLikeModel->updateLike(session('memberId'),$commentId,$is_like);
+                }else{
+                        $return['flag'] = $voteComLikeModel->insertLike(session('memberId'),$commentId,$is_like);
+                }
+            }else{
+                $return['flag']  = ['code' => -1, 'data' =>'', 'msg' => '点赞失败，话题评论不存在'];
+            }
+
+
+        }
+        return json($return);
+    }
+	
     public function apply() //我要报名
     {
         $voteId = input('param.vote_id');
@@ -250,13 +289,18 @@ class Vote extends Controller
                 ]);
             }
         }
+		$topicType = new TopicTypeModel();
+        $where = [];
+        $where['type_status'] = 1;
+        $topicTypeList = $topicType->getListByWhere($where);
         if (empty($return)) {
             $return['code'] = 0;
             $return['msg'] = '';
         }
         $this->assign([
             'return' => $return,
-            'voteId' => $voteId
+            'voteId' => $voteId,
+			'topicTypeList'=>$topicTypeList
         ]);
         return $this->fetch('/apply');
     }
