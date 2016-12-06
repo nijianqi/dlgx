@@ -111,8 +111,6 @@ class Vote extends Base
 		$voteJoin->delByWhere(array('vote_id'=>$id));
 		$voteComment = new VoteCommentModel();
 		$voteComment->delByWhere(array('vote_id'=>$id));
-		$message = new messageModel();
-		$message->delByWhere(array('vote_id'=>$id));
         $flag = $vote->del($id);
         return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
     }

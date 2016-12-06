@@ -310,7 +310,7 @@ class Vote extends Controller
         if (request()->isAjax()) {
             $voteId = input('param.vote_id');
 			if(empty(session('memberId'))) {
-             $return['code'] = -1;
+             $return['code'] = -2;
                 $return['msg'] = '投票失败,请先登录!';
                 return json($return);
              }

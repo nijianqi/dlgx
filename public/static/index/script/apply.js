@@ -5,6 +5,9 @@ $(function() {
 		$(".submit").attr("disabled", "disabled");
 		if (status === '1') {
 			myalert('报名成功,请等待审核!');
+			 $(".alert-operate").click(function () {
+                           location.href = "{:url('vote/vote')}";
+                        });
 		} else {
 			myalert(msg);
 		}
