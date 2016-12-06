@@ -350,8 +350,8 @@ class Club extends Controller
                 return json(['flag' => -2]);
             }
             $clubJoinModel = new ClubJoinModel();
-            $clubJoinList = $clubJoinModel->getListByWhere(array('club_id' => $clubId, 'member_id' => session('memberId')));
-            if(empty($clubJoinList) || ($clubJoinList[0]['verify_status'] == 3)) {
+            $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id' => session('memberId')));
+            if(empty($clubJoinInfo)) {
                 $params = [];
                 $params['club_id'] = $clubId;
                 $params['member_id'] = session('memberId');
@@ -359,7 +359,6 @@ class Club extends Controller
                 $return['flag'] = db('club_join')->insertGetId($params);
                 $messageModel = new MessageModel();
                 $messageModel->insertMessage(session('memberId'),$clubInfo['club_owner_id'],$member['member_name'].'成功加入你的社团',4);
-
             } else {
                 $return['flag'] = 0;
             }

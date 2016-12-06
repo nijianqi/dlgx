@@ -50,6 +50,20 @@
 <script src="__JS__/content.min.js?v=1.0.0"></script>
 <script>
     $(document).ready(function(){$(".contact-box").each(function(){animationHover(this,"pulse")})});
+	function del(id){
+        layer.confirm('确认删除此会员?', {icon: 3, title:'提示'}, function(index){
+            //do something
+            $.getJSON('./delcp', {'id' : id}, function(res){
+                if(res.code == 1){
+                    layer.alert('删除成功');
+                    initTable();
+                }else{
+                    layer.alert('删除失败');
+                }
+            });
+            layer.close(index);
+        })
+    }
 </script>
 </body>
 </html>

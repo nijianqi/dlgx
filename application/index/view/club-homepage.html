@@ -153,6 +153,8 @@
 								location.href = "{:url('member/edit')}";
 							}else if(data.flag == -2){
 								myalert("口令错误");
+							}else if(data.flag == 0){
+								myalert("只能加入一个社团!");
 							}else{
 								myalert("恭喜您！成功加入“{$club.club_name}");
 								setTimeout(function() {
