@@ -1,21 +1,4 @@
 $(function() {
-	var status = $(".info-mask").attr('data-status');
-	var msg = $(".info-mask").attr("data-msg");
-	if (status === '1' || status === '-1') {
-		$(".submit").attr("disabled", "disabled");
-		if (status === '1') {
-			myalert('报名成功,请等待审核!');
-			 $(".alert-operate").click(function () {
-                           location.href = "{:url('vote/vote')}";
-                        });
-		} else {
-			myalert(msg);
-		}
-		$(".info-mask").removeClass('none');
-		setTimeout(function() {
-			$(".info-mask").addClass('none');
-		}, 1500);
-	}
 var rate0 = 0,
  	rate1 = 0;
  	$(".dpicker-body0").scroll(function() {

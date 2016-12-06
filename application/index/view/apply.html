@@ -98,4 +98,26 @@
 </div>
 <script src="__PUBLIC__/script/min/mypop.min.js"></script>
 <script src="__PUBLIC__/script/min/apply.min.js"></script>
+<script>
+$(function () {
+    var status = $(".info-mask").attr('data-status');
+	var msg = $(".info-mask").attr("data-msg");
+	if (status === '1' || status === '-1') {
+		$(".submit").attr("disabled", "disabled");
+		if (status === '1') {
+			myalert('报名成功,请等待审核!');
+			 $(".alert-operate").click(function () {
+             var url = "{:url('Vote/index',['vote_id'=>$voteId])}";
+			 location.replace(url);
+                        });
+		} else {
+			myalert(msg);
+		}
+		$(".info-mask").removeClass('none');
+		setTimeout(function() {
+			$(".info-mask").addClass('none');
+		}, 1500);
+	}
+	});
+</script>
 {include file="common/footer" /}
