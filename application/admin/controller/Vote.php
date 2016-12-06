@@ -137,7 +137,10 @@ class Vote extends Base
     public function delcp()
     {
         $id = input('param.id');
+		$voteApply = new VoteApplyModel();
 		$voteJoin = new VoteJoinModel();
+		$voteJoinInfo = $voteJoin->getInfoById($id);
+        $voteApply->delByWhere(array('member_id'=>$voteJoinInfo['member_id'],'vote_id'=>$voteJoinInfo['vote_id']));
         $flag = $voteJoin->del($id);
         return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
     }
@@ -191,10 +194,16 @@ class Vote extends Base
                 unset($param['verify_idea']);
                 unset($param['apply_time']);
                 $param['join_time']= time();
-                $voteJoinCounts= $voteJoinModel->getCounts(array('vote_id' => $param['vote_id']));
-                if(!empty($voteJoinCounts)){
-                        $param['cp_id']= $voteJoinCounts+1;
-                }else{
+				$voteJoinList= $voteJoinModel->getListByWhere(array('vote_id' => $param['vote_id']),'','','','id asc');
+				$count =  $voteJoinModel->getCounts(array('vote_id' => $param['vote_id']));
+				if(!empty($voteJoinList)){
+					foreach($voteJoinList as $key => $vo){
+						if($key+1 == $count){
+						$cp_id = $vo['cp_id'];	
+						}
+				}
+				 $param['cp_id']= $cp_id+1;
+				}else{
                     $param['cp_id']= 1;
                 }
                 $voteJoinModel->insert($param, '');
