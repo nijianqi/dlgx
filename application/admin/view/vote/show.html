@@ -24,7 +24,9 @@
                             <div class="m-t-xs font-bold">{$vo.real_name}</div>
                         </div>
                     </div>
-                </a><div class="col-sm-8"><a href="#">
+                </a>
+				<button class="btn btn-warning btn-circle" type="button" onclick="javascript:del('{$vo.id}')"><i class="fa fa-times"></i></button>
+				<div class="col-sm-8"><a href="#">
                 <h4  style="text-align: center;"><strong>第{$key+1}名</strong></h4>
                 <h4><strong>{$vo.cp_id}号选手  共计{$vo.vote_num}票 </strong></h4>
                 <h4><strong> cp名称：{$vo.cp_name}</strong></h4>
@@ -48,15 +50,18 @@
 <script src="__JS__/jquery.min.js?v=2.1.4"></script>
 <script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
 <script src="__JS__/content.min.js?v=1.0.0"></script>
+<script src="__JS__/plugins/layer/laydate/laydate.js"></script>
+<script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="__JS__/plugins/layer/layer.min.js"></script>
 <script>
     $(document).ready(function(){$(".contact-box").each(function(){animationHover(this,"pulse")})});
 	function del(id){
-        layer.confirm('确认删除此会员?', {icon: 3, title:'提示'}, function(index){
+        layer.confirm('确认删除此选手?', {icon: 3, title:'提示'}, function(index){
             //do something
-            $.getJSON('./delcp', {'id' : id}, function(res){
+            $.getJSON('http://www.dlgx888.com/index.php/admin/vote/delcp', {'id' : id}, function(res){
                 if(res.code == 1){
                     layer.alert('删除成功');
-                    initTable();
+                    location.reload() 
                 }else{
                     layer.alert('删除失败');
                 }

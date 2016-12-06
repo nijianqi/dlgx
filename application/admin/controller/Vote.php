@@ -133,6 +133,14 @@ class Vote extends Base
         ]);
         return $this->fetch();
     }
+	//删除投票参赛人员
+    public function delcp()
+    {
+        $id = input('param.id');
+		$voteJoin = new VoteJoinModel();
+        $flag = $voteJoin->del($id);
+        return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
+    }
     //投票活动参赛审核列表
     public function apply()
     {
