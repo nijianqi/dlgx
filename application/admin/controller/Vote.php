@@ -156,7 +156,7 @@ class Vote extends Base
                 $where['cp_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $voteApply = new VoteApplyModel();
-            $selectResult = $voteApply->getListByWhere($where, $offset, $limit);
+            $selectResult = $voteApply->getListByWhere($where,'*', $offset, $limit);
             $status = config('apply_status');
             foreach ($selectResult as $key => $vo) {
                 $member = new MemberModel();

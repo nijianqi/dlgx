@@ -192,6 +192,9 @@ class Vote extends Controller
     public function comment() //评论
     {
         $memberModel = new MemberModel();
+		if (empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
         $member = $memberModel->getInfoById(session('memberId'));
         if (empty($member['member_tel'])) {
             $this->redirect('member/edit');
@@ -219,6 +222,9 @@ class Vote extends Controller
 	    public function com_like() //点赞评论
     {
         $memberModel = new MemberModel();
+		if (empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
         $member = $memberModel->getInfoById(session('memberId'));
         if(empty($member['member_tel'])) {
             $this->redirect('member/edit');
@@ -249,8 +255,13 @@ class Vote extends Controller
         $voteId = input('param.vote_id');
 		$VoteModel = new VoteModel();
 		$voteInfo = $VoteModel->getInfoById($voteId);
-		if (empty(session('memberId'))) {
+		$memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+        if (empty(session('memberId'))) {
             $this->redirect('index/index');
+        }
+        if (empty($member['member_tel'])) {
+            $this->redirect('member/edit');
         }
         if (request()->isPost()) {
             $param = input('param.');
@@ -313,6 +324,11 @@ class Vote extends Controller
              $return['code'] = -2;
                 $return['msg'] = '投票失败,请先登录!';
                 return json($return);
+             }
+			 $memberModel = new MemberModel();
+             $member = $memberModel->getInfoById(session('memberId'));
+             if (empty($member['member_tel'])) {
+               $this->redirect('member/edit');
              }
             $Vote = new VoteModel();
             $VoteNum = new VoteNumModel();
