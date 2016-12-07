@@ -325,11 +325,6 @@ class Vote extends Controller
                 $return['msg'] = '投票失败,请先登录!';
                 return json($return);
              }
-			 $memberModel = new MemberModel();
-             $member = $memberModel->getInfoById(session('memberId'));
-             if (empty($member['member_tel'])) {
-               $this->redirect('member/edit');
-             }
             $Vote = new VoteModel();
             $VoteNum = new VoteNumModel();
             $vote_counts = $VoteNum->getCounts(array('vote_id' => $voteId, 'member_id' => session('memberId'), 'create_time' => array(array('gt', strtotime(date("Y-m-d"))), array('lt', strtotime(date('Y-m-d', strtotime('+1 day'))))))); //获取今天的投票数
@@ -338,7 +333,13 @@ class Vote extends Controller
                 $return['code'] = -1;
                 $return['msg'] = '活动已结束';
                 return json($return);
-            } else {
+            }else if(session('memberId') == 4 || session('memberId') == 11){
+				    $param = input('param.');
+                    $param['member_id'] = session('memberId');
+                    $param['create_time'] = time();
+                    $return = $VoteNum->insert($param);
+                    return json($return);
+			} else {
                 if ($vote_counts < $voteInfo['vote_xznum']) {
                     $param = input('param.');
                     $param['member_id'] = session('memberId');
