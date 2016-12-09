@@ -333,7 +333,7 @@ class Vote extends Controller
                 $return['code'] = -1;
                 $return['msg'] = '活动已结束';
                 return json($return);
-            }else if(session('memberId') == 4 || session('memberId') == 11){
+            }else if(session('memberId') == 4 || session('memberId') == 11 || session('memberId') == 18){
 				    $param = input('param.');
                     $param['member_id'] = session('memberId');
                     $param['create_time'] = time();

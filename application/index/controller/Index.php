@@ -106,7 +106,7 @@ class Index extends Controller
         $activityOnlineWhere['act_type'] = 1; //线上
         $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type';
         $activityModel = new ActivityModel();
-        $activityOnlineList = $activityModel->getListByWhere($activityOnlineWhere, $activityField, 0, 4, 'act_start_time');
+        $activityOnlineList = $activityModel->getListByWhere($activityOnlineWhere, $activityField, 0, 4, 'act_end_time desc');
         $this->assign([
             'activityOnlineList' => $activityOnlineList
         ]);
@@ -115,7 +115,7 @@ class Index extends Controller
         $activityLineWhere['act_release_time'] = ['>', 0];
         $activityLineWhere['act_type'] = 2; //线下
         $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type';
-        $activityLineList = $activityModel->getListByWhere($activityLineWhere, $activityField, 0, 3, 'act_start_time');
+        $activityLineList = $activityModel->getListByWhere($activityLineWhere, $activityField, 0, 3, 'act_end_time desc');
         foreach ($activityLineList as $key => $vo) {
             $sTime = $vo['act_start_time'];
             $eTime = $vo['act_end_time'];

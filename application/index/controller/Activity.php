@@ -171,7 +171,7 @@ class Activity extends Controller
         $activityWhere['act_release_time'] = ['>', 0];
         $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type';
         $activityModel = new ActivityModel();
-        $activityList = $activityModel->getListByWhere($activityWhere, $activityField, 0,0,'act_start_time');
+        $activityList = $activityModel->getListByWhere($activityWhere, $activityField, 0,0,'act_end_time desc');
 
         foreach($activityList as $key => $vo){
             $stime = $vo['act_start_time'];
