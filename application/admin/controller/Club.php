@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\admin\model\ClubModel;
 use app\admin\model\ClubTypeModel;
+use app\admin\model\ClubRuleModel;
 use app\index\model\ClubAlbumModel;
 use app\index\model\ClubFollowModel;
 use app\index\model\ClubJoinModel;
@@ -173,7 +174,7 @@ class Club extends Base
                 $where['type_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $clubType = new ClubTypeModel();
-            $selectResult = $clubType->getListByWhere($where, $offset, $limit);
+            $selectResult = $clubType->getListByWhere($where, '*', $offset, $limit);
             $status = config('type_status');
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['type_status'] = $status[$vo['type_status']];
@@ -200,7 +201,7 @@ class Club extends Base
             return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
         }
         $this->assign([
-            'status' => config('notice_status')
+            'status' => config('type_status')
         ]);
         return $this->fetch('club/add_type');
     }
@@ -227,6 +228,74 @@ class Club extends Base
         $id = input('param.id');
         $clubType = new ClubTypeModel();
         $flag = $clubType->del($id);
+        return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
+    }
+    //社团经验规则
+    public function rule()
+    {
+        if (request()->isAjax()) {
+            $param = input('param.');
+            $limit = $param['pageSize'];
+            $offset = ($param['pageNumber'] - 1) * $limit;
+            $where = [];
+            if (isset($param['searchText']) && !empty($param['searchText'])) {
+                $where['rule_name'] = ['like', '%' . $param['searchText'] . '%'];
+            }
+            $clubRule = new ClubRuleModel();
+            $selectResult = $clubRule->getListByWhere($where,'*',$offset, $limit);
+            $status = config('rule_status');
+            foreach ($selectResult as $key => $vo) {
+                $selectResult[$key]['rule_status'] = $status[$vo['rule_status']];
+                $operate = [
+                    '编辑' => url('club/editRule', ['id' => $vo['id']]),
+                    '删除' => "javascript:del('" . $vo['id'] . "')"
+                ];
+                $selectResult[$key]['operate'] = showOperate($operate);
+            }
+            $return['total'] = $clubRule->getCounts($where);
+            $return['rows'] = $selectResult;
+            return json($return);
+        }
+        return $this->fetch('club/rule');
+    }
+    //添加社团经验规则
+    public function addRule()
+    {
+        if(request()->isPost()){
+            $param = input('param.');
+            $param = parseParams($param['data']);
+            $clubRule = new ClubRuleModel();
+            $flag = $clubRule->insert($param,'ClubRuleValidate');
+            return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
+        }
+        $this->assign([
+            'status' => config('rule_status')
+        ]);
+        return $this->fetch('club/add_rule');
+    }
+    //编辑社团经验规则
+    public function editRule()
+    {
+        $clubRule = new ClubRuleModel();
+        if (request()->isPost()) {
+            $param = input('post.');
+            $param = parseParams($param['data']);
+            $flag = $clubRule->edit($param);
+            return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
+        }
+        $id = input('param.id');
+        $this->assign([
+            'clubRule' => $clubRule->getInfoById($id),
+            'rule_status' => config('rule_status')
+        ]);
+        return $this->fetch('club/edit_rule');
+    }
+    //删除社团经验规则
+    public function delRule()
+    {
+        $id = input('param.id');
+        $clubRule = new ClubRuleModel();
+        $flag = $clubRule->del($id);
         return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
     }
 }

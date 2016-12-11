@@ -11,6 +11,7 @@ use app\index\model\ClubFollowModel;
 use app\index\model\ClubTypeModel;
 use app\index\model\ClubAlbumModel;
 use app\index\model\MessageModel;
+use app\admin\model\ClubRuleModel;
 use Qiniu\Auth;
 use Qiniu\Storage\BucketManager;
 class Club extends Controller
@@ -357,6 +358,11 @@ class Club extends Controller
                 $params['member_id'] = session('memberId');
                 $params['apply_time'] = time();
                 $return['flag'] = db('club_join')->insertGetId($params);
+                $clubRuleModel = new ClubRuleModel();
+                $where = [];
+                $where['rule_name'] = ['like', '%' . 加入社团 . '%'];
+                $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+                $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('id'=>$clubId));
                 $messageModel = new MessageModel();
                 $messageModel->insertMessage(session('memberId'),$clubInfo['club_owner_id'],$member['member_name'].'成功加入你的社团',4);
             } else {

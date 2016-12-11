@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编辑社团类型</title>
+    <title>编辑社团经验规则</title>
     <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
     <link href="__CSS__/animate.min.css" rel="stylesheet">
@@ -17,23 +17,35 @@
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>编辑社团类型</h5>
+                    <h5>编辑社团经验规则</h5>
                 </div>
                 <div class="ibox-content">
                     <form class="form-horizontal m-t" id="commentForm" method="post" onsubmit="return toVaild()">
-                        <input type="hidden" name="id" value="{$clubType.id}">
+                        <input type="hidden" name="id" value="{$clubRule.id}">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">社团类型名称：</label>
+                            <label class="col-sm-3 control-label">社团经验规则名称：</label>
                             <div class="input-group col-sm-4">
-                                <input id="type_name" type="text" class="form-control" name="type_name" required="" aria-required="true" value="{$clubType.type_name}">
+                                <input id="rule_name" type="text" class="form-control" name="rule_name" required="" aria-required="true" value="{$clubRule.rule_name}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">社团类型状态：</label>
+                            <label class="col-sm-3 control-label">社团经验值：</label>
                             <div class="input-group col-sm-4">
-                                {foreach name='type_status' item='vo' key='key'}
+                                <input id="rule_experience" type="text" class="form-control" name="rule_experience" required="" aria-required="true" value="{$clubRule.rule_experience}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">限制次数：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="rule_num" type="text" class="form-control" name="rule_num" required="" aria-required="true" value="{$clubRule.rule_num}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">社团经验规则状态：</label>
+                            <div class="input-group col-sm-4">
+                                {foreach name='rule_status' item='vo' key='key'}
                                 <div class="radio i-checks col-sm-4">
-                                    <label><input type="radio" value="{$key}" {if condition="$key == $clubType['type_status']"}checked{/if} name="type_status"><i></i>{$vo}</label>
+                                    <label><input type="radio" value="{$key}" {if condition="$key == $clubRule['rule_status']"}checked{/if} name="rule_status"><i></i>{$vo}</label>
                                 </div>
                                 {/foreach}
                             </div>
@@ -64,7 +76,7 @@
     //表单提交
     function toVaild(){
         var jz;
-        var url = "./editType";
+        var url = "./editRule";
         $.ajax({
             type:"POST",
             url:url,
@@ -82,6 +94,7 @@
                 layer.close(jz);
                 if(data.code == 1){
                     swal(data.msg, "", "success");
+                    window.location="./rule";
                 }else{
                     swal(data.msg, "", "error");
                 }
