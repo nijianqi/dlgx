@@ -5,7 +5,19 @@
 			<img src="{$club.club_icon}" alt="">
 			<h2>{$club.club_name}</h2>
 			<p>关注数 {$followCounts}</p>
-		</div>
+			<div id="homepage-rank">
+				<p><img src="__PUBLIC__/images/star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="50"></span>
+					</div>
+				</div>
+				<p>535/1000</p>
+				<div class="hrank-explain">
+					<img src="__PUBLIC__/images/mark_wen.png" alt="">
+					等级说明
+				</div>
+			</div>
 		</div>
 		{if $clubFollowInfo.is_follow == 2}
 		<a class="homepage-watch _watch"><span>已关注</span></a>
@@ -122,10 +134,12 @@
 		<img src="__PUBLIC__/images/tick.png" alt="">
 		<p></p>
 	</div>
-	<script src="__PUBLIC__/script/min/swipe.min.js"></script>
 	<script src="__PUBLIC__/script/min/mypop.min.js"></script>
 	<script>
 		$(function() {
+			var width = $(".rank-bar-score").attr('data-score');
+		    $(".rank-bar-score").css('width',width + "%");
+		    
 		    $(".homepage-watch").click(function() {
 		    	if($(this).hasClass("_watch")) {
 		    		return;
@@ -136,7 +150,7 @@
 		    		$(".trans-alert").addClass('none');
 		    	},1400)
 		    });
-
+		   
 		    $(".submit").click(function() {
 		    	myprompt("请输入加入口令",function(val) {
 		    			if(val === '') {
