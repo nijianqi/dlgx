@@ -334,7 +334,7 @@ class Activity extends Controller
             $flag = $activityApply->insert($param);
             $return['code'] = $flag['code'];
             $return['msg'] = $flag['msg'];
-            $this->assign([
+           $this->assign([
                 'return' => $return
             ]);
         }

@@ -10,6 +10,7 @@ use app\index\model\ActCommentModel;
 use app\admin\model\MessageModel;
 use app\admin\model\ClubModel;
 use app\admin\model\ClubJoinModel;
+use app\admin\model\ClubRuleModel;
 
 class Activity extends Base
 {
@@ -220,6 +221,15 @@ class Activity extends Base
                 $clubModel = new ClubModel();
                 $clubJoinModel = new ClubJoinModel();
                 $clubInfo = $clubModel->getInfoByWhere(array('club_owner_id'=>$activityInfo['act_from_id']));
+                $activityCounts = $activity->getCounts(array('club_owner_id'=>$activityInfo['act_from_id'],'act_create_time'=>array('lt',strtotime(date('Y-m-d')))));
+                $clubRuleModel = new ClubRuleModel();
+                $where = [];
+                $where['rule_name'] = ['like', '%' . 线下活动 . '%'];
+                $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+                if($activityCounts<= $clubRuleInfo['rule_num']){
+                    $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('id'=>$activityInfo['act_from_id']));
+
+                }
                 $clubJoinList = $clubJoinModel->getListByWhere(array('club_id'=>$clubInfo['id'],'verify_status'=>1));
                 foreach($clubJoinList as $key=>$vo){
                         $messageModel->insertMessage($activityInfo['act_from_id'],$vo['member_id'],'发布了活动'.$param['act_name'],'4');
