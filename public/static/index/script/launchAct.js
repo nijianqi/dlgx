@@ -21,10 +21,12 @@ function check() {
         var val = $("input[name='fund']").val().trim();
         if (!val) {
             alert("资金需求不能为空！");
+            $(".submit").removeAttr("disabled");
             return false;
         }
         if (isNaN(val)) {
             alert("请输入规范的数字！");
+            $(".submit").removeAttr("disabled");
             return false;
         }
     }
