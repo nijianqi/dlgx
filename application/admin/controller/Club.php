@@ -243,7 +243,7 @@ class Club extends Base
             }
             $clubRule = new ClubRuleModel();
             $selectResult = $clubRule->getListByWhere($where,'*',$offset, $limit);
-            $status = config('rule_status');
+            $status = config('type_status');
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['rule_status'] = $status[$vo['rule_status']];
                 $operate = [
@@ -269,7 +269,7 @@ class Club extends Base
             return json(['code' => $flag['code'], 'data' => $flag['data'], 'msg' => $flag['msg']]);
         }
         $this->assign([
-            'status' => config('rule_status')
+            'status' => config('type_status')
         ]);
         return $this->fetch('club/add_rule');
     }
@@ -286,7 +286,7 @@ class Club extends Base
         $id = input('param.id');
         $this->assign([
             'clubRule' => $clubRule->getInfoById($id),
-            'rule_status' => config('rule_status')
+            'rule_status' => config('type_status')
         ]);
         return $this->fetch('club/edit_rule');
     }

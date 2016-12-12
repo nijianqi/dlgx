@@ -11,6 +11,7 @@ use app\admin\model\MessageModel;
 use app\admin\model\ClubModel;
 use app\admin\model\ClubJoinModel;
 use app\admin\model\ClubRuleModel;
+use app\index\model\ClubExperienceModel;
 
 class Activity extends Base
 {
@@ -220,15 +221,24 @@ class Activity extends Base
 
                 $clubModel = new ClubModel();
                 $clubJoinModel = new ClubJoinModel();
-                $clubInfo = $clubModel->getInfoByWhere(array('club_owner_id'=>$activityInfo['act_from_id']));
-                $activityCounts = $activity->getCounts(array('club_owner_id'=>$activityInfo['act_from_id'],'act_create_time'=>array('lt',strtotime(date('Y-m-d')))));
                 $clubRuleModel = new ClubRuleModel();
+                $clubExperienceModel = new ClubExperienceModel();
+                $clubInfo = $clubModel->getInfoByWhere(array('club_owner_id'=>$activityInfo['act_from_id']));
+                $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%线下活动%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
                 $where = [];
-                $where['rule_name'] = ['like', '%' . 线下活动 . '%'];
+                $where['rule_name'] = ['like', '%线下活动%'];
+                $where['rule_status'] = 1;
                 $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
-                if($activityCounts<= $clubRuleInfo['rule_num']){
-                    $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('id'=>$activityInfo['act_from_id']));
-
+                if(!empty($clubRuleInfo)){
+                    if($Counts<= $clubRuleInfo['rule_num']){
+                        $arr = [];
+                        $arr['member_id'] = $activityInfo['act_from_id'];
+                        $arr['club_id'] = $clubInfo['id'];
+                        $arr['content'] = '线下活动+'.$clubRuleInfo['rule_experience'].'经验值';
+                        $arr['create_time'] = time();
+                        $clubExperienceModel->insert($arr);
+                        $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('club_owner_id'=>$activityInfo['act_from_id']));
+                    }
                 }
                 $clubJoinList = $clubJoinModel->getListByWhere(array('club_id'=>$clubInfo['id'],'verify_status'=>1));
                 foreach($clubJoinList as $key=>$vo){

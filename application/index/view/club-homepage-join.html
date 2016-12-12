@@ -6,13 +6,39 @@
 			<h2>{$club.club_name}</h2>
 			<p>关注数 {$followCounts}</p>
 			<div id="homepage-rank">
+				{if $club.club_experience < 1000}
+				<p></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/10}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/1000</p>
+				{elseif $club.club_experience >= 1000 && $club.club_experience < 3500 }
 				<p><img src="__PUBLIC__/images/star.png" alt=""></p>
 				<div class="rank-bar-wrap">
 					<div class="rank-bar">
-						<span class="rank-bar-score" data-score="50"></span>
+						<span class="rank-bar-score" data-score="{$club.club_experience/35}"></span>
 					</div>
 				</div>
-				<p>535/1000</p>
+				<p>{$club.club_experience}/3500</p>
+				{elseif $club.club_experience >= 3500 && $club.club_experience < 12000}
+				<p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/120}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/12000</p>
+				{elseif $club.club_experience >= 12000}
+				<p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/10000}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/100000</p>
+				{/if}
 				<div class="hrank-explain">
 					<img src="__PUBLIC__/images/mark_wen.png" alt="">
 					等级说明

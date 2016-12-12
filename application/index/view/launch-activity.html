@@ -80,19 +80,10 @@
                 </li>
             </ul>
         </div>
-        <div class="ccreate-detail">
-            <ul>
-                <li>
-                    <span>赞助需求</span>
-                    <div class="cdinput-wrap">
-                        <textarea name="act_sponsor" placeholder="请输入详细赞助需求"></textarea>
-                    </div>
-                </li>
-            </ul>
-        </div>
         <p class="rank-top"><i class="fa fa-question-circle"></i>社团赞助等级规则</p>
         <div class="ccreate-detail">
-            <p id="rank-head">当前社团等级为<img src="__PUBLIC__/images/star.png" alt=""><span>申请赞助</span><input type="checkbox"></p>
+            <p id="rank-head">当前社团等级为{if $clubInfo.club_experience > 1000 }<img src="__PUBLIC__/images/star.png" alt="">{elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 }<img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt="">{elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }<img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt="">{/if}
+                <span>申请赞助</span><input type="checkbox" name="sponsor" value="0"></p>
             <div id="rank-body">
                 <div class="rank-item">
                     <span class="fl">资金需求</span>
@@ -103,7 +94,7 @@
                 <div class="rank-item">
                     <span class="fl">物资需求</span>
                     <div class="rank-input-wrap">
-                        <textarea name="materials" cols="30" rows="10" placeholder="请输入需要的物资，如不需要则无需填写" disabled></textarea>
+                        <textarea name="sponsor" cols="30" rows="10" placeholder="请输入需要的物资，如不需要则无需填写" disabled></textarea>
                     </div>
                 </div>
             </div>
@@ -115,7 +106,7 @@
                     <p style="font-size:1.1rem">选择此项请保持电话畅通，等待工作人员与你联系</p>
                 </div>
                 <div class="fr">
-                    <input type="checkbox" name="special-need">
+                    <input type="checkbox" name="need" id="need" value="0">
                 </div>
             </div>
         </div>

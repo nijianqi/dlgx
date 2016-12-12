@@ -4,6 +4,7 @@ namespace app\index\controller;
 use think\Controller;
 use app\index\model\MemberModel;
 use app\index\model\ActivityModel;
+use app\index\model\ClubModel;
 use app\index\model\ActCommentModel;
 use app\index\model\ActJoinModel;
 use app\index\model\ActivityApplyModel;
@@ -297,7 +298,7 @@ class Activity extends Controller
                 foreach($album as $key=>$val){
                     $album_img = $activityAlbumModel->insertAlbum($val);
                     $activityAlbumModel->insertGetId(array('act_id'=>0,'act_name'=>$param['act_name'],'album_img'=>$album_img.'?imageMogr2/size-limit/300k','create_time'=>time()));
-                    $param['act_detail_img'] = $album_img;
+                    $param['act_detail_img'] = $album_img.'?imageMogr2/size-limit/300k';
 				}
             }
 			if(empty($param['act_detail_img'])){
@@ -330,6 +331,18 @@ class Activity extends Controller
             }
             $param['club_owner_id'] = session('memberId');
 			$param['verify_idea'] = '';
+            if(!empty($param['need'])&& $param['need']== 1){
+                $param['act_sponsor'] = '有特殊需求。';
+            }
+            if(!empty($param['fund'])&&!empty($param['sponsor'])){
+                if(!empty($param['act_sponsor'])){
+                    $param['act_sponsor'] = $param['act_sponsor'].'资金需求为'.$param['fund'].'元,物资需求为'.$param['sponsor'];
+                }else{
+                    $param['act_sponsor'] = '资金需求为'.$param['fund'].'元,物资需求为'.$param['sponsor'];
+                }
+
+            }
+            unset($param['fund']);unset($param['sponsor']);unset($param['need']);
             $activityApply = new ActivityApplyModel();
             $flag = $activityApply->insert($param);
             $return['code'] = $flag['code'];
@@ -342,11 +355,17 @@ class Activity extends Controller
             $return['code'] = 0;
             $return['msg'] = '';
         }
+        $clubModel = new ClubModel();
+        $clubInfo = $clubModel->getInfoByWhere(array('club_owner_id'=> session('memberId')));
+        if(empty($clubInfo)){
+            $this->redirect('index/show');
+        }
         $sTime = date('Y 年 m 月 d 日', time());
         $eTime = date('Y 年 m 月 d 日', strtotime('+1 day'));
         $this->assign([
             'act_start_time' => $sTime,
             'act_end_time' => $eTime,
+            'clubInfo' => $clubInfo,
             'return' => $return
         ]);
         return $this->fetch('/launch-activity');

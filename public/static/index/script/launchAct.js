@@ -37,10 +37,13 @@ $(function() {
         $(".submit").attr("disabled", "disabled");
         myalert(msg);
         $(".alert-operate").click(function() {
-            var url = "actlist";
+            var url = "actList";
             location.replace(url);
         });
     }
+    $("#need").click(function() {
+        $("#need").attr('value',1);
+    });
     var t = 0,
         i = 0,
         a = 0,

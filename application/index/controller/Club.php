@@ -12,6 +12,7 @@ use app\index\model\ClubTypeModel;
 use app\index\model\ClubAlbumModel;
 use app\index\model\MessageModel;
 use app\admin\model\ClubRuleModel;
+use app\index\model\ClubExperienceModel;
 use Qiniu\Auth;
 use Qiniu\Storage\BucketManager;
 class Club extends Controller
@@ -359,10 +360,23 @@ class Club extends Controller
                 $params['apply_time'] = time();
                 $return['flag'] = db('club_join')->insertGetId($params);
                 $clubRuleModel = new ClubRuleModel();
+                $clubExperienceModel = new ClubExperienceModel();
                 $where = [];
-                $where['rule_name'] = ['like', '%' . 加入社团 . '%'];
+                $where['rule_name'] = ['like', '%加入社团%'];
+                $where['rule_status'] = 1;
                 $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
-                $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('id'=>$clubId));
+                if(!empty($clubRuleInfo)){
+                    $arr = [];
+                    $arr['member_id'] = session('memberId');
+                    $arr['club_id'] = $clubId;
+                    $arr['content'] = '加入社团+'.$clubRuleInfo['rule_experience'].'经验值';
+                    $arr['create_time'] = time();
+                    $clubExperienceModel->insert($arr);
+                    $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%加入社团%']));
+                    if($Counts <1 ){
+                        $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('id'=>$clubId));
+                    }
+                }
                 $messageModel = new MessageModel();
                 $messageModel->insertMessage(session('memberId'),$clubInfo['club_owner_id'],$member['member_name'].'成功加入你的社团',4);
             } else {
