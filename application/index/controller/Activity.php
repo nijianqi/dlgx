@@ -341,7 +341,7 @@ class Activity extends Controller
                     $param['act_sponsor'] = '资金需求为'.$param['fund'].'元,物资需求为'.$param['sponsor'];
                 }
 
-            }else if(empty($param['sponsor'])){
+            }else if(!empty($param['fund'])&&empty($param['sponsor'])){
                 if(!empty($param['act_sponsor'])){
                     $param['act_sponsor'] = $param['act_sponsor'].'资金需求为'.$param['fund'].'元';
                 }else{
