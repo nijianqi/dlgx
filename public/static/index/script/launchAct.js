@@ -20,17 +20,18 @@ function check() {
     if ($("#rank-head input[type=checkbox]").prop("checked")) {
         var val = $("input[name='fund']").val().trim();
         if (!val) {
-            alert("资金需求不能为空！");
+            myalert("资金需求不能为空！");
             $(".submit").removeAttr("disabled");
             return false;
         }
         if (isNaN(val)) {
-            alert("请输入规范的数字！");
+            myalert("请输入规范的数字！");
             $(".submit").removeAttr("disabled");
             return false;
         }
         if (+val > +$("input[name='fund']").attr('data-fund')) {
-            alert("资金申请超过当前等级最高申请，如需举办大型活动，请选择大型活动申请")
+            myalert("资金申请超过当前等级最高申请，如需举办大型活动，请选择大型活动申请");
+            $(".submit").removeAttr("disabled");
             return false;
         }
     }
