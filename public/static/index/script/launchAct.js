@@ -29,6 +29,10 @@ function check() {
             $(".submit").removeAttr("disabled");
             return false;
         }
+        if (+val > +$("input[name='fund']").attr('data-fund')) {
+            alert("资金申请超过当前等级最高申请，如需举办大型活动，请选择大型活动申请")
+            return false;
+        }
     }
     return $("input[name='act_name']").val().trim() ? $("input[name='act_address']").val().trim() ? $("textarea[name='act_intro']").val().trim() ? "未设置" === $("input[name='act_start_time']").val().trim() ? (alert("开始时间不能为空！"), $(".submit").removeAttr("disabled"), !1) : "未设置" !== $("input[name='act_end_time']").val().trim() || (alert("结束时间不能为空！"), $(".submit").removeAttr("disabled"), !1) : (alert("活动介绍不能为空！"), $(".submit").removeAttr("disabled"), !1) : (alert("活动地点不能为空！"), $(".submit").removeAttr("disabled"), !1) : (alert("活动名称不能为空！"), $(".submit").removeAttr("disabled"), !1)
 }
