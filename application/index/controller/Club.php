@@ -194,7 +194,7 @@ class Club extends Controller
         $member = $memberModel->getInfoById($club['club_owner_id']);
 
         $clubJoinModel = new ClubJoinModel();
-        $memberList = $clubJoinModel->getJoinMember(array('club_id' => $clubId));
+        $memberList = $clubJoinModel->getJoinMember(array('club_id' => $clubId),'0','5');
         $counts = $clubJoinModel->getCounts(array('club_id' => $clubId));
 
         $activityModel = new ActivityModel();
@@ -225,6 +225,8 @@ class Club extends Controller
         $clubFollowModel = new ClubFollowModel();
         $clubFollowInfo = $clubFollowModel->getInfoByWhere(array('club_id' => $clubId, 'member_id' => session('memberId')));
         $followCounts = $clubFollowModel->getCounts(array('club_id' => $clubId,'is_follow' => '2'));
+        $clubExperienceModel = new ClubExperienceModel();
+        $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%社团签到%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
 
         $clubAlbumModel = new ClubAlbumModel();
         $clubAlbumList = $clubAlbumModel->getListByWhere(array('club_id'=>$clubId),'','','3');
@@ -237,7 +239,8 @@ class Club extends Controller
             'activityList' =>$activityList,
             'clubFollowInfo' => $clubFollowInfo,
             'followCounts' => $followCounts,
-            'clubAlbumList'=>$clubAlbumList
+            'clubAlbumList'=>$clubAlbumList,
+            'Counts'=>$Counts
         ]);
 
         return $this->fetch('/club-homepage-join');

@@ -86,13 +86,9 @@
 
         <div class="ccreate-detail">
             <p id="rank-head">当前社团等级为
-                {if $clubInfo.club_experience > 1000 }
-                <img src="__PUBLIC__/images/star.png" alt="">
-                {elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 }
-                <img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt="">
-                {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }
-                <img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img
-                        src="__PUBLIC__/images/star.png" alt="">{/if}
+                {if $clubInfo.club_experience < 1000 }LV0
+                {elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 }LV1
+                {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }Lv2{/if}
                 <span>申请赞助</span><input type="checkbox" name="sponsor" value="0"></p>
 
             <div id="rank-body">
