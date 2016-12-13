@@ -88,7 +88,8 @@
             <p id="rank-head">当前社团等级为
                 {if $clubInfo.club_experience < 1000 }LV0
                 {elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 }LV1
-                {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }Lv2{/if}
+                {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }Lv2
+                {elseif $clubInfo.club_experience > 12000 }Lv3{/if}
                 <span>申请赞助</span><input type="checkbox" name="sponsor" value="0"></p>
 
             <div id="rank-body">
@@ -99,7 +100,8 @@
                         <input type="text" data-fund="
                         {if $clubInfo.club_experience <1000 }300
                         {elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 } 500
-                        {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }800{/if}"
+                        {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }800
+                        {elseif $clubInfo.club_experience > 12000 }800{/if}"
                                name="fund" disabled>元
                     </div>
                 </div>
