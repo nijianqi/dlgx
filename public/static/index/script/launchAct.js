@@ -49,7 +49,7 @@ $(function() {
         });
     }
     $("#need").click(function() {
-        $("#need").attr('value',1);
+        $("#need").attr('value', 1);
     });
     var t = 0,
         i = 0,
@@ -111,5 +111,6 @@ $(function() {
             $(".rank-input-wrap input").val("").prop('disabled', true);
             $(".rank-input-wrap textarea").val("").prop('disabled', true);
         }
-    })
+    });
+
 });

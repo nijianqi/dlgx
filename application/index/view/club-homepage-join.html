@@ -45,6 +45,18 @@
 				</div>
 			</div>
 		</div>
+		{if $clubFollowInfo.is_follow == 2}
+		<a class="homepage-watch _watch"><span>已关注</span></a>
+		{else/}
+		<a class="homepage-watch" onclick="follow({$club.id},2)"><i class="fa fa-plus"></i><span>关注</span></a>
+		{/if}
+		{if !empty($isJoin)}
+		{if $Counts == 1 }
+		<a class="homepage-sign _sign"><span>已签到</span></a>
+		{else/}
+		<a class="homepage-sign"><i class="fa fa-plus"></i><span>签到</span></a>
+		{/if}
+		{/if}
 	</div>
 	
 	<div class="adetail-wrap">
@@ -165,6 +177,39 @@
 $(function() {
 	var width = $(".rank-bar-score").attr('data-score');
     $(".rank-bar-score").css('width',width + "%");
+
+    $(".homepage-watch").click(function () {
+        if ($(this).hasClass("_watch")) {
+            return;
+        }
+        $(this).addClass('_watch').find('.fa').addClass('none').next('span').text('已关注');
+        $(".trans-alert p").text('关注成功').parent().removeClass('none');
+        setTimeout(function () {
+            $(".trans-alert").addClass('none');
+        }, 1400)
+    });
+    $(".homepage-sign").click(function () {
+        if ($(this).hasClass("_sign")) {
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "{:url('club/past')}",
+            data: {'id': $('#club-id').val()},
+            async: false,
+            success: function (data) {
+                if (0 > data.flag) {
+                    myalert(data.msg)
+                } else {
+                    $(".homepage-sign").addClass('_sign').find('.fa').addClass('none').next('span').text('已签到');
+                    $(".trans-alert p").text('签到成功').parent().removeClass('none');
+                    setTimeout(function () {
+                        $(".trans-alert").addClass('none');
+                    }, 1400)
+                }
+            }
+        });
+    });
 })
 </script>
 {include file="common/footer" /}
