@@ -1,5 +1,6 @@
 {include file="common/header" title="社团主页" keywords="社团主页" description="" /}
     {if $status ==1 }
+<input id="club-id" type="hidden" value="{$club.id}">
 	<div id="homepage-top">
 		<div id="homepage-intro">
 			<img src="{$club.club_icon}" alt="">
@@ -7,7 +8,7 @@
 			<p>关注数 {$followCounts}</p>
 			<div id="homepage-rank">
 				{if $club.club_experience < 1000}
-				<p></p>
+				<p><img src="__PUBLIC__/images/yellow-star.png" alt=""></p>
 				<div class="rank-bar-wrap">
 					<div class="rank-bar">
 						<span class="rank-bar-score" data-score="{$club.club_experience/10}"></span>
@@ -50,12 +51,10 @@
 		{else/}
 		<a class="homepage-watch" onclick="follow({$club.id},2)"><i class="fa fa-plus"></i><span>关注</span></a>
 		{/if}
-		{if !empty($isJoin)}
 		{if $Counts == 1 }
 		<a class="homepage-sign _sign"><span>已签到</span></a>
 		{else/}
 		<a class="homepage-sign"><i class="fa fa-plus"></i><span>签到</span></a>
-		{/if}
 		{/if}
 	</div>
 	
@@ -170,6 +169,15 @@
 			<button class="submit">发起活动</button>
 		</a>
 	</div>
+<div id="vadetail-pop" class="center none">
+	<div id="vadetail-pop-body">
+		LV0------LV1   需要0/1000经验      <br>
+		LV1------LV2   需要1000/3500经验   <br>
+		LV2------LV3   需要3500/12000经验  <br>
+	</div>
+	<a>关闭</a>
+</div>
+
 {else/}
 <p>该社团已被管理员禁用或你不是该社团的管理员</p>
 {/if}
@@ -210,6 +218,10 @@ $(function() {
             }
         });
     });
+	$(".hrank-explain").click(function () {
+		$("#vadetail-pop").removeClass("none");
+	});
+
 })
 </script>
 {include file="common/footer" /}
