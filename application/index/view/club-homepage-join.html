@@ -1,11 +1,61 @@
 {include file="common/header" title="社团主页" keywords="社团主页" description="" /}
     {if $status ==1 }
+<input id="club-id" type="hidden" value="{$club.id}">
 	<div id="homepage-top">
 		<div id="homepage-intro">
 			<img src="{$club.club_icon}" alt="">
 			<h2>{$club.club_name}</h2>
 			<p>关注数 {$followCounts}</p>
+			<div id="homepage-rank">
+				{if $club.club_experience < 1000}
+				<p><img src="__PUBLIC__/images/yellow-star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/10}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/1000</p>
+				{elseif $club.club_experience >= 1000 && $club.club_experience < 3500 }
+				<p><img src="__PUBLIC__/images/star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/35}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/3500</p>
+				{elseif $club.club_experience >= 3500 && $club.club_experience < 12000}
+				<p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/120}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/12000</p>
+				{elseif $club.club_experience >= 12000}
+				<p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+				<div class="rank-bar-wrap">
+					<div class="rank-bar">
+						<span class="rank-bar-score" data-score="{$club.club_experience/10000}"></span>
+					</div>
+				</div>
+				<p>{$club.club_experience}/100000</p>
+				{/if}
+				<div class="hrank-explain">
+					<img src="__PUBLIC__/images/mark_wen.png" alt="">
+					等级说明
+				</div>
+			</div>
 		</div>
+		{if $clubFollowInfo.is_follow == 2}
+		<a class="homepage-watch _watch"><span>已关注</span></a>
+		{else/}
+		<a class="homepage-watch" onclick="follow({$club.id},2)"><i class="fa fa-plus"></i><span>关注</span></a>
+		{/if}
+		{if $Counts == 1 }
+		<a class="homepage-sign _sign"><span>已签到</span></a>
+		{else/}
+		<a class="homepage-sign"><i class="fa fa-plus"></i><span>签到</span></a>
+		{/if}
 	</div>
 	
 	<div class="adetail-wrap">
@@ -119,8 +169,59 @@
 			<button class="submit">发起活动</button>
 		</a>
 	</div>
+<div id="vadetail-pop" class="center none">
+	<div id="vadetail-pop-body">
+		LV0------LV1   需要0/1000经验      <br>
+		LV1------LV2   需要1000/3500经验   <br>
+		LV2------LV3   需要3500/12000经验  <br>
+	</div>
+	<a>关闭</a>
+</div>
+
 {else/}
 <p>该社团已被管理员禁用或你不是该社团的管理员</p>
 {/if}
-<script src="__PUBLIC__/script/min/swipe.min.js"></script>
+<script>
+$(function() {
+	var width = $(".rank-bar-score").attr('data-score');
+    $(".rank-bar-score").css('width',width + "%");
+
+    $(".homepage-watch").click(function () {
+        if ($(this).hasClass("_watch")) {
+            return;
+        }
+        $(this).addClass('_watch').find('.fa').addClass('none').next('span').text('已关注');
+        $(".trans-alert p").text('关注成功').parent().removeClass('none');
+        setTimeout(function () {
+            $(".trans-alert").addClass('none');
+        }, 1400)
+    });
+    $(".homepage-sign").click(function () {
+        if ($(this).hasClass("_sign")) {
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "{:url('club/past')}",
+            data: {'id': $('#club-id').val()},
+            async: false,
+            success: function (data) {
+                if (0 > data.flag) {
+                    myalert(data.msg)
+                } else {
+                    $(".homepage-sign").addClass('_sign').find('.fa').addClass('none').next('span').text('已签到');
+                    $(".trans-alert p").text('签到成功').parent().removeClass('none');
+                    setTimeout(function () {
+                        $(".trans-alert").addClass('none');
+                    }, 1400)
+                }
+            }
+        });
+    });
+	$(".hrank-explain").click(function () {
+		$("#vadetail-pop").removeClass("none");
+	});
+
+})
+</script>
 {include file="common/footer" /}

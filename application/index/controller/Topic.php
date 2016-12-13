@@ -4,6 +4,10 @@ namespace app\index\controller;
 use think\Controller;
 use app\index\model\MemberModel;
 use app\index\model\TopicModel;
+use app\index\model\ClubModel;
+use app\admin\model\ClubRuleModel;
+use app\admin\model\ClubJoinModel;
+use app\index\model\ClubExperienceModel;
 use app\index\model\TopicCollectModel;
 use app\index\model\TopicCommentModel;
 use app\index\model\TopicComLikeModel;
@@ -291,6 +295,32 @@ class Topic extends Controller
                     $commentId = 0;
                 }
                 $return = $topicCommentModel->insertComment($topicId,$comment,$commentId);
+                $clubModel = new ClubModel();
+                $clubJoinModel = new ClubJoinModel();
+                $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id'=>session('memberId')));
+                $clubInfo = $clubModel->getInfoByWhere(array('id'=>$clubJoinInfo['club_id']));
+                if(!empty($clubInfo)){
+                    $clubRuleModel = new ClubRuleModel();
+                    $clubExperienceModel = new ClubExperienceModel();
+                    $where = [];
+                    $where['rule_name'] = ['like', '%评论话题%'];
+                    $where['rule_status'] = 1;
+                    $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+                    if(!empty($clubRuleInfo)){
+                        $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%评论话题%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
+                        if($Counts <= $clubRuleInfo['rule_num']){
+                            $arr = [];
+                            $arr['member_id'] = session('memberId');
+                            $arr['club_id'] = $clubInfo['id'];
+                            $arr['content'] = '评论话题+'.$clubRuleInfo['rule_experience'].'经验值';
+                            $arr['create_time'] = time();
+                            $clubExperienceModel->insert($arr);
+                            $club_experience = intval($clubInfo['club_experience'])+intval($clubRuleInfo['rule_experience']);
+                            $clubModel->updateByWhere(array('club_experience'=>$club_experience),'',array('id'=>$clubInfo['id']));
+                        }
+                    }
+
+                }
                 if(request()->file()){
                     $album = request()->file('file');
                     $topComAlbumModel = new TopComAlbumModel();
@@ -413,7 +443,32 @@ class Topic extends Controller
            $topicCollectModel = new TopicCollectModel();
            $topicCollectModel->insert(array('topic_id'=>$topic_id,'member_id'=>session('memberId'),'is_collect'=>2,'apply_time'=>time()));
            $flag = $topicLikeModel->insert(array('topic_id'=>$topic_id,'member_id'=>session('memberId'),'is_like'=>2,'apply_time'=>time()));
+           $clubModel = new ClubModel();
+           $clubJoinModel = new ClubJoinModel();
+           $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id'=>session('memberId')));
+           $clubInfo = $clubModel->getInfoByWhere(array('id'=>$clubJoinInfo['club_id']));
+           if(!empty($clubInfo)){
+               $clubRuleModel = new ClubRuleModel();
+               $clubExperienceModel = new ClubExperienceModel();
+               $where = [];
+               $where['rule_name'] = ['like', '%发布话题%'];
+               $where['rule_status'] = 1;
+               $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+               if(!empty($clubRuleInfo)){
+                   $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%发布话题%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
+                   if($Counts <= $clubRuleInfo['rule_num']){
+                       $arr = [];
+                       $arr['member_id'] = session('memberId');
+                       $arr['club_id'] = $clubInfo['id'];
+                       $arr['content'] = '发布话题+'.$clubRuleInfo['rule_experience'].'经验值';
+                       $arr['create_time'] = time();
+                       $clubExperienceModel->insert($arr);
+                       $club_experience = intval($clubInfo['club_experience'])+intval($clubRuleInfo['rule_experience']);
+                       $clubModel->updateByWhere(array('club_experience'=>$club_experience),'',array('id'=>$clubInfo['id']));
+                   }
+               }
 
+           }
            $return['code'] = $flag['code'];
            $return['msg'] = $flag['msg'];
            $this->assign([

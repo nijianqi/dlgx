@@ -82,17 +82,51 @@
                 </li>
             </ul>
         </div>
-        <div class="ccreate-detail">
-            <ul>
-                <li>
-                    <span>赞助需求</span>
-                    <div class="cdinput-wrap">
-                        <textarea name="act_sponsor" placeholder="请输入详细赞助需求"></textarea>
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <p class="rank-top"><i class="fa fa-question-circle"></i>社团赞助等级规则</p>
 
+        <div class="ccreate-detail">
+            <p id="rank-head">当前社团等级为
+                {if $clubInfo.club_experience < 1000 }LV0
+                {elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 }LV1
+                {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }Lv2
+                {elseif $clubInfo.club_experience > 12000 }Lv3{/if}
+                <span>申请赞助</span><input type="checkbox" name="sponsor" value="0"></p>
+
+            <div id="rank-body">
+                <div class="rank-item">
+                    <span class="fl">资金需求</span>
+
+                    <div class="rank-input-wrap">
+                        <input type="text" data-fund="
+                        {if $clubInfo.club_experience <1000 }300
+                        {elseif $clubInfo.club_experience > 1000 &&$clubInfo.club_experience < 3500 } 500
+                        {elseif $clubInfo.club_experience > 3500 &&$clubInfo.club_experience < 12000 }800
+                        {elseif $clubInfo.club_experience > 12000 }800{/if}"
+                               name="fund" disabled>元
+                    </div>
+                </div>
+                <div class="rank-item">
+                    <span class="fl">物资需求</span>
+
+                    <div class="rank-input-wrap">
+                        <textarea name="sponsor" cols="30" rows="10" placeholder="请输入需要的物资，如不需要则无需填写"
+                                  disabled></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ccreate-detail">
+            <div id="special-need" class="clearfix">
+                <div class="fl">
+                    <p>我要举办大型活动-有特殊需求</p>
+
+                    <p style="font-size:1.1rem">选择此项请保持电话畅通，等待工作人员与你联系</p>
+                </div>
+                <div class="fr">
+                    <input type="checkbox" name="need" id="need" value="0">
+                </div>
+            </div>
+        </div>
         <button class="submit">立即发起</button>
     </form>
 </div>
@@ -166,8 +200,27 @@
         </ul>
     </div>
     <div class="dpicker-info">日</div>
+    <div id="vadetail-pop" class="center none" style="top:-330%;">
+        <div id="vadetail-pop-body">
+            LV0   获得大乐个学0-300元以内现金或物料赞助。     <br>
+            LV1   获得大乐个学0-500元以内现金或物料赞助。   <br>
+            LV2   获得大乐个学0-800元以内现金或物料赞助。 <br>
+            LV3   获得大乐个学0-800元以内现金或物料赞助。 <br>
+        </div>
+        <a>关闭</a>
+    </div>
 </div>
 <div class="info-mask center none" data-status="{$return.code}" data-msg="{$return.msg}"></div>
 <script src="__PUBLIC__/script/min/mypop.min.js"></script>
 <script src="__PUBLIC__/script/min/launchAct.min.js"></script>
+<script>
+$(function() {
+    $(".rank-top").click(function() {
+        $("#vadetail-pop").removeClass("none");
+    })
+    $("#vadetail-pop a").click(function() {
+        $("#vadetail-pop").addClass("none");
+    });
+})
+</script>
 {include file="common/footer" /}

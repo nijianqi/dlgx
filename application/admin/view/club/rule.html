@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活动审核列表</title>
+    <title>社团经验规则列表</title>
     <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
     <link href="__CSS__/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
@@ -15,15 +15,18 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>活动审核列表</h5>
+            <h5>社团经验规则列表</h5>
         </div>
         <div class="ibox-content">
+            <div class="form-group clearfix col-sm-1">
+                <a href="./addRule"><button class="btn btn-outline btn-primary" type="button">添加社团经验规则</button></a>
+            </div>
             <!--搜索框开始-->
             <form id='commentForm' role="form" method="post" class="form-inline">
                 <div class="content clearfix m-b">
                     <div class="form-group">
-                        <label>活动名称：</label>
-                        <input type="text" class="form-control" id="act_name" name="act_name">
+                        <label>社团经验规则名称：</label>
+                        <input type="text" class="form-control" id="rule_name" name="rule_name">
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="button" id="search"><strong>搜 索</strong></button>
@@ -36,17 +39,10 @@
                 <div class="example">
                     <table id="cusTable" data-height="700">
                         <thead>
-                        <th data-field="act_name">活动名称</th>
-                        <th data-field="act_start_time">开始时间</th>
-                        <th data-field="act_end_time">结束时间</th>
-                        <th data-field="act_address">活动地点</th>
-                        <th data-field="act_intro">活动简介</th>
-                        <th data-field="act_money">活动费用</th>
-                        <th data-field="act_sponsor">赞助需求</th>
-                        <th data-field="club_owner_id">活动团长ID</th>
-                        <th data-field="apply_time">申请时间</th>
-                        <th data-field="verify_status">状态</th>
-                        <th data-field="verify_idea">审核意见</th>
+                        <th data-field="rule_name">社团经验规则名称</th>
+                        <th data-field="rule_experience">社团经验值</th>
+                        <th data-field="rule_num">限制次数</th>
+                        <th data-field="rule_status">社团经验规则状态</th>
                         <th data-field="operate">操作</th>
                         </thead>
                     </table>
@@ -73,7 +69,7 @@
         //初始化表格,动态从服务器加载数据
         $("#cusTable").bootstrapTable({
             method: "get",  //使用get请求到服务器获取数据
-            url: "./apply", //获取数据的地址
+            url: "./rule", //获取数据的地址
             striped: true,  //表格显示条纹
             pagination: true, //启动分页
             pageSize: 10,  //每页显示的记录数
@@ -87,7 +83,7 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
-                    searchText:$('#act_name').val()
+                    searchText:$('#rule_name').val()
                 };
                 return param;
             },
@@ -105,6 +101,20 @@
         //当点击查询按钮的时候执行
         $("#search").bind("click", initTable);
     });
+    function del(id){
+        layer.confirm('确认删除此社团经验规则?', {icon: 3, title:'提示'}, function(index){
+            //do something
+            $.getJSON('./delRule', {'id' : id}, function(res){
+                if(res.code == 1){
+                    layer.alert('删除成功');
+                    initTable();
+                }else{
+                    layer.alert('删除失败');
+                }
+            });
+            layer.close(index);
+        })
+    }
 </script>
 </body>
 </html>

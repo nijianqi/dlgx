@@ -11,6 +11,8 @@ use app\index\model\ClubFollowModel;
 use app\index\model\ClubTypeModel;
 use app\index\model\ClubAlbumModel;
 use app\index\model\MessageModel;
+use app\admin\model\ClubRuleModel;
+use app\index\model\ClubExperienceModel;
 use Qiniu\Auth;
 use Qiniu\Storage\BucketManager;
 class Club extends Controller
@@ -51,7 +53,8 @@ class Club extends Controller
 
         $clubJoinModel = new ClubJoinModel();
         $memberList = $clubJoinModel->getJoinMember(array('club_id' => $clubId),'0','5');
-        foreach($memberList as $key=>$vo){
+        $memberListAll = $clubJoinModel->getJoinMember(array('club_id' => $clubId));
+        foreach($memberListAll as $key=>$vo){
             if($vo['member_id'] == session('memberId')){
                 $isJoin = 1;
             }
@@ -89,6 +92,8 @@ class Club extends Controller
         $clubFollowModel = new ClubFollowModel();
         $clubFollowInfo = $clubFollowModel->getInfoByWhere(array('club_id' => $clubId, 'member_id' => session('memberId')));
         $followCounts = $clubFollowModel->getCounts(array('club_id' => $clubId,'is_follow' => '2'));
+        $clubExperienceModel = new ClubExperienceModel();
+        $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%社团签到%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
 
         $clubAlbumModel = new ClubAlbumModel();
         $clubAlbumList = $clubAlbumModel->getListByWhere(array('club_id'=>$clubId),'','','3');
@@ -101,7 +106,8 @@ class Club extends Controller
             'activityList' =>$activityList,
             'clubFollowInfo' => $clubFollowInfo,
             'followCounts' => $followCounts,
-            'clubAlbumList' => $clubAlbumList
+            'clubAlbumList' => $clubAlbumList,
+            'Counts'=>$Counts
         ]);
 
         return $this->fetch('/club-homepage');
@@ -188,7 +194,7 @@ class Club extends Controller
         $member = $memberModel->getInfoById($club['club_owner_id']);
 
         $clubJoinModel = new ClubJoinModel();
-        $memberList = $clubJoinModel->getJoinMember(array('club_id' => $clubId));
+        $memberList = $clubJoinModel->getJoinMember(array('club_id' => $clubId),'0','5');
         $counts = $clubJoinModel->getCounts(array('club_id' => $clubId));
 
         $activityModel = new ActivityModel();
@@ -219,6 +225,8 @@ class Club extends Controller
         $clubFollowModel = new ClubFollowModel();
         $clubFollowInfo = $clubFollowModel->getInfoByWhere(array('club_id' => $clubId, 'member_id' => session('memberId')));
         $followCounts = $clubFollowModel->getCounts(array('club_id' => $clubId,'is_follow' => '2'));
+        $clubExperienceModel = new ClubExperienceModel();
+        $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%社团签到%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
 
         $clubAlbumModel = new ClubAlbumModel();
         $clubAlbumList = $clubAlbumModel->getListByWhere(array('club_id'=>$clubId),'','','3');
@@ -231,7 +239,8 @@ class Club extends Controller
             'activityList' =>$activityList,
             'clubFollowInfo' => $clubFollowInfo,
             'followCounts' => $followCounts,
-            'clubAlbumList'=>$clubAlbumList
+            'clubAlbumList'=>$clubAlbumList,
+            'Counts'=>$Counts
         ]);
 
         return $this->fetch('/club-homepage-join');
@@ -357,6 +366,24 @@ class Club extends Controller
                 $params['member_id'] = session('memberId');
                 $params['apply_time'] = time();
                 $return['flag'] = db('club_join')->insertGetId($params);
+                $clubRuleModel = new ClubRuleModel();
+                $clubExperienceModel = new ClubExperienceModel();
+                $where = [];
+                $where['rule_name'] = ['like', '%加入社团%'];
+                $where['rule_status'] = 1;
+                $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+                if(!empty($clubRuleInfo)){
+                    $arr = [];
+                    $arr['member_id'] = session('memberId');
+                    $arr['club_id'] = $clubId;
+                    $arr['content'] = '加入社团+'.$clubRuleInfo['rule_experience'].'经验值';
+                    $arr['create_time'] = time();
+                    $clubExperienceModel->insert($arr);
+                    $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%加入社团%']));
+                    if($Counts <1 ){
+                        $clubModel->updateByWhere(array('club_experience'=>$clubInfo['club_experience']+$clubRuleInfo['rule_experience']),'',array('id'=>$clubId));
+                    }
+                }
                 $messageModel = new MessageModel();
                 $messageModel->insertMessage(session('memberId'),$clubInfo['club_owner_id'],$member['member_name'].'成功加入你的社团',4);
             } else {
@@ -405,6 +432,37 @@ class Club extends Controller
 
         }
             return json($return);
+    }
+
+    public function past() //社团签到
+    {
+            $clubId = input('param.id');
+            $clubModel = new ClubModel();
+            $clubInfo = $clubModel->getInfoById($clubId);
+            if(!empty($clubInfo)){
+            $clubRuleModel = new ClubRuleModel();
+            $clubExperienceModel = new ClubExperienceModel();
+            $where = [];
+            $where['rule_name'] = ['like', '%社团签到%'];
+            $where['rule_status'] = 1;
+            $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+            if(!empty($clubRuleInfo)){
+                $Counts = $clubExperienceModel->getCounts(array('member_id'=>session('memberId'),'content'=>['like', '%社团签到%'],'create_time'=>array(array('gt',strtotime(date('Y-m-d'))),array('lt',strtotime(date('Y-m-d',strtotime('+1 day')))))));
+                if($Counts < $clubRuleInfo['rule_num']){
+                    $arr = [];
+                    $arr['member_id'] = session('memberId');
+                    $arr['club_id'] = $clubInfo['id'];
+                    $arr['content'] = '社团签到+'.$clubRuleInfo['rule_experience'].'经验值';
+                    $arr['create_time'] = time();
+                    $clubExperienceModel->insert($arr);
+                    $club_experience = intval($clubInfo['club_experience'])+intval($clubRuleInfo['rule_experience']);
+                    $return = $clubModel->updateByWhere(array('club_experience'=>$club_experience),'',array('id'=>$clubInfo['id']));
+                }
+            }
+
+        }
+
+        return json($return);
     }
 
     public function notice() //社团公告
