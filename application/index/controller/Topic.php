@@ -39,6 +39,18 @@ class Topic extends Controller
 
     public function index() //话题详情
     {
+		$memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+		if(empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        }
+        if($member['member_status'] == 2) {
+            $this->redirect('member/index');
+        }
+		
         $topicId = input('param.topic_id');
         $topicModel = new TopicModel();
         $topic_info = $topicModel->getInfoByWhere(array('id' => $topicId,'topic_status' => 1));
@@ -135,6 +147,17 @@ class Topic extends Controller
 
     public function newTopList() //最新话题列表
     {
+		$memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+		if(empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        }
+        if($member['member_status'] == 2) {
+            $this->redirect('member/index');
+        }
         if(request()->isAjax()) {
             $topicModel = new TopicModel();
             $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), '', '', 'topic_create_time desc');
@@ -189,6 +212,17 @@ class Topic extends Controller
 
     public function hotTopList() //热门话题列表
     {
+		$memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+		if(empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        }
+        if($member['member_status'] == 2) {
+            $this->redirect('member/index');
+        }
         if(request()->isAjax()) {
             $topicModel = new TopicModel();
             $topic_list = $topicModel->getTopicMember(array('topic_status' => 1,'topic_create_time'=>array(array('gt',strtotime(date('Y-m-d',strtotime('-1 day')))),array('lt',strtotime(date('Y-m-d'))))), '', '', 'topic_num desc');
