@@ -166,6 +166,8 @@ class Topic extends Controller
             $topicCollectModel = new TopicCollectModel();
             $topicCommentModel = new TopicCommentModel();
             if (!empty($topic_list)) {
+                $flag=array();
+				$flag2=array();
                 foreach ($topic_list as $key => $vo) {
                     $topicAlbumList = $topicAlbumModel->getListByWhere(array('topic_id' => $vo['id']), '', '', '3');
                     $topic_list[$key]['topicAlbumList'] = $topicAlbumList;
@@ -202,7 +204,10 @@ class Topic extends Controller
                     $topic_list[$key]['is_like'] = $topicLikeInfo['is_like'];
                     $topicCollectInfo = $topicCollectModel->getInfoByWhere(array('member_id' => session('memberId'), 'topic_id' => $vo['id']));
                     $topic_list[$key]['is_collect'] = $topicCollectInfo['is_collect'];
+                    $flag[]=$topic_list[$key]['is_top'];
+					$flag2[]=$topic_list[$key]['topic_create_time'];
                 }
+                array_multisort($flag, SORT_ASC,$flag2, SORT_NUMERIC  ,$topic_list);
             }
             $return['lists'] = $topic_list;
             return json($return);

@@ -33,6 +33,16 @@
                             </div>
                         </div>
                         <div class="form-group">
+                        <label class="col-sm-3 control-label">是否置顶：</label>
+                        <div class="input-group col-sm-4">
+                            {foreach name='is_top' item='vo' key='key'}
+                            <div class="radio i-checks col-sm-4">
+                                <label><input type="radio" value="{$key}" {if condition="$key == $topic['is_top']"}checked{/if} name="is_top"><i></i>{$vo}</label>
+                            </div>
+                            {/foreach}
+                        </div>
+                </div>
+                        <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-3">
                                 <button class="btn btn-primary" type="submit">提交</button>
                             </div>

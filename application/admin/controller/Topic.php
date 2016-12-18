@@ -26,6 +26,7 @@ class Topic extends Base
             $topic = new TopicModel();
             $selectResult = $topic->getListByWhere($where,'*', $offset, $limit);
             $status = config('topic_status');
+            $top= config('is_top');
             foreach ($selectResult as $key => $vo) {
                 $member = new MemberModel();
                 if($vo['topic_owner_id']!=0){
@@ -41,6 +42,7 @@ class Topic extends Base
                 } else {
                     $selectResult[$key]['topic_release_time'] = date('Y-m-d H:i:s', $vo['topic_release_time']);
                 }
+                $selectResult[$key]['is_top'] = $top[$vo['is_top']];
                 $operate = [
                     '编辑' => url('topic/edit', ['id' => $vo['id']]),
 					'删除' => "javascript:del('" . $vo['id'] . "')"
@@ -88,7 +90,8 @@ class Topic extends Base
         $id = input('param.id');
         $this->assign([
             'topic' => $topic->getInfoById($id),
-            'topic_status' => config('topic_status')
+            'topic_status' => config('topic_status'),
+            'is_top' => config('is_top')
         ]);
         return $this->fetch();
     }
