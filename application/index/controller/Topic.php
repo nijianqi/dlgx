@@ -205,9 +205,9 @@ class Topic extends Controller
                     $topicCollectInfo = $topicCollectModel->getInfoByWhere(array('member_id' => session('memberId'), 'topic_id' => $vo['id']));
                     $topic_list[$key]['is_collect'] = $topicCollectInfo['is_collect'];
                     $flag[]=$topic_list[$key]['is_top'];
-					$flag2[]=$topic_list[$key]['topic_create_time'];
+					$flag2[]=$vo['id'];
                 }
-                array_multisort($flag, SORT_ASC,$flag2, SORT_NUMERIC  ,$topic_list);
+                array_multisort($flag, SORT_ASC,$flag2, SORT_DESC,$topic_list);
             }
             $return['lists'] = $topic_list;
             return json($return);
