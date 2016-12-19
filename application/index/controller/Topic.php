@@ -509,7 +509,11 @@ class Topic extends Controller
 
            }
            $return['code'] = $flag['code'];
-           $return['msg'] = $flag['msg'];
+		   if($flag['msg'] == '添加成功'){
+			    $return['msg'] = '话题发布成功!';
+		   }else{
+			    $return['msg'] = $flag['msg'];
+		   }
            $this->assign([
                'return' => $return
            ]);

@@ -292,18 +292,14 @@ class Activity extends Controller
     {
         if (request()->isPost()) {
             $param = input('param.');
-            if(request()->file()){
-                $album = request()->file('album');
-                $activityAlbumModel = new ActivityAlbumModel();
-                foreach($album as $key=>$val){
-                    $album_img = $activityAlbumModel->insertAlbum($val);
-                    $activityAlbumModel->insertGetId(array('act_id'=>0,'act_name'=>$param['act_name'],'album_img'=>$album_img.'?imageMogr2/size-limit/300k','create_time'=>time()));
-                    $param['act_detail_img'] = $album_img.'?imageMogr2/size-limit/300k';
-				}
-            }
-			if(empty($param['act_detail_img'])){
-				$param['act_detail_img'] = '';
-			}
+			$activityApply = new ActivityApplyModel();
+            $activityApplying = $activityApply->getListByWhere(array('club_owner_id' => session('memberId'), 'verify_status' => 1));
+            if(!empty($activityApplying)) {
+                $return['code'] = -1;
+                $return['msg'] = '您的社团已有活动正在审核，可别太急哦~';
+                $this->assign([
+                    'return' => $return
+                ]);
             preg_match_all('/\d/',$param['act_start_time'],$arr);
             $sTime=implode('',$arr[0]);
             $sTime=strtotime($sTime);
@@ -349,7 +345,18 @@ class Activity extends Controller
                 }
             }
             unset($param['fund']);unset($param['sponsor']);unset($param['need']);
-            $activityApply = new ActivityApplyModel();
+			if(request()->file()){
+                $album = request()->file('album');
+                $activityAlbumModel = new ActivityAlbumModel();
+                foreach($album as $key=>$val){
+                    $album_img = $activityAlbumModel->insertAlbum($val);
+                    $activityAlbumModel->insertGetId(array('act_id'=>0,'act_name'=>$param['act_name'],'album_img'=>$album_img.'?imageMogr2/size-limit/300k','create_time'=>time()));
+                    $param['act_detail_img'] = $album_img.'?imageMogr2/size-limit/300k';
+				}
+            }
+			if(empty($param['act_detail_img'])){
+				$param['act_detail_img'] = '';
+			}
             $flag = $activityApply->insert($param);
             $return['code'] = $flag['code'];
             $return['msg'] = $flag['msg'];

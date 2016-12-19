@@ -119,18 +119,22 @@
 </div>
 
 <div id="adetail-navbt" class="nav-bottom">
-    <div class="navbt-item"><span>评论</span>
-    </div>
     {if $activityInfo.act_status == 1}
+	<div class="navbt-item"><span>评论</span>
+    </div>
     <div class="navbt-item active" style="background-color: grey;"><span>未开始</span></div>
     {elseif $activityInfo.act_status == 2}
     {if $is_join == 0}
+	<div class="navbt-item"><span>评论</span>
+    </div>
     <div id="act-apply" class="navbt-item active"><span>立即报名</span></div>
     {else/}
+	<div class="navbt-item"><span>评论</span>
+    </div>
     <div id="act-edit" class="navbt-item active"><span>取消报名</span></div>
     {/if}
     {elseif $activityInfo.act_status == 3}
-    <div class="navbt-item active" style="background-color: grey;"><span>已结束</span></div>
+    <div class="navbt-item active" style="background-color: grey;width:100%"><span>活动已结束</span></div>
     {/if}
 </div>
 </div>
