@@ -300,6 +300,7 @@ class Activity extends Controller
                 $this->assign([
                     'return' => $return
                 ]);
+                return $this->fetch('/Msg');
 			}
             preg_match_all('/\d/',$param['act_start_time'],$arr);
             $sTime=implode('',$arr[0]);
@@ -309,12 +310,13 @@ class Activity extends Controller
             $eTime=implode('',$arr[0]);
             $eTime=strtotime($eTime);
             $param['act_end_time'] = $eTime;
-            if($sTime == $eTime ){
+            if($sTime > $eTime ){
                 $return['code'] = -1;
-                $return['msg'] = '开始时间不能等于结束时间';
+                $return['msg'] = '开始时间必须大于结束时间';
                 $this->assign([
                     'return' => $return
                 ]);
+                return $this->fetch('/Msg');
             }
             $param['apply_time'] = time();
             $memberModel = new MemberModel();
@@ -325,6 +327,7 @@ class Activity extends Controller
                 $this->assign([
                     'return' => $return
                 ]);
+                return $this->fetch('/Msg');
             }
             $param['club_owner_id'] = session('memberId');
 			$param['verify_idea'] = '';
@@ -361,7 +364,7 @@ class Activity extends Controller
             $flag = $activityApply->insert($param);
             $return['code'] = $flag['code'];
             $return['msg'] = $flag['msg'];
-           $this->assign([
+            $this->assign([
                 'return' => $return
             ]);
         }
