@@ -292,16 +292,6 @@ class Activity extends Controller
     {
         if (request()->isPost()) {
             $param = input('param.');
-			$activityApply = new ActivityApplyModel();
-            $activityApplying = $activityApply->getListByWhere(array('club_owner_id' => session('memberId'), 'verify_status' => 1));
-            if(!empty($activityApplying)) {
-                $return['code'] = -1;
-                $return['msg'] = '您的社团已有活动正在审核，可别太急哦~';
-                $this->assign([
-                    'return' => $return
-                ]);
-                return $this->fetch('/Msg');
-			}
             preg_match_all('/\d/',$param['act_start_time'],$arr);
             $sTime=implode('',$arr[0]);
             $sTime=strtotime($sTime);
@@ -310,9 +300,26 @@ class Activity extends Controller
             $eTime=implode('',$arr[0]);
             $eTime=strtotime($eTime);
             $param['act_end_time'] = $eTime;
-            if($sTime > $eTime ){
+            if($sTime >= $eTime ){
                 $return['code'] = -1;
-                $return['msg'] = '开始时间必须大于结束时间';
+                $return['msg'] = '结束时间必须大于开始时间~';
+                $this->assign([
+                    'return' => $return
+                ]);
+                return $this->fetch('/Msg');
+            }elseif($sTime<time()||$eTime<time()){
+                $return['code'] = -1;
+                $return['msg'] = '开始时间和结束时间必须大于现在的时间~';
+                $this->assign([
+                    'return' => $return
+                ]);
+                return $this->fetch('/Msg');
+            }
+            $activityApply = new ActivityApplyModel();
+            $activityApplying = $activityApply->getListByWhere(array('club_owner_id' => session('memberId'), 'verify_status' => 1));
+            if(!empty($activityApplying)) {
+                $return['code'] = -1;
+                $return['msg'] = '您的社团已有活动正在审核，可别太急哦~';
                 $this->assign([
                     'return' => $return
                 ]);
