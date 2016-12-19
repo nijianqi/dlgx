@@ -300,6 +300,7 @@ class Activity extends Controller
                 $this->assign([
                     'return' => $return
                 ]);
+			}
             preg_match_all('/\d/',$param['act_start_time'],$arr);
             $sTime=implode('',$arr[0]);
             $sTime=strtotime($sTime);
