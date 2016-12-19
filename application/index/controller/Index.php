@@ -111,7 +111,7 @@ class Index extends Controller
         $flag2=array();
         foreach ($activityOnlineList as $key => $vo) {
             $flag[]=$activityOnlineList[$key]['is_top'];
-            $flag2[]=$vo['id'];
+            $flag2[]=$vo['act_end_time'];
         }
         array_multisort($flag, SORT_ASC,$flag2, SORT_DESC,$activityOnlineList);
         $this->assign([
@@ -154,7 +154,7 @@ class Index extends Controller
                 $activityLineList[$key]['act_from_icon'] = $member_info['member_icon'];
             }
             $top[]=$activityLineList[$key]['is_top'];
-            $top2[]=$vo['id'];
+            $top2[]=$vo['act_end_time'];
         }
         array_multisort($top, SORT_ASC ,$top2, SORT_DESC,$activityLineList);
         $this->assign([
