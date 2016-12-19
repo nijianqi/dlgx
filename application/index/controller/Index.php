@@ -104,9 +104,16 @@ class Index extends Controller
         $activityOnlineWhere = [];  //线上活动
         $activityOnlineWhere['act_release_time'] = ['>', 0];
         $activityOnlineWhere['act_type'] = 1; //线上
-        $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type';
+        $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type,is_top';
         $activityModel = new ActivityModel();
-        $activityOnlineList = $activityModel->getListByWhere($activityOnlineWhere, $activityField, 0, 4, 'act_end_time desc');
+        $activityOnlineList = $activityModel->getListByWhere($activityOnlineWhere, $activityField, 0, 0, 'act_end_time desc');
+        $flag=array();
+        $flag2=array();
+        foreach ($activityOnlineList as $key => $vo) {
+            $flag[]=$activityOnlineList[$key]['is_top'];
+            $flag2[]=$vo['id'];
+        }
+        array_multisort($flag, SORT_ASC,$flag2, SORT_DESC,$activityOnlineList);
         $this->assign([
             'activityOnlineList' => $activityOnlineList
         ]);
@@ -114,8 +121,10 @@ class Index extends Controller
         $activityLineWhere = [];   //线下活动
         $activityLineWhere['act_release_time'] = ['>', 0];
         $activityLineWhere['act_type'] = 2; //线下
-        $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type';
-        $activityLineList = $activityModel->getListByWhere($activityLineWhere, $activityField, 0, 3, 'act_end_time desc');
+        $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type,is_top';
+        $activityLineList = $activityModel->getListByWhere($activityLineWhere, $activityField, 0, 0, 'act_end_time desc');
+        $top=array();
+        $top2=array();
         foreach ($activityLineList as $key => $vo) {
             $sTime = $vo['act_start_time'];
             $eTime = $vo['act_end_time'];
@@ -144,7 +153,10 @@ class Index extends Controller
                 $activityLineList[$key]['act_from_name'] = $member_info['member_name'];
                 $activityLineList[$key]['act_from_icon'] = $member_info['member_icon'];
             }
+            $top[]=$activityLineList[$key]['is_top'];
+            $top2[]=$vo['id'];
         }
+        array_multisort($top, SORT_ASC ,$top2, SORT_DESC,$activityLineList);
         $this->assign([
             'activityLineList' => $activityLineList
         ]);

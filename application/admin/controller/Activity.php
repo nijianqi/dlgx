@@ -28,6 +28,7 @@ class Activity extends Base
             }
             $activity = new ActivityModel();
             $selectResult = $activity->getListByWhere($where,'*', $offset, $limit);
+            $top= config('is_top');
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['act_create_time'] = date('Y-m-d H:i:s', $vo['act_create_time']);
                 $selectResult[$key]['act_start_time'] = date('Y-m-d H:i:s', $vo['act_start_time']);
@@ -50,6 +51,7 @@ class Activity extends Base
                 }else{
                     $selectResult[$key]['act_from_id']='官方';
                 }
+                $selectResult[$key]['is_top'] = $top[$vo['is_top']];
                 $operate = [
                     '查看活动成员' => url('activity/show', ['id' => $vo['id']]),
                     '编辑' => url('activity/edit', ['id' => $vo['id']]),
@@ -114,7 +116,8 @@ class Activity extends Base
             $info['activity_status'] = 1;
         }
         $this->assign([
-            'activity' => $info
+            'activity' => $info,
+            'is_top' => config('is_top')
         ]);
         return $this->fetch();
     }
