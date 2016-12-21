@@ -208,7 +208,7 @@ class Activity extends Base
 				$param['act_list_img'] = '';
                 $param['act_create_time'] = time();
                 $param['act_release_time'] = time();
-				
+
                 $activity->insert($param, 'ActivityValidate');
                 $activityInfo = $activity->getInfoByWhere(array('act_name'=>$param['act_name']));
                 $activityAlbumList = $activityAlbum ->getListByWhere(array('act_name'=>$param['act_name'],'act_id'=>0));
