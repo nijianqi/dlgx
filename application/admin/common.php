@@ -24,7 +24,19 @@ EOT;
 function parseParams($str)
 {
     $arrParams = [];
+    $str =  str_replace("%26","@1#3!86",$str);
     parse_str(html_entity_decode(urldecode($str)), $arrParams);
+    function strReplace(&$array) {
+        $array = str_replace('@1#3!86', '&', $array);
+        if (is_array($array)) {
+            foreach ($array as $key => $val) {
+                if (is_array($val)) {
+                    strReplace($array[$key]);
+                }
+            }
+        }
+    }
+    strReplace($arrParams);
     return $arrParams;
 }
 
