@@ -6,46 +6,72 @@
 			<img src="{$club.club_icon}" alt="">
 			<h2>{$club.club_name}</h2>
 			<p>关注数 {$followCounts}</p>
-			<div id="homepage-rank">
-				{if $club.club_experience < 1000}
-				<p><img src="__PUBLIC__/images/yellow-star.png" alt=""></p>
-				<div class="rank-bar-wrap">
-					<div class="rank-bar">
-						<span class="rank-bar-score" data-score="{$club.club_experience/10}"></span>
-					</div>
-				</div>
-				<p>{$club.club_experience}/1000</p>
-				{elseif $club.club_experience >= 1000 && $club.club_experience < 3500 }
-				<p><img src="__PUBLIC__/images/star.png" alt=""></p>
-				<div class="rank-bar-wrap">
-					<div class="rank-bar">
-						<span class="rank-bar-score" data-score="{$club.club_experience/35}"></span>
-					</div>
-				</div>
-				<p>{$club.club_experience}/3500</p>
-				{elseif $club.club_experience >= 3500 && $club.club_experience < 12000}
-				<p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
-				<div class="rank-bar-wrap">
-					<div class="rank-bar">
-						<span class="rank-bar-score" data-score="{$club.club_experience/120}"></span>
-					</div>
-				</div>
-				<p>{$club.club_experience}/12000</p>
-				{elseif $club.club_experience >= 12000}
-				<p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
-				<div class="rank-bar-wrap">
-					<div class="rank-bar">
-						<span class="rank-bar-score" data-score="{$club.club_experience/10000}"></span>
-					</div>
-				</div>
-				<p>{$club.club_experience}/100000</p>
-				{/if}
-				<div class="hrank-explain">
-					<img src="__PUBLIC__/images/mark_wen.png" alt="">
-					等级说明
-				</div>
-			</div>
-		</div>
+			 <div id="homepage-rank">
+            {if $club.club_experience < 800}
+            <p><img src="__PUBLIC__/images/star.png" alt=""></p>
+
+            <div class="rank-bar-wrap">
+                <div class="rank-bar">
+                    <span class="rank-bar-score" data-score="{$club.club_experience/8}"></span>
+                </div>
+            </div>
+            <p>{$club.club_experience}/800</p>
+            {elseif $club.club_experience > 800 && $club.club_experience < 1800 }
+            <p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+
+            <div class="rank-bar-wrap">
+                <div class="rank-bar">
+                    <span class="rank-bar-score" data-score="{$club.club_experience/18}"></span>
+                </div>
+            </div>
+            <p>{$club.club_experience}/1800</p>
+            {elseif $club.club_experience > 1800 && $club.club_experience < 3000}
+            <p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+
+            <div class="rank-bar-wrap">
+                <div class="rank-bar">
+                    <span class="rank-bar-score" data-score="{$club.club_experience/30}"></span>
+                </div>
+            </div>
+            <p>{$club.club_experience}/3000</p>
+            {elseif $club.club_experience > 3000 && $club.club_experience < 5000}
+            <p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img
+                    src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+
+            <div class="rank-bar-wrap">
+                <div class="rank-bar">
+                    <span class="rank-bar-score" data-score="{$club.club_experience/50}"></span>
+                </div>
+            </div>
+            <p>{$club.club_experience}/5000</p>
+            {elseif $club.club_experience > 5000 && $club.club_experience < 7500}
+            <p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img
+                    src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""></p>
+
+            <div class="rank-bar-wrap">
+                <div class="rank-bar">
+                    <span class="rank-bar-score" data-score="{$club.club_experience/75}"></span>
+                </div>
+            </div>
+            <p>{$club.club_experience}/7500</p>
+            {elseif $club.club_experience > 7500 && $club.club_experience < 10000}
+            <p><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img
+                    src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt=""><img src="__PUBLIC__/images/star.png" alt="">
+					<img src="__PUBLIC__/images/star.png" alt=""></p>
+
+            <div class="rank-bar-wrap">
+                <div class="rank-bar">
+                    <span class="rank-bar-score" data-score="{$club.club_experience/100}"></span>
+                </div>
+            </div>
+            <p>{$club.club_experience}/10000</p>
+            {/if}
+            <div class="hrank-explain">
+                <img src="__PUBLIC__/images/mark_wen.png" alt="">
+                等级说明
+            </div>
+        </div>
+    </div>
 		{if $clubFollowInfo.is_follow == 2}
 		<a class="homepage-watch _watch"><span>已关注</span></a>
 		{else/}
@@ -171,9 +197,12 @@
 	</div>
 <div id="vadetail-pop" class="center none">
 	<div id="vadetail-pop-body">
-		Lv0-Lv1：1000经验 <br>
-        Lv1-Lv2：2500经验 <br>
-        Lv2-Lv3：8500经验 <br>
+		LV1:0～800经验  <br>
+        LV2:800～1800经验  <br>
+        LV3:1800～3000经验 <br>
+		LV4:3000～5000经验 <br>
+		LV5:5000～7500经验 <br>
+		LV6:7500~10000经验 <br>
         经验获取途径 <br>
         每日签到+5 <br>
         发布话题+2（每天限3次）<br>
