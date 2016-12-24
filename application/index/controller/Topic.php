@@ -44,9 +44,6 @@ class Topic extends Controller
 		if(empty(session('memberId'))) {
             $this->redirect('index/index');
         }
-        if(empty($member['member_tel'])) {
-            $this->redirect('member/edit');
-        }
         if($member['member_status'] == 2) {
             $this->redirect('member/index');
         }
@@ -152,9 +149,6 @@ class Topic extends Controller
 		if(empty(session('memberId'))) {
             $this->redirect('index/index');
         }
-        if(empty($member['member_tel'])) {
-            $this->redirect('member/edit');
-        }
         if($member['member_status'] == 2) {
             $this->redirect('member/index');
         }
@@ -221,9 +215,6 @@ class Topic extends Controller
         $member = $memberModel->getInfoById(session('memberId'));
 		if(empty(session('memberId'))) {
             $this->redirect('index/index');
-        }
-        if(empty($member['member_tel'])) {
-            $this->redirect('member/edit');
         }
         if($member['member_status'] == 2) {
             $this->redirect('member/index');

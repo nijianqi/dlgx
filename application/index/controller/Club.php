@@ -259,6 +259,14 @@ class Club extends Controller
     public function create() //创建社团
     {
         if(request()->isPost()) {
+		$memberModel = new MemberModel();
+        $member = $memberModel->getInfoById(session('memberId'));
+		if(empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }
+        if(empty($member['member_tel'])) {
+            $this->redirect('member/edit');
+        }
             $clubModel = new ClubModel();
             $club = $clubModel->getListByWhere(array('club_owner_id' => session('memberId')));
             if(!empty($club)) {
