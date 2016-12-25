@@ -19,7 +19,7 @@ use app\index\model\MessageModel;
 class Topic extends Controller
 {
     protected $beforeActionList = [
-        'checkMember' => ['only' => 'index,newTopList,hotTopList,collect,comment,like,createTop,cancel']
+        'checkMember' => ['only' => 'collect,comment,like,createTop,cancel']
     ];
 
     public function checkMember()
