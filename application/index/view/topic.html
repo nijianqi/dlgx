@@ -59,10 +59,10 @@
 <script src="__PUBLIC__/script/min/topic.min.js"></script>
 <script>
     $(function(){
-        var counter = 0;
+        var counter = 1;
         // 每页展示6个
         var num = 6;
-        var pageStart = 0,pageEnd = 0;
+        var pageStart = 0,pageEnd = 6;
 
         // dropload
         $('#topic-list').dropload({
@@ -71,21 +71,22 @@
                 $.ajax({
                     type: 'post',
                     url: "{:url('Topic/newTopList')}",
+                    data:{'offset':pageStart,'limit':pageEnd},
                     dataType: 'json',
                     success: function(data){
-				if(data.lists.length ==0){
+				     if(data.lists.length ==0){
                                 // 锁定
                                 me.lock();
                                 // 无数据
                                 me.noData();
                                 me.resetload();
-                            }
+                     }
                         var result = '';
                         counter++;
                         pageEnd = num * counter;
                         pageStart = pageEnd - num;
 
-                        for(var i = pageStart; i < pageEnd; i++){
+                        for(var i = 0; i < data.lists.length; i++){
                             result += '<li class="topic-item">';
                             result +='<div class="topic-item-head"><a href="/index.php/index/member/personhomepage/member_id/'+data.lists[i].topic_owner_id+'.html"><img src="'+data.lists[i].member_icon+'" alt="" class="mark-portrait"> <span>'+data.lists[i].member_name+'</span></a> <span class="fr">'+data.lists[i].topic_create_time+'</span> ' + '</div>';
                             result +='<div class="topic-item-body"> <a href="/index.php/index/Topic/index/topic_id/'+data.lists[i].id+'.html"><h2>'+data.lists[i].topic_name+'</h2><p>'+data.lists[i].topic_content+'</p></a>';
@@ -115,13 +116,6 @@
                                 result +='<li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
                             }
                             result +='</ul></div></li>';
-                            if((i + 1) >= data.lists.length){
-                                // 锁定
-                                me.lock();
-                                // 无数据
-                                me.noData();
-                                break;
-                            }
                         }
                         // 为了测试，延迟1秒加载
                      

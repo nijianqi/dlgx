@@ -153,8 +153,10 @@ class Topic extends Controller
             $this->redirect('member/index');
         }
         if(request()->isAjax()) {
+            $offset = input('param.offset');
+            $limit = input('param.limit');
             $topicModel = new TopicModel();
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), '', '', 'topic_create_time desc');
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), $offset, $limit, 'topic_create_time desc');
             $topicAlbumModel = new TopicAlbumModel();
             $topicLikeModel = new TopicLikeModel();
             $topicCollectModel = new TopicCollectModel();
@@ -226,7 +228,9 @@ class Topic extends Controller
         }
         if(request()->isAjax()) {
             $topicModel = new TopicModel();
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1,'topic_create_time'=>array(array('gt',strtotime(date('Y-m-d',strtotime('-1 day')))),array('lt',strtotime(date('Y-m-d'))))), '', '', 'topic_num desc');
+            $offset = input('param.offset');
+            $limit = input('param.limit');
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1,'topic_create_time'=>array(array('gt',strtotime(date('Y-m-d',strtotime('-1 day')))),array('lt',strtotime(date('Y-m-d'))))), $offset, $limit, 'topic_num desc');
             $topicAlbumModel = new TopicAlbumModel();
             $topicLikeModel = new TopicLikeModel();
             $topicCollectModel = new TopicCollectModel();
