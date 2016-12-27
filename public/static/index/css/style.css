@@ -1302,22 +1302,20 @@
 }
 
 .online-act {
-    padding: 0 0 1rem .6rem;
     background-color: #fff;
 }
 
 .online-act-item {
     float: left;
     width: 50%;
-    height: 9.5rem;
-    padding: 1rem .5rem;
-    overflow: hidden;
-    border-radius: 6px;
+    padding: .5rem;
 }
 
 .online-act img {
     width: 100%;
-    min-height: 9.5rem;
+    height: 10rem;
+    border-radius: 6px;
+
 }
 
 .imgbox {

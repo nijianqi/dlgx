@@ -1,8 +1,9 @@
 .idea
 composer.lock
 *.log
-/applocation/database.php
-/applocation/admin/database.php
-/applocation/admin/config.php
-/applocation/index/database.php
-/applocation/index/config.php
+application/admin/database.php
+application/database.php
+application/index/database.php
+application/index/config.php
+application/admin/config.php
+
