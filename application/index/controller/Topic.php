@@ -156,7 +156,11 @@ class Topic extends Controller
             $offset = input('param.offset');
             $limit = input('param.limit');
             $topicModel = new TopicModel();
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), $offset, $limit, 'topic_create_time desc');
+            if($limit == 6){
+                $topic_list = $topicModel->getTopicMember(array('topic_status' => 1 ,'is_top'=>'1'), $offset, $limit, 'topic_create_time desc');
+            }else{
+                $topic_list = $topicModel->getTopicMember(array('topic_status' => 1), $offset, $limit, 'topic_create_time desc');
+            }
             $topicAlbumModel = new TopicAlbumModel();
             $topicLikeModel = new TopicLikeModel();
             $topicCollectModel = new TopicCollectModel();
