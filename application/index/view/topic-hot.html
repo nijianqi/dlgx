@@ -28,7 +28,9 @@
     <div class="navbt-item">
         <a href="{:url('Member/index')}">
             <img src="__PUBLIC__/images/person_gray.png" alt="">
-
+            {if $messageCounts > 0 }
+            <span class="note-message"></span>
+            {/if}
             <p>我的</p>
         </a>
     </div>

@@ -8,6 +8,7 @@ use app\index\model\ActivityModel;
 use app\index\model\VideoModel;
 use app\index\model\ClubModel;
 use app\index\model\ClubFollowModel;
+use app\index\model\MessageModel;
 
 class Index extends Controller
 {
@@ -173,6 +174,12 @@ class Index extends Controller
             'videoList' => $videoList
         ]);
 
+        $message = new MessageModel();
+        $messageCounts = $message->getCounts(array('member_id' => array('neq', session('memberId')), 'to_member_id' => session('memberId'), 'message_status' => 1));//指定会员消息的总数量
+        $this->assign([
+            'messageCounts' => $messageCounts
+        ]);
+
         return $this->fetch('/index');
     }
 
@@ -199,10 +206,13 @@ class Index extends Controller
 
             }
         }
+        $message = new MessageModel();
+        $messageCounts = $message->getCounts(array('member_id' => array('neq', session('memberId')), 'to_member_id' => session('memberId'), 'message_status' => 1));//指定会员消息的总数量
         $this->assign([
             'clubList' => $clubList,
             'clubFollowList' => $clubFollowList,
-            'memberId' => $memberId
+            'memberId' => $memberId,
+            'messageCounts' => $messageCounts
         ]);
 
         return $this->fetch('/index-club');

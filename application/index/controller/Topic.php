@@ -206,6 +206,11 @@ class Topic extends Controller
             $return['lists'] = $topic_list;
             return json($return);
         }
+        $message = new MessageModel();
+        $messageCounts = $message->getCounts(array('member_id' => array('neq', session('memberId')), 'to_member_id' => session('memberId'), 'message_status' => 1));//指定会员消息的总数量
+        $this->assign([
+            'messageCounts' => $messageCounts
+        ]);
         return $this->fetch('/topic');
     }
 
@@ -271,6 +276,11 @@ class Topic extends Controller
             $return['lists'] = $topic_list;
             return json($return);
         }
+        $message = new MessageModel();
+        $messageCounts = $message->getCounts(array('member_id' => array('neq', session('memberId')), 'to_member_id' => session('memberId'), 'message_status' => 1));//指定会员消息的总数量
+        $this->assign([
+            'messageCounts' => $messageCounts
+        ]);
         return $this->fetch('/topic-hot');
     }
 
