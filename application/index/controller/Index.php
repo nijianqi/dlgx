@@ -107,12 +107,12 @@ class Index extends Controller
         $activityOnlineWhere['act_type'] = 1; //线上
         $activityField = 'id,act_name,act_detail_img,act_release_time,act_start_time,act_end_time,act_from_id,act_type,is_top';
         $activityModel = new ActivityModel();
-        $activityOnlineList = $activityModel->getListByWhere($activityOnlineWhere, $activityField, 0, 0, 'act_start_time desc');
+        $activityOnlineList = $activityModel->getListByWhere($activityOnlineWhere, $activityField, 0, 0, 'act_end_time desc');
         $flag=array();
         $flag2=array();
         foreach ($activityOnlineList as $key => $vo) {
             $flag[]=$activityOnlineList[$key]['is_top'];
-            $flag2[]=$vo['act_start_time'];
+            $flag2[]=$vo['act_end_time'];
         }
         array_multisort($flag, SORT_ASC,$flag2, SORT_DESC,$activityOnlineList);
         $this->assign([
