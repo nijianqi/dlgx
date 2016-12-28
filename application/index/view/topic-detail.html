@@ -1,5 +1,8 @@
-{include file="common/header" title="话题详情" keywords="话题详情" description="" /}
-<style>.adetail-wrap{margin-bottom: 5.4rem} {</style>
+{include file="common/header" title="$topic_info.topic_name" keywords="话题详情" description="" /}
+<style>.adetail-wrap {
+    margin-bottom: 5.4rem
+}
+</style>
 <div class="topic-detail-head">
     <h2 class="topic-detail-title">
         {$topic_info.topic_name}
@@ -69,9 +72,11 @@
                 </div>
                 <div class="mark-reply">
                     {if $vo.is_comLike == 2}
-                    <div class="mark-zan active"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></div>
+                    <div class="mark-zan active"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span>
+                    </div>
                     {else/}
-                    <div class="mark-zan"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span></div>
+                    <div class="mark-zan"><i class="fa fa-thumbs-o-up"></i><span value="{$vo.id}">{$vo.topicComLike_Counts}</span>
+                    </div>
                     {/if}
                     {if $vo.member_id != $memberId}<span value="{$vo.id}">回复</span>{/if}
                 </div>
@@ -88,14 +93,15 @@
             评论
         </li>
         {if $topic_info.topic_is_like == 2}
-        <li class="topic-ibottom-item heart active"><i class="fa fa-heart" ></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
+        <li class="topic-ibottom-item heart active"><i class="fa fa-heart"></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
         </li>
         {else/}
-        <li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o" ></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
+        <li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o"></i><span value="{$topic_info.id}">{$topic_info.topicLikeCounts}</span>
         </li>
         {/if}
         {if $topic_info.topic_is_collect == 2}
-        <li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span value="{$topic_info.id}">收藏</span></li>
+        <li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span value="{$topic_info.id}">收藏</span>
+        </li>
         {else/}
         <li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="{$topic_info.id}">收藏</span></li>
         {/if}
@@ -221,8 +227,8 @@
                 });
             }, 10)
         });
-        $(".mark-zan").click(function() {
-            if (!$(this).hasClass('active'))  {
+        $(".mark-zan").click(function () {
+            if (!$(this).hasClass('active')) {
                 var b = $(this);
                 var id = b.children("span").attr("value");
                 $.ajax({
@@ -233,7 +239,7 @@
                     success: function (data) {
                         if (0 > data.flag.code) {
                             myalert(data.flag.msg);
-                        }else{
+                        } else {
                             b.addClass('active');
                             var a = b.children("span").text();
                             b.children("span").text(parseInt(a) + 1)
