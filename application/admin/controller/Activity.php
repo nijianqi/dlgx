@@ -157,7 +157,7 @@ class Activity extends Base
             $offset = ($param['pageNumber'] - 1) * $limit;
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
-                $where['activity_name'] = ['like', '%' . $param['searchText'] . '%'];
+                $where['act_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $activityApply = new ActivityApplyModel();
             $selectResult = $activityApply->getListByWhere($where, $offset, $limit);
