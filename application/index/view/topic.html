@@ -7,8 +7,62 @@
 </div>
 
 <div id="topic-list" class="pre-navbt">
+    <ul>
+        {if !empty($topic_list_top)}
+        {foreach name="topic_list_top" item="vo"}
+        <li class="topic-item">
+            <div class="topic-item-head">
+                <a href="{:url('Member/personHomepage', ['member_id' => $vo.topic_owner_id])}">
+                    <img src="{$vo.member_icon}" alt="" class="mark-portrait">
+                    <span>{$vo.member_name}</span>
+                </a>
+                <span class="fr">{$vo.topic_create_time}</span>
+            </div>
+            <div class="topic-item-body">
+                <a href="{:url('Topic/index', ['topic_id' => $vo.id])}">
+                    <h2>{$vo.topic_name}</h2>
+
+                    <p>{$vo.topic_content}</p>
+                </a>
+
+                <div class="topic-item-imgs clearfix">
+                    {foreach name="$vo.topicAlbumList" item="voList" key="key"}
+                    <div class="topic-iimg-wrap">
+                        <img src="{$voList.album_img}">
+                        {if $vo.topicAlbumCounts > 3 && $key == 2}<p class="topic-iimg-bottom">
+                        共{$vo.topicAlbumCounts}张</p>{/if}
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+            <div class="topic-item-bottom clearfix">
+                <ul>
+                    <li class="topic-ibottom-item" value="{$vo.id}"><i class="fa fa-commenting-o"></i><span>{$vo.topicCommentCounts}</span>
+                    </li>
+                    {if $vo.is_like == 2}
+                    <li class="topic-ibottom-item heart active"><i class="fa fa-heart"></i><span value="{$vo.id}">{$vo.topicLikeCounts}</span>
+                    </li>
+                    {else/}
+                    <li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o"></i><span value="{$vo.id}">{$vo.topicLikeCounts}</span>
+                    </li>
+                    {/if}
+                    {if $vo.is_collect == 2}
+                    <li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span
+                            value="{$vo.id}">收藏</span></li>
+                    {else/}
+                    <li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="{$vo.id}">收藏</span>
+                    </li>
+                    {/if}
+                </ul>
+            </div>
+        </li>
+        </li>
+        {/foreach}
+        {/if}
+    </ul>
     <ul class="lists"></ul>
-    <div class="hover-layer none"><img src="__PUBLIC__/images/user1.jpg" alt="" class="center"></div></div>
+    <div class="hover-layer none"><img src="__PUBLIC__/images/user1.jpg" alt="" class="center"></div>
+</div>
 </div>
 <div class="nav-bottom">
     <div class="navbt-item">
@@ -19,8 +73,9 @@
         </a>
     </div>
     <div class="navbt-item active">
-            <img src="__PUBLIC__/images/topic.png" alt="">
-            <p>话题</p>
+        <img src="__PUBLIC__/images/topic.png" alt="">
+
+        <p>话题</p>
     </div>
     <div class="navbt-item">
         <a href="{:url('Member/index')}">
@@ -44,6 +99,7 @@
 
         <div class="mark-publish-body">
             <textarea id="comment" name="comment" placeholder="写评论..."></textarea>
+
             <div class="mark-publish-img">
                 <div class="mark-img-button">
                     <img src="__PUBLIC__/images/add_picture.png" alt="">
@@ -58,79 +114,73 @@
 <script src="__PUBLIC__/script/min/mypop.min.js"></script>
 <script src="__PUBLIC__/script/min/topic.min.js"></script>
 <script>
-    $(function(){
-        var counter = 0;
+    $(function () {
+        var counter = 1;
         // 每页展示6个
         var num = 6;
-        var pageStart = 0,pageEnd = 0;
+        var pageStart = 0, pageEnd = 6;
 
         // dropload
         $('#topic-list').dropload({
-            scrollArea : window,
-            loadDownFn : function(me){
+            scrollArea: window,
+            loadDownFn: function (me) {
                 $.ajax({
                     type: 'post',
                     url: "{:url('Topic/newTopList')}",
+                    data: {'offset': pageStart, 'limit': pageEnd},
                     dataType: 'json',
-                    success: function(data){
-				if(data.lists.length ==0){
-                                // 锁定
-                                me.lock();
-                                // 无数据
-                                me.noData();
-                                me.resetload();
-                            }
+                    success: function (data) {
+                        if (data.lists.length == 0) {
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
+                            me.resetload();
+                        }
                         var result = '';
                         counter++;
                         pageEnd = num * counter;
                         pageStart = pageEnd - num;
 
-                        for(var i = pageStart; i < pageEnd; i++){
+                        for (var i = 0; i < data.lists.length; i++) {
                             result += '<li class="topic-item">';
-                            result +='<div class="topic-item-head"><a href="/index.php/index/member/personhomepage/member_id/'+data.lists[i].topic_owner_id+'.html"><img src="'+data.lists[i].member_icon+'" alt="" class="mark-portrait"> <span>'+data.lists[i].member_name+'</span></a> <span class="fr">'+data.lists[i].topic_create_time+'</span> ' + '</div>';
-                            result +='<div class="topic-item-body"> <a href="/index.php/index/Topic/index/topic_id/'+data.lists[i].id+'.html"><h2>'+data.lists[i].topic_name+'</h2><p>'+data.lists[i].topic_content+'</p></a>';
+                            result += '<div class="topic-item-head"><a href="__INDEX__/member/personhomepage/member_id/' + data.lists[i].topic_owner_id + '.html"><img src="' + data.lists[i].member_icon + '" alt="" class="mark-portrait"> <span>' + data.lists[i].member_name + '</span></a> <span class="fr">' + data.lists[i].topic_create_time + '</span> ' + '</div>';
+                            result += '<div class="topic-item-body"> <a href="__INDEX__/Topic/index/topic_id/' + data.lists[i].id + '.html"><h2>' + data.lists[i].topic_name + '</h2><p>' + data.lists[i].topic_content + '</p></a>';
                             result += '<div class="topic-item-imgs clearfix">';
-                            var topicAlbumList=data.lists[i].topicAlbumList;
-                            if(topicAlbumList.length>0){
-                                for(var j in topicAlbumList){
-                                    result +='<div class="topic-iimg-wrap"><img src="'+topicAlbumList[j].album_img+'" alt="">';
-                                    if(data.lists[i].topicAlbumCounts>3&&j==2){
-                                        result +='<p class="topic-iimg-bottom">共'+data.lists[i].topicAlbumCounts+'张</p></div>';
-                                    }else{
-                                        result +='</div>';
+                            var topicAlbumList = data.lists[i].topicAlbumList;
+                            if (topicAlbumList.length > 0) {
+                                for (var j in topicAlbumList) {
+                                    result += '<div class="topic-iimg-wrap"><img src="' + topicAlbumList[j].album_img + '" alt="">';
+                                    if (data.lists[i].topicAlbumCounts > 3 && j == 2) {
+                                        result += '<p class="topic-iimg-bottom">共' + data.lists[i].topicAlbumCounts + '张</p></div>';
+                                    } else {
+                                        result += '</div>';
                                     }
                                 }
                             }
-                            result +='</div></div>';
-                            result +='<div class="topic-item-bottom clearfix"><ul>';
-                            result +='<li class="topic-ibottom-item" value="'+data.lists[i].id+'"><i class="fa fa-commenting-o"></i><span>'+data.lists[i].topicCommentCounts+'</span></li>';
-                            if(data.lists[i].is_like == 2){
-                                result +='<li class="topic-ibottom-item heart active"><i class="fa fa-heart"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
-                            }else{
-                                result +='<li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o"></i><span value="'+data.lists[i].id+'">'+data.lists[i].topicLikeCounts+'</span></li>';
+                            result += '</div></div>';
+                            result += '<div class="topic-item-bottom clearfix"><ul>';
+                            result += '<li class="topic-ibottom-item" value="' + data.lists[i].id + '"><i class="fa fa-commenting-o"></i><span>' + data.lists[i].topicCommentCounts + '</span></li>';
+                            if (data.lists[i].is_like == 2) {
+                                result += '<li class="topic-ibottom-item heart active"><i class="fa fa-heart"></i><span value="' + data.lists[i].id + '">' + data.lists[i].topicLikeCounts + '</span></li>';
+                            } else {
+                                result += '<li class="topic-ibottom-item heart-o"><i class="fa fa-heart-o"></i><span value="' + data.lists[i].id + '">' + data.lists[i].topicLikeCounts + '</span></li>';
                             }
-                            if(data.lists[i].is_collect == 2){
-                                result +='<li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
-                            }else{
-                                result +='<li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="'+data.lists[i].id+'">收藏</span></li>';
+                            if (data.lists[i].is_collect == 2) {
+                                result += '<li class="topic-ibottom-item star active"><i class="fa fa-star"></i><span value="' + data.lists[i].id + '">收藏</span></li>';
+                            } else {
+                                result += '<li class="topic-ibottom-item star-o"><i class="fa fa-star-o"></i><span value="' + data.lists[i].id + '">收藏</span></li>';
                             }
-                            result +='</ul></div></li>';
-                            if((i + 1) >= data.lists.length){
-                                // 锁定
-                                me.lock();
-                                // 无数据
-                                me.noData();
-                                break;
-                            }
+                            result += '</ul></div></li>';
                         }
                         // 为了测试，延迟1秒加载
 
-                            $('.lists').append(result);
-                            // 每次数据加载完，必须重置
-                            me.resetload();
+                        $('.lists').append(result);
+                        // 每次数据加载完，必须重置
+                        me.resetload();
 
                     },
-                    error: function(xhr, type){
+                    error: function (xhr, type) {
                         // 即使加载出错，也得重置
                         me.resetload();
                     }
@@ -141,7 +191,7 @@
 </script>
 <script>
     $(function () {
-        window.flag=0;
+        window.flag = 0;
         $("#topic-list").on('click', '.topic-iimg-wrap', function () {
             $(".hover-layer img").attr('src', $(this).find('img').attr('src')).parent().removeClass('none');
         });
@@ -154,7 +204,7 @@
                 myalert("评论不能为空！");
                 return false;
             } else {
-                if(window.flag == 0){
+                if (window.flag == 0) {
                     window.flag = 1;
                     $("#uploadFrom").submit();
                     setTimeout(function () {
@@ -164,7 +214,7 @@
                             location.reload();
                         });
                     }, 1400);
-                }else{
+                } else {
                     myalert('手速这么快，点一次就好了哦~！');
                     return false;
                 }

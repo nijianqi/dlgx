@@ -18,7 +18,8 @@ return [
         '__SCRIPT__' => '/static/index/script',
         '__STATIC__' => '/static/index/static',
         '__PUBLIC__' => '/static/index',
-        '__PLUGINS__'=> '/static/index/plugins'
+        '__PLUGINS__'=> '/static/index/plugins',
+		'__INDEX__' => '/index.php/index'
     ),
     //七牛上传配置
     'ACCESSKEY'=>'77TFY2VYN65eFsy9gi0m0wp7l2BiUmZ1SknbcLW0',
