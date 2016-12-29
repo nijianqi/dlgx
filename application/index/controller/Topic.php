@@ -142,8 +142,7 @@ class Topic extends Controller
         $topicCommentModel = new TopicCommentModel();
         if (request()->isAjax()) {
             $offset = input('param.offset');
-            $limit = input('param.limit');
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1, 'is_top' => '2'), $offset, $limit, 'topic_create_time desc');
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1, 'is_top' => '2'), $offset, '6', 'topic_create_time desc');
             if (!empty($topic_list)) {
                 foreach ($topic_list as $key => $vo) {
                     $topicAlbumList = $topicAlbumModel->getListByWhere(array('topic_id' => $vo['id']), '', '', '3');
@@ -240,8 +239,7 @@ class Topic extends Controller
         if (request()->isAjax()) {
             $topicModel = new TopicModel();
             $offset = input('param.offset');
-            $limit = input('param.limit');
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1, 'topic_create_time' => array(array('gt', strtotime(date('Y-m-d', strtotime('-1 day')))), array('lt', strtotime(date('Y-m-d'))))), $offset, $limit, 'topic_num desc');
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1, 'topic_create_time' => array(array('gt', strtotime(date('Y-m-d', strtotime('-1 day')))), array('lt', strtotime(date('Y-m-d'))))), $offset, '6', 'topic_num desc');
             $topicAlbumModel = new TopicAlbumModel();
             $topicLikeModel = new TopicLikeModel();
             $topicCollectModel = new TopicCollectModel();

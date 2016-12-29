@@ -127,7 +127,7 @@
                 $.ajax({
                     type: 'post',
                     url: "{:url('Topic/newTopList')}",
-                    data: {'offset': pageStart, 'limit': pageEnd},
+                    data: {'offset': pageStart},
                     dataType: 'json',
                     success: function (data) {
                         if (data.lists.length == 0) {
