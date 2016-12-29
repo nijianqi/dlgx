@@ -384,8 +384,8 @@ class Activity extends Controller
         if(empty($clubInfo)){
             $this->redirect('index/show');
         }
-        $sTime = date('Y 年 m 月 d 日', time());
-        $eTime = date('Y 年 m 月 d 日', strtotime('+1 day'));
+        $sTime = date('Y 年 m 月 d 日', strtotime('+1 day'));
+        $eTime = date('Y 年 m 月 d 日', strtotime('+2 day'));
         $this->assign([
             'act_start_time' => $sTime,
             'act_end_time' => $eTime,
