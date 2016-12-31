@@ -18,25 +18,6 @@ use app\index\model\MessageModel;
 
 class Topic extends Controller
 {
-    protected $beforeActionList = [
-        'checkMember' => ['only' => 'collect,comment,like,createTop,cancel']
-    ];
-
-    public function checkMember()
-    {
-        $memberModel = new MemberModel();
-        $member = $memberModel->getInfoById(session('memberId'));
-        if (empty(session('memberId'))) {
-            $this->redirect('index/index');
-        }
-        if (empty($member['member_tel'])) {
-            $this->redirect('member/edit');
-        }
-        if ($member['member_status'] == 2) {
-            $this->redirect('member/index');
-        }
-    }
-
     public function index() //话题详情
     {
         $topicId = input('param.topic_id');
@@ -299,10 +280,8 @@ class Topic extends Controller
 
     public function collect() //收藏话题
     {
-        $memberModel = new MemberModel();
-        $member = $memberModel->getInfoById(session('memberId'));
-        if (empty($member['member_tel'])) {
-            $this->redirect('member/edit');
+        if (empty(session('memberId'))) {
+            $this->redirect('index/index');
         } else {
             $topicId = input('param.id');
             $is_collect = input('param.is_collect');
@@ -331,10 +310,8 @@ class Topic extends Controller
 
     public function comment() //评论话题
     {
-        $memberModel = new MemberModel();
-        $member = $memberModel->getInfoById(session('memberId'));
-        if (empty($member['member_tel'])) {
-            $this->redirect('member/edit');
+        if (empty(session('memberId'))) {
+            $this->redirect('index/index');
         } else {
             $topicId = input('param.topic_id');
             $comment = input('param.comment');
@@ -391,11 +368,9 @@ class Topic extends Controller
 
     public function like() //点赞话题
     {
-        $memberModel = new MemberModel();
-        $member = $memberModel->getInfoById(session('memberId'));
-        if (empty($member['member_tel'])) {
-            $this->redirect('member/edit');
-        } else {
+        if (empty(session('memberId'))) {
+            $this->redirect('index/index');
+        }else {
             $topicId = input('param.id');
             $is_like = input('param.is_like');
             $topicModel = new TopicModel();
@@ -422,10 +397,8 @@ class Topic extends Controller
 
     public function com_like() //点赞评论
     {
-        $memberModel = new MemberModel();
-        $member = $memberModel->getInfoById(session('memberId'));
-        if (empty($member['member_tel'])) {
-            $this->redirect('member/edit');
+        if (empty(session('memberId'))) {
+            $this->redirect('index/index');
         } else {
             $commentId = input('param.id');
             $is_like = input('param.is_like');
@@ -450,10 +423,8 @@ class Topic extends Controller
 
     public function del() //删除话题
     {
-        $memberModel = new MemberModel();
-        $member = $memberModel->getInfoById(session('memberId'));
-        if (empty($member['member_tel'])) {
-            $this->redirect('member/edit');
+        if (empty(session('memberId'))) {
+            $this->redirect('index/index');
         } else {
             $id = input('param.id');
             $topic = new TopicModel();
@@ -478,7 +449,7 @@ class Topic extends Controller
             $param = input('param.');
             $topic = new TopicModel();
             if (empty(session('memberId'))) {
-                $this->redirect('index/show');
+                $this->redirect('index/index');
             }
             $param['topic_owner_id'] = session('memberId');
             $param['topic_create_time'] = time();
