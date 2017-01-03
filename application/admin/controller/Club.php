@@ -19,12 +19,13 @@ class Club extends Base
             $param = input('param.');
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
+            $order = $param['sortName'].' '.$param['sortOrder'];
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
                 $where['club_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $club = new ClubModel();
-            $selectResult = $club->getListByWhere($where, '*',$offset, $limit);
+            $selectResult = $club->getListByWhere($where, '*',$offset, $limit ,$order);
             $status = config('club_status');
             foreach ($selectResult as $key => $vo) {
                 $member = new MemberModel();
@@ -88,12 +89,13 @@ class Club extends Base
             $param = input('param.');
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
+            $order = $param['sortName'].' '.$param['sortOrder'];
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
                 $where['club_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $clubApply = new ClubApplyModel();
-            $selectResult = $clubApply->getListByWhere($where, $offset, $limit);
+            $selectResult = $clubApply->getListByWhere($where,'*', $offset, $limit ,$order);
             $status = config('apply_status');
             foreach ($selectResult as $key => $vo) {
                 $member = new MemberModel();

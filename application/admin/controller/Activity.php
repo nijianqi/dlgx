@@ -22,12 +22,13 @@ class Activity extends Base
             $param = input('param.');
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
+            $order = $param['sortName'].' '.$param['sortOrder'];
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
                 $where['act_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $activity = new ActivityModel();
-            $selectResult = $activity->getListByWhere($where,'*', $offset, $limit);
+            $selectResult = $activity->getListByWhere($where,'*', $offset, $limit ,$order);
             $top= config('is_top');
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['act_create_time'] = date('Y-m-d H:i:s', $vo['act_create_time']);
@@ -155,12 +156,13 @@ class Activity extends Base
             $param = input('param.');
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
+            $order = $param['sortName'].' '.$param['sortOrder'];
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
                 $where['act_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $activityApply = new ActivityApplyModel();
-            $selectResult = $activityApply->getListByWhere($where, $offset, $limit);
+            $selectResult = $activityApply->getListByWhere($where, '*', $offset, $limit ,$order);
             $status = config('apply_status');
             foreach ($selectResult as $key => $vo) {
                 $member = new MemberModel();

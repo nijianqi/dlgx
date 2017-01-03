@@ -19,12 +19,13 @@ class Topic extends Base
             $param = input('param.');
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
+            $order = $param['sortName'].' '.$param['sortOrder'];
             $where = [];
             if (isset($param['searchText']) && !empty($param['searchText'])) {
                 $where['topic_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $topic = new TopicModel();
-            $selectResult = $topic->getListByWhere($where,'*', $offset, $limit);
+            $selectResult = $topic->getListByWhere($where,'*', $offset, $limit ,$order);
             $status = config('topic_status');
             $top= config('is_top');
             foreach ($selectResult as $key => $vo) {

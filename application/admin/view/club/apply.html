@@ -42,8 +42,8 @@
                         <th data-field="club_intro">社团简介</th>
                         <th data-field="club_school">社团学校</th>
                         <th data-field="club_owner_id">社团团长</th>
-                        <th data-field="apply_time">申请时间</th>
-                        <th data-field="verify_status">状态</th>
+                        <th data-field="apply_time" data-sortable="true">申请时间</th>
+                        <th data-field="verify_status" data-sortable="true">状态</th>
                         <th data-field="verify_idea">审核意见</th>
                         <th data-field="operate">操作</th>
                         </thead>
@@ -76,6 +76,8 @@
             pagination: true, //启动分页
             pageSize: 10,  //每页显示的记录数
             pageNumber:1, //当前第几页
+            sortOrder: 'desc',
+            sortName: 'id',
             pageList: [5, 10, 15, 20, 25],  //记录数可选列表
             sidePagination: "server", //表示服务端请求
             //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
@@ -85,6 +87,8 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
+                    sortName: params.sortName,
+                    sortOrder: params.sortOrder,
                     searchText:$('#club_name').val()
                 };
                 return param;

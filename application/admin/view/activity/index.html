@@ -41,15 +41,15 @@
                         <thead>
                         <th data-field="act_name">活动名称</th>
                         <th data-field="act_intro">活动简介</th>
-                        <th data-field="act_create_time">创建时间</th>
-                        <th data-field="act_release_time">发布时间</th>
-                        <th data-field="act_start_time">开始时间</th>
-						<th data-field="act_end_time">结束时间</th>
+                        <th data-field="act_create_time" data-sortable="true">创建时间</th>
+                        <th data-field="act_release_time" data-sortable="true">发布时间</th>
+                        <th data-field="act_start_time" data-sortable="true">开始时间</th>
+						<th data-field="act_end_time" data-sortable="true">结束时间</th>
 						<th data-field="act_address">活动地点</th>
 						<th data-field="act_money">活动费用</th>
                         <th data-field="act_type">活动类型</th>
                         <th data-field="act_from_id">发布社团ID</th>
-                        <th data-field="is_top">是否置顶</th>
+                        <th data-field="is_top" data-sortable="true">是否置顶</th>
                         <th data-field="operate">操作</th>
                         </thead>
                     </table>
@@ -81,6 +81,8 @@
             pagination: true, //启动分页
             pageSize: 10,  //每页显示的记录数
             pageNumber:1, //当前第几页
+            sortOrder: 'desc',
+            sortName: 'id',
             pageList: [5, 10, 15, 20, 25],  //记录数可选列表
             sidePagination: "server", //表示服务端请求
             //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
@@ -90,6 +92,8 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
+                    sortName: params.sortName,
+                    sortOrder: params.sortOrder,
                     searchText:$('#act_name').val()
                 };
                 return param;
