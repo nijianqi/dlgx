@@ -40,8 +40,7 @@
         if (status === '1' || status === '-1') {
             myalert(msg);
             $(".alert-operate").click(function () {
-                var url = "{:url('Topic/newTopList')}";
-                location.replace(url);
+                history.go(-2);
             });
         }
         $(".mark-img-button").on("change", "input[type='file']", function () {
@@ -62,10 +61,12 @@
     function check() {
         if (!$("input[name='topic_name']").val().trim()) {
             alert("标题不能为空！");
+			$(".submit").removeAttr("disabled");
             return false;
         }
         if (!$("textarea[name='topic_content']").val().trim()) {
             alert("内容不能为空！");
+			$(".submit").removeAttr("disabled");
             return false;
         }
 		$(".submit").attr("disabled","disabled");

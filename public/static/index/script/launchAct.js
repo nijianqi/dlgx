@@ -50,8 +50,7 @@ $(function() {
         $(".submit").attr("disabled", "disabled");
         myalert(msg);
         $(".alert-operate").click(function() {
-            var url = "actList";
-            location.replace(url);
+             history.go(-2);
         });
     }
     $("#need").click(function() {
