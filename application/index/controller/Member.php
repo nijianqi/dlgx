@@ -47,7 +47,8 @@ class Member extends Controller
 
     public function index() //我的主页
     {
-        if(empty(session('memberId'))) {
+        if (empty(session('memberId'))) {
+            session('url', 'member/index');
             $this->redirect('index/index');
         }
         $memberModel = new MemberModel();

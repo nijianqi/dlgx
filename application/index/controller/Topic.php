@@ -116,6 +116,10 @@ class Topic extends Controller
 
     public function newTopList() //最新话题列表
     {
+        if (empty(session('memberId'))) {
+            session('url', 'topic/newTopList');
+            $this->redirect('index/index');
+        }
         $topicModel = new TopicModel();
         $topicAlbumModel = new TopicAlbumModel();
         $topicLikeModel = new TopicLikeModel();

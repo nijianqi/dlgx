@@ -76,13 +76,18 @@ class Index extends Controller
             session('memberIcon', $userInfo['headimgurl']);
             session('memberName', $userInfo['nickname']);
 
-            $membermodel = new Membermodel();
-			$memberInfo = $membermodel->getInfoById(session('memberId'));
-			if($memberInfo['member_status'] == 2){
-			   $this->redirect('member/index');
-			}else{
-			   $this->redirect('index/show');
-		    } 
+            $memberModel = new Membermodel();
+			$memberInfo = $memberModel->getInfoById(session('memberId'));
+            if($memberInfo['member_status'] == 2){
+                $this->redirect('member/index');
+            }
+            $url = session('url');
+            if(!empty($url)){
+                    session('url','');
+                    $this->redirect($url);
+            }else{
+                    $this->redirect('index/show');
+            }
         } else {
             $this->error('The state does not match. You may be a victim of CSRF.');
             exit;
