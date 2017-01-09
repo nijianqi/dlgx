@@ -1,6 +1,8 @@
 <?php
 namespace app\index\model;
 
+use app\index\controller\Member;
+
 class MessageModel extends BaseModel
 {
     protected $table = "dlgx_message";
@@ -19,7 +21,8 @@ class MessageModel extends BaseModel
         $param['create_time'] = time();
         $flag = $this->insertGetId($param);
         if(!empty($flag)){
-            $memberInfo = $this->getInfoById($toMemberId);
+            $memberModel = new Member();
+            $memberInfo = $memberModel->getInfoById($toMemberId);
             $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN';
             $post_data['touser']       = $memberInfo['member_openid'];
             $post_data['template_id']      = 'B0TldCRq2ljtRcaPMIsQlJJQAmjhscoUOtwPxmFfrec';

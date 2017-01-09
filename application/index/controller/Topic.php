@@ -284,143 +284,123 @@ class Topic extends Controller
 
     public function collect() //收藏话题
     {
-        if (empty(session('memberId'))) {
-            $this->redirect('index/index');
-        } else {
-            $topicId = input('param.id');
-            $is_collect = input('param.is_collect');
-            $topicModel = new TopicModel();
-            $topicInfo = $topicModel->getInfoById($topicId);
-            if ($topicInfo) {
-                $topicCollectModel = new TopicCollectModel();
-                $topicCollectList = $topicCollectModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
-                if (!empty($topicCollectList)) {
-                    if ($topicInfo && $topicInfo['topic_status'] = 1) {
-                        $return['flag'] = $topicCollectModel->updateCollect(session('memberId'), $topicId, $is_collect);
-                    }
-                } else {
-                    if ($topicInfo && $topicInfo['topic_status'] = 1) {
-                        $return['flag'] = $topicCollectModel->insertCollect(session('memberId'), $topicId, $is_collect);
-                    }
+        $topicId = input('param.id');
+        $is_collect = input('param.is_collect');
+        $topicModel = new TopicModel();
+        $topicInfo = $topicModel->getInfoById($topicId);
+        if ($topicInfo) {
+            $topicCollectModel = new TopicCollectModel();
+            $topicCollectList = $topicCollectModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
+            if (!empty($topicCollectList)) {
+                if ($topicInfo && $topicInfo['topic_status'] = 1) {
+                    $return['flag'] = $topicCollectModel->updateCollect(session('memberId'), $topicId, $is_collect);
                 }
             } else {
-                $return['flag'] = ['code' => -1, 'data' => '', 'msg' => '收藏失败，话题不存在'];
+                if ($topicInfo && $topicInfo['topic_status'] = 1) {
+                    $return['flag'] = $topicCollectModel->insertCollect(session('memberId'), $topicId, $is_collect);
+                }
             }
-
-
+        } else {
+            $return['flag'] = ['code' => -1, 'data' => '', 'msg' => '收藏失败，话题不存在'];
         }
         return json($return);
     }
 
     public function comment() //评论话题
     {
-        if (empty(session('memberId'))) {
-            $this->redirect('index/index');
-        } else {
-            $topicId = input('param.topic_id');
-            $comment = input('param.comment');
-            $commentId = input('param.comment_id');
-            $topicCommentModel = new TopicCommentModel();
-            $TopicModel = new TopicModel();
-            $topic = $TopicModel->getInfoById($topicId);
-            if ($topic) {
-                $TopicModel->update(array('topic_num' => $topic['topic_num'] + 1), array('id' => $topicId));
-                if (empty($commentId)) {
-                    $commentId = 0;
-                }
-                $return = $topicCommentModel->insertComment($topicId, $comment, $commentId);
-                $clubModel = new ClubModel();
-                $clubJoinModel = new ClubJoinModel();
-                $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id' => session('memberId')));
-                $clubInfo = $clubModel->getInfoByWhere(array('id' => $clubJoinInfo['club_id']));
-                if (!empty($clubInfo)) {
-                    $clubRuleModel = new ClubRuleModel();
-                    $clubExperienceModel = new ClubExperienceModel();
-                    $where = [];
-                    $where['rule_name'] = ['like', '%评论话题%'];
-                    $where['rule_status'] = 1;
-                    $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
-                    if (!empty($clubRuleInfo)) {
-                        $Counts = $clubExperienceModel->getCounts(array('member_id' => session('memberId'), 'content' => ['like', '%评论话题%'], 'create_time' => array(array('gt', strtotime(date('Y-m-d'))), array('lt', strtotime(date('Y-m-d', strtotime('+1 day')))))));
-                        if ($Counts <= $clubRuleInfo['rule_num']) {
-                            $arr = [];
-                            $arr['member_id'] = session('memberId');
-                            $arr['club_id'] = $clubInfo['id'];
-                            $arr['content'] = '评论话题+' . $clubRuleInfo['rule_experience'] . '经验值';
-                            $arr['create_time'] = time();
-                            $clubExperienceModel->insert($arr);
-                            $club_experience = intval($clubInfo['club_experience']) + intval($clubRuleInfo['rule_experience']);
-                            $clubModel->updateByWhere(array('club_experience' => $club_experience), '', array('id' => $clubInfo['id']));
-                        }
-                    }
-
-                }
-                if (request()->file()) {
-                    $album = request()->file('file');
-                    $topComAlbumModel = new TopComAlbumModel();
-                    foreach ($album as $key => $val) {
-                        $album_img = $topComAlbumModel->insertAlbum($val);
-                        $topComAlbumModel->insertGetId(array('comment_id' => $return, 'album_img' => $album_img . '?imageMogr2/size-limit/300k', 'create_time' => time()));
-                    }
-                }
-            } else {
-                echo "<script>alert('话题不存在');</script>";
+        $topicId = input('param.topic_id');
+        $comment = input('param.comment');
+        $commentId = input('param.comment_id');
+        $topicCommentModel = new TopicCommentModel();
+        $TopicModel = new TopicModel();
+        $topic = $TopicModel->getInfoById($topicId);
+        if ($topic) {
+            $TopicModel->update(array('topic_num' => $topic['topic_num'] + 1), array('id' => $topicId));
+            if (empty($commentId)) {
+                $commentId = 0;
             }
+            $return = $topicCommentModel->insertComment($topicId, $comment, $commentId);
+            $clubModel = new ClubModel();
+            $clubJoinModel = new ClubJoinModel();
+            $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id' => session('memberId')));
+            $clubInfo = $clubModel->getInfoByWhere(array('id' => $clubJoinInfo['club_id']));
+            if (!empty($clubInfo)) {
+                $clubRuleModel = new ClubRuleModel();
+                $clubExperienceModel = new ClubExperienceModel();
+                $where = [];
+                $where['rule_name'] = ['like', '%评论话题%'];
+                $where['rule_status'] = 1;
+                $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
+                if (!empty($clubRuleInfo)) {
+                    $Counts = $clubExperienceModel->getCounts(array('member_id' => session('memberId'), 'content' => ['like', '%评论话题%'], 'create_time' => array(array('gt', strtotime(date('Y-m-d'))), array('lt', strtotime(date('Y-m-d', strtotime('+1 day')))))));
+                    if ($Counts <= $clubRuleInfo['rule_num']) {
+                        $arr = [];
+                        $arr['member_id'] = session('memberId');
+                        $arr['club_id'] = $clubInfo['id'];
+                        $arr['content'] = '评论话题+' . $clubRuleInfo['rule_experience'] . '经验值';
+                        $arr['create_time'] = time();
+                        $clubExperienceModel->insert($arr);
+                        $club_experience = intval($clubInfo['club_experience']) + intval($clubRuleInfo['rule_experience']);
+                        $clubModel->updateByWhere(array('club_experience' => $club_experience), '', array('id' => $clubInfo['id']));
+                    }
+                }
 
+            }
+            if (request()->file()) {
+                $album = request()->file('file');
+                $topComAlbumModel = new TopComAlbumModel();
+                foreach ($album as $key => $val) {
+                    $album_img = $topComAlbumModel->insertAlbum($val);
+                    $topComAlbumModel->insertGetId(array('comment_id' => $return, 'album_img' => $album_img . '?imageMogr2/size-limit/300k', 'create_time' => time()));
+                }
+            }
+        } else {
+            echo "<script>alert('话题不存在');</script>";
         }
+
     }
 
     public function like() //点赞话题
     {
-        if (empty(session('memberId'))) {
-            $this->redirect('index/index');
-        }else {
-            $topicId = input('param.id');
-            $is_like = input('param.is_like');
-            $topicModel = new TopicModel();
-            $topicInfo = $topicModel->getInfoById($topicId);
-            if ($topicInfo) {
-                $topicLikeModel = new TopicLikeModel();
-                $topicLikeList = $topicLikeModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
-                if (!empty($topicLikeList)) {
-                    if ($topicInfo && $topicInfo['topic_status'] = 1) {
-                        $return['flag'] = $topicLikeModel->updateLike(session('memberId'), $topicId, $is_like);
-                    }
-                } else {
-                    if ($topicInfo && $topicInfo['topic_status'] = 1) {
-                        $return['flag'] = $topicLikeModel->insertLike(session('memberId'), $topicId, $is_like);
-                    }
+        $topicId = input('param.id');
+        $is_like = input('param.is_like');
+        $topicModel = new TopicModel();
+        $topicInfo = $topicModel->getInfoById($topicId);
+        if ($topicInfo) {
+            $topicLikeModel = new TopicLikeModel();
+            $topicLikeList = $topicLikeModel->getListByWhere(array('topic_id' => $topicId, 'member_id' => session('memberId')));
+            if (!empty($topicLikeList)) {
+                if ($topicInfo && $topicInfo['topic_status'] = 1) {
+                    $return['flag'] = $topicLikeModel->updateLike(session('memberId'), $topicId, $is_like);
                 }
             } else {
-                $return['flag'] = ['code' => -1, 'data' => '', 'msg' => '点赞失败，话题不存在'];
+                if ($topicInfo && $topicInfo['topic_status'] = 1) {
+                    $return['flag'] = $topicLikeModel->insertLike(session('memberId'), $topicId, $is_like);
+                }
             }
-
+        } else {
+            $return['flag'] = ['code' => -1, 'data' => '', 'msg' => '点赞失败，话题不存在'];
         }
+
         return json($return);
     }
 
     public function com_like() //点赞评论
     {
-        if (empty(session('memberId'))) {
-            $this->redirect('index/index');
-        } else {
-            $commentId = input('param.id');
-            $is_like = input('param.is_like');
-            $topicCommentModel = new TopicCommentModel();
-            $commentInfo = $topicCommentModel->getInfoById($commentId);
-            if ($commentInfo) {
-                $topicComLikeModel = new TopicComLikeModel();
-                $topicLikeComList = $topicComLikeModel->getListByWhere(array('comment_id' => $commentId, 'member_id' => session('memberId')));
-                if (!empty($topicLikeComList)) {
-                    $return['flag'] = $topicComLikeModel->updateLike(session('memberId'), $commentId, $is_like);
-                } else {
-                    $return['flag'] = $topicComLikeModel->insertLike(session('memberId'), $commentId, $is_like);
-                }
+        $commentId = input('param.id');
+        $is_like = input('param.is_like');
+        $topicCommentModel = new TopicCommentModel();
+        $commentInfo = $topicCommentModel->getInfoById($commentId);
+        if ($commentInfo) {
+            $topicComLikeModel = new TopicComLikeModel();
+            $topicLikeComList = $topicComLikeModel->getListByWhere(array('comment_id' => $commentId, 'member_id' => session('memberId')));
+            if (!empty($topicLikeComList)) {
+                $return['flag'] = $topicComLikeModel->updateLike(session('memberId'), $commentId, $is_like);
             } else {
-                $return['flag'] = ['code' => -1, 'data' => '', 'msg' => '点赞失败，话题评论不存在'];
+                $return['flag'] = $topicComLikeModel->insertLike(session('memberId'), $commentId, $is_like);
             }
-
-
+        } else {
+            $return['flag'] = ['code' => -1, 'data' => '', 'msg' => '点赞失败，话题评论不存在'];
         }
         return json($return);
     }
