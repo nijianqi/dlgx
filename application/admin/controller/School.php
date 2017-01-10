@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\SchoolModel;
+use app\admin\model\ClubModel;
 use app\admin\model\AreaModel;
 
 class School extends Base
@@ -17,12 +18,15 @@ class School extends Base
                 $where['school_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $school = new SchoolModel();
+			$clubModel = new ClubModel();
             $selectResult = $school->getSchoolByWhere($where,'*', $offset, $limit);
             foreach($selectResult as $key=>$vo){
+				$clubCounts = $clubModel->getCounts(array('club_school'=>$vo['school_name']));
                 $operate = [
                     '编辑' => url('school/edit', ['id' => $vo['id']]),
                     '删除' => "javascript:del('" . $vo['id'] . "')"
                 ];
+				$selectResult[$key]['clubCounts'] = $clubCounts;
                 $selectResult[$key]['operate'] = showOperate($operate);
             }
             $return['total'] = $school->getCounts($where);
