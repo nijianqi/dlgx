@@ -59,7 +59,11 @@
 					</span>
                 </div>
                 <div class="mark-body">{if !empty($vo.to_member_id)}@<a
-                        href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}{$vo.comment_content}
+                        href="{:url('Member/personHomepage', ['member_id' => $vo.to_member_id])}">{$vo.to_member_name}:</a>{/if}
+                        <?php
+                            echo preg_replace ("/\[\[_gif(.)+?_\]\]/", "<img src='__PUBLIC__/images/face/\${1}.gif'>", $vo['comment_content'])
+                        ?>
+                        <br>
                     {if !empty($vo.topComAlbumList)}
                     <div class="topic-item-imgs clearfix">
                         {foreach name="$vo.topComAlbumList" item="volist"}
@@ -116,7 +120,7 @@
     <div class="mark-publish-wrap">
         <p class="mark-publish-head">
             <span class="fl">取消</span>
-            发表评论
+            <img src="__PUBLIC__/images/happy.png" alt="">
             <span class="fr"><input type="submit">发布</span>
         </p>
 
@@ -128,6 +132,10 @@
                     <img src="__PUBLIC__/images/add_picture.png" alt="">
                     <input type="file" name="file[]">
                 </div>
+            </div>
+            <div class="emotion-wrap none" data-status="0">
+                <ul>
+                </ul>
             </div>
         </div>
     </div>
@@ -251,4 +259,8 @@
     });
 </script>
 <script src="__PUBLIC__/script/min/topicdetail.min.js"></script>
+<script>
+var gifPath = "__PUBLIC__/images/face/";
+</script>
+<script src="__PUBLIC__/script/min/emotion.min.js"></script>
 {include file="common/footer" /}
