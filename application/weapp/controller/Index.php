@@ -92,58 +92,14 @@ class Index extends Controller
 
     public function showClub()  //首页社团显示
     {
-        if(empty(session('memberId'))) {
-            $this->redirect('index/index');
-        }
-        $memberId = session('memberId');
         $clubWhere = [];
         $clubWhere['club_create_time'] = ['>', 0];
         $clubWhere['club_status'] = 1;
         $clubField = 'id,club_name,club_school,club_icon,club_intro,club_owner_id';
         $clubModel = new ClubModel();
         $clubList = $clubModel->getListByWhere($clubWhere, $clubField, 0);
-
-        $clubFollowModel = new ClubFollowModel();
-        $clubFollowList = $clubFollowModel->getListByWhere(array('member_id' => $memberId));
-        foreach ($clubList as $key => $vo) {
-            foreach ($clubFollowList as $keyword => $volist) {
-                if ($vo['id'] == $volist['club_id']) {
-                    $clubList[$key]['is_follow'] = $volist['is_follow'];
-                }
-
-            }
-        }
-        $message = new MessageModel();
-        $messageCounts = $message->getCounts(array('member_id' => array('neq', session('memberId')), 'to_member_id' => session('memberId'), 'message_status' => 1));//指定会员消息的总数量
-        $this->assign([
-            'clubList' => $clubList,
-            'clubFollowList' => $clubFollowList,
-            'memberId' => $memberId,
-            'messageCounts' => $messageCounts
-        ]);
-
-        return $this->fetch('/index-club');
-    }
-
-    function get_url_contents($url)
-    {
-        if (ini_get('allow_url_fopen') == 1) return file_get_contents($url);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
-
-    function get_user_info()
-    {
-        $accessToken = session('accessToken');
-        $openId = session('openId');
-        $url = 'https://api.weixin.qq.com/sns/userinfo?' . 'access_token=' . $accessToken . '&openid=' . $openId;
-        $info = $this->get_url_contents($url);
-        $info = json_decode($info, true);
-        return $info;
+        $return['clubList'] = $clubList;
+        return json($return);
     }
 
 }
