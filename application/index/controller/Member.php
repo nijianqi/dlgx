@@ -218,15 +218,11 @@ class Member extends Controller
         } else {
             $toMemberId = input('param.id');
             $is_follow = input('param.is_follow');
-            $memberFollowList = $memberFollowModel->getListByWhere(array('to_member_id' => $toMemberId, 'member_id' => session('memberId'),'member_status'=>'1'));
+            $memberFollowList = $memberFollowModel->getListByWhere(array('to_member_id' => $toMemberId, 'member_id' => session('memberId')));
             if (!empty($memberFollowList)) {
-                if ($memberInfo && $memberInfo['member_status'] = 1) {
                     $return['flag'] = $memberFollowModel->updateFollow(session('memberId'), $toMemberId, $is_follow);
-                }
             } else {
-                if ($memberInfo && $memberInfo['member_status'] = 1) {
                     $return['flag'] = $memberFollowModel->insertFollow(session('memberId'), $toMemberId, $is_follow);
-                }
             }
 
         }
