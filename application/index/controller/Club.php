@@ -372,11 +372,6 @@ class Club extends Controller
             $clubJoinModel = new ClubJoinModel();
             $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id' => session('memberId')));
             if (empty($clubJoinInfo)) {
-                $params = [];
-                $params['club_id'] = $clubId;
-                $params['member_id'] = session('memberId');
-                $params['apply_time'] = time();
-                $return['flag'] = db('club_join')->insertGetId($params);
                 $clubRuleModel = new ClubRuleModel();
                 $clubExperienceModel = new ClubExperienceModel();
                 $where = [];
@@ -384,14 +379,19 @@ class Club extends Controller
                 $where['rule_status'] = 1;
                 $clubRuleInfo = $clubRuleModel->getInfoByWhere($where);
                 if (!empty($clubRuleInfo)) {
-                    $arr = [];
-                    $arr['member_id'] = session('memberId');
-                    $arr['club_id'] = $clubId;
-                    $arr['content'] = '加入社团+' . $clubRuleInfo['rule_experience'] . '经验值';
-                    $arr['create_time'] = time();
-                    $clubExperienceModel->insert($arr);
                     $Counts = $clubExperienceModel->getCounts(array('member_id' => session('memberId'), 'content' => ['like', '%加入社团%']));
                     if ($Counts < 1) {
+                        $params = [];
+                        $params['club_id'] = $clubId;
+                        $params['member_id'] = session('memberId');
+                        $params['apply_time'] = time();
+                        $return['flag'] = db('club_join')->insertGetId($params);
+                        $arr = [];
+                        $arr['member_id'] = session('memberId');
+                        $arr['club_id'] = $clubId;
+                        $arr['content'] = '加入社团+' . $clubRuleInfo['rule_experience'] . '经验值';
+                        $arr['create_time'] = time();
+                        $clubExperienceModel->insert($arr);
                         $clubModel->updateByWhere(array('club_experience' => $clubInfo['club_experience'] + $clubRuleInfo['rule_experience']), '', array('id' => $clubId));
                     }
                 }
