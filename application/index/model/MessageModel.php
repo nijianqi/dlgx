@@ -38,7 +38,7 @@ class MessageModel extends BaseModel
                     'remark' => array('value' => $message_content),
                 )
             );
-            $this->http_curl($url,'post','json',json_encode($data));
+            $res = $this->http_curl($url,'post','json',json_encode($data));
         }
     }
     function get_url_contents($url)
