@@ -83,7 +83,7 @@ class Index extends Controller
             }
             $url = session('url');
             if(!empty($url)){
-                    session('url','');
+                    session('url','index/show');
                     $this->redirect($url);
             }else{
                     $this->redirect('index/show');

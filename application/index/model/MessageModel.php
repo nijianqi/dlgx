@@ -32,7 +32,7 @@ class MessageModel extends BaseModel
             $data = array(
                 'touser' => $memberInfo['member_openid'], // openid是发送消息的基础
                 'template_id' => 'B0TldCRq2ljtRcaPMIsQlJJQAmjhscoUOtwPxmFfrec', // 模板id
-                'url' => 'https://www.dlgx888.com/index/member/index.html', // 点击跳转地址
+                'url' => 'https://www.dlgx888.com/index/member/message.html', // 点击跳转地址
                 'data' => array(
                     'first' => array('value' => '您有一条消息，请查收'),
                     'keyword1' => array('value' => '新的消息'),

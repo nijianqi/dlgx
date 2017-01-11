@@ -231,6 +231,10 @@ class Member extends Controller
 
     public function message() //我的消息
     {
+		 if (empty(session('memberId'))) {
+            session('url', 'member/message');
+            $this->redirect('index/index');
+        }
         $memberId = session('memberId');
         $message = new MessageModel();
         $messageOfficialCounts = $message->getCounts(array('member_id' => 0, 'to_member_id' => $memberId, 'message_type' => 3, 'message_status' => 1));//官方消息的数量
