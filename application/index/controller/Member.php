@@ -667,7 +667,7 @@ class Member extends Controller
                 $clubModel = new ClubModel();
                 $clubInfo = $clubModel->getInfoByWhere(array('id' => $vo['club_id'], 'club_status' => 1));
                 $clubFollowModel = new ClubFollowModel();
-                $clubFollowInfo = $clubFollowModel->getInfoByWhere(array('member_id' => $memberId, 'club_id' => $clubInfo['id']));
+                $clubFollowInfo = $clubFollowModel->getInfoByWhere(array('member_id' => session('memberId'), 'club_id' => $clubInfo['id']));
                 $clubInfo['is_follow'] = $clubFollowInfo['is_follow'];
                 $clubJoinList[$key]['clubInfo'] = $clubInfo;
             }
@@ -694,6 +694,8 @@ class Member extends Controller
                 $clubModel = new ClubModel();
                 $clubInfo = $clubModel->getInfoByWhere(array('id' => $vo['club_id'], 'club_status' => 1));
                 $clubFollowList[$key]['clubInfo'] = $clubInfo;
+				$clubFollowInfo = $clubFollowModel->getInfoByWhere(array('member_id' => session('memberId'), 'club_id' => $vo['club_id']));
+				$clubFollowList[$key]['is_follow'] = $clubFollowInfo['is_follow'];
             }
         }
 		 $this->assign([
