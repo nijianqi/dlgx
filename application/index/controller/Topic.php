@@ -127,7 +127,7 @@ class Topic extends Controller
         $topicCommentModel = new TopicCommentModel();
         if (request()->isAjax()) {
             $offset = input('param.offset');
-            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1, 'is_top' => '2'), $offset, '6', 'topic_create_time desc');
+            $topic_list = $topicModel->getTopicMember(array('topic_status' => 1, 'is_top' => '2'), $offset, '6', 'topic_release_time desc');
             if (!empty($topic_list)) {
                 foreach ($topic_list as $key => $vo) {
                     $topicAlbumList = $topicAlbumModel->getListByWhere(array('topic_id' => $vo['id']), '', '', '3');
@@ -315,7 +315,7 @@ class Topic extends Controller
         $TopicModel = new TopicModel();
         $topic = $TopicModel->getInfoById($topicId);
         if ($topic) {
-            $TopicModel->update(array('topic_num' => $topic['topic_num'] + 1), array('id' => $topicId));
+            $TopicModel->update(array('topic_num' => $topic['topic_num'] + 1,'topic_release_time' => time()), array('id' => $topicId));
             if (empty($commentId)) {
                 $commentId = 0;
             }
