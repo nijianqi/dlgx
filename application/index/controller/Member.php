@@ -390,11 +390,10 @@ class Member extends Controller
         $memberId = session('memberId');
         $message = new MessageModel();
         $clubJoinModel = new ClubJoinModel();
-        $clubJoinList = $clubJoinModel->getListBywhere(array('member_id' => session('memberId')));//会员加入的社团列表
-        if (!empty($clubJoinList)) {
-            foreach ($clubJoinList as $key => $val) {
+        $clubJoinInfo = $clubJoinModel->getInfoByWhere(array('member_id' => session('memberId')));//会员加入的社团
+        if (!empty($clubJoinInfo)) {
                 $clubModel = new ClubModel();
-                $clubInfo = $clubModel->getInfoByWhere(array('id' => $val['club_id'], 'club_status' => 1));
+                $clubInfo = $clubModel->getInfoByWhere(array('id' => $clubJoinInfo['club_id'], 'club_status' => 1));
                 $messageList = $message->getListByWhere(array('member_id' => array('neq', session('memberId')), 'to_member_id' => $memberId, 'message_type' => 4));//社团动态的消息
                 $message->updateByWhere(array('message_status' => 2), '', array('to_member_id' => session('memberId'), 'message_type' => 4, 'message_status' => 1));//所有改为已读
                 foreach ($messageList as $keyword => $vo) {
@@ -403,11 +402,9 @@ class Member extends Controller
                     $messageList[$keyword]['club_icon'] = $clubInfo['club_icon'];
                     $messageList[$keyword]['club_id'] = $clubInfo['id'];
                 }
-                $clubJoinList[$key]['messageList'] = $messageList;
-            }
         }
         $this->assign([
-            'clubJoinList' => $clubJoinList
+            'messageList' => $messageList
         ]);
         return $this->fetch('/society-dynamics');
     }

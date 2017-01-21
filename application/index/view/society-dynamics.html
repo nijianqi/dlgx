@@ -2,8 +2,8 @@
 	
 	<div class="message-list">
 		<ul>
-			{if !empty($clubJoinList.messageList)}
-			{foreach name="clubJoinList.messageList" item="vo"}
+			{if !empty($messageList)}
+			{foreach name="$messageList" item="vo"}
 			<li class="message-item">
 				<p class="message-time">{$vo.create_time}</p>
 				<div class="message-body">
