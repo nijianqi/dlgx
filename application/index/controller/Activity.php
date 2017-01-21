@@ -233,6 +233,11 @@ class Activity extends Controller
                     $messageModel = new MessageModel();
                     $messageModel->insertMessage(session('memberId'),$activity['act_from_id'],$message_content,$message_type);
                     $messageModel->insertMessage($activity['act_from_id'],session('memberId'),'biu~您已成功报名"'.$activity['act_name'].'"活动!请在规定时间内进行参加!',1);
+                    $return = [];
+                    if($activity['success_url']){
+                        $return['url'] = $activity['success_url'];
+                    }
+                    $return['flag'] = 1;
                 }
 
             } else {

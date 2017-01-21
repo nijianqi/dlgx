@@ -496,4 +496,13 @@ class Topic extends Controller
         ]);
         return $this->fetch('/topic-publish');
     }
+
+    public function alert() //话题评论弹窗内容
+    {
+        $topicId = input('param.id');
+        $topicModel = new TopicModel();
+        $topicInfo = $topicModel->getInfoById($topicId);
+        $return['flag'] = ['code' => 1, 'data' => '', 'msg' => $topicInfo['alert_content']];
+        return json($return);
+    }
 }

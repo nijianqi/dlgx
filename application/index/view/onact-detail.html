@@ -164,7 +164,11 @@
                     } else {
                         myalert('报名成功！');
                         setTimeout(function () {
-                            location.reload();
+                            if(data.url){
+                                location.href = data.url;
+                            }else{
+                                location.reload();
+                            }
                         }, 1400);
                     }
                 }

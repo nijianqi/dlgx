@@ -157,7 +157,15 @@
                     window.flag = 1;
                     $("#uploadFrom").submit();
                     setTimeout(function () {
-                        myalert('评论成功！');
+                        $.ajax({
+                            type: 'POST',
+                            url: "{:url('Topic/alert')}",
+                            data: {'id': $("#topic_id").val()},
+                            async: false,
+                            success: function (data) {
+                                myalert(data.flag.msg);
+                            }
+                        });
                         $(".mark-publish-wrap").css("bottom", '-21rem');
                         $(".alert-operate").click(function () {
                             location.reload();
