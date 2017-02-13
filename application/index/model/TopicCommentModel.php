@@ -27,7 +27,7 @@ class TopicCommentModel extends BaseModel
                 $messageModel = new MessageModel();
                 $messageModel->insertMessage(session('memberId'),$topicComment['member_id'],$message_content,$message_type,$comment_content,'0',$topic_id,$return);
             }else{
-                $message_content = '评论了你的话题'.": ".$topic['topic_name'];
+                $message_content = '评论了你的话题'.": ".$topic['topic_content'];
                 $comment_content = $comment;
                 $message_type = 2;
                 $messageModel = new MessageModel();

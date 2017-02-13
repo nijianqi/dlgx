@@ -19,7 +19,7 @@ class TopicLikeModel extends BaseModel
         $param['apply_time'] = time();
         $return['flag'] = $this->insert($param);
         if($return['flag']['code'] = 1){
-            $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+            $message_content = $topic_info['member_name'].": ".$topic_info['topic_content'];
             $comment_content = '赞了你的话题';
             $messageModel = new MessageModel();
             $toMemberId = $topic_info['topic_owner_id'];
@@ -43,10 +43,10 @@ class TopicLikeModel extends BaseModel
         $return['flag'] = $this->updateByWhere($param,'',$where);
         if($return['flag']['code'] = 1){
             if($is_like == 2){
-                $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+                $message_content = $topic_info['member_name'].": ".$topic_info['topic_content'];
                 $comment_content = '赞了你的话题';
             }else{
-                $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+                $message_content = $topic_info['member_name'].": ".$topic_info['topic_content'];
                 $comment_content = '取消了对你话题的赞';
             }
             $messageModel = new MessageModel();

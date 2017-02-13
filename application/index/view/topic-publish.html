@@ -8,16 +8,16 @@
     <form action="" method="post" enctype="multipart/form-data" onsubmit="return check();">
         <div class="ccreate-detail">
             <ul>
-                <li class="topic-publish-item">
+                <!--<li class="topic-publish-item">
                     <span>标题</span>
                     <div class="cdinput-wrap">
                         <input type="text" name="topic_name" placeholder="请输入标题">
                     </div>
-                </li>
+                </li>-->
                 <li class="topic-publish-item">
-                    <span>内容</span>
+                    <!--<span>内容</span>-->
                     <div class="cdinput-wrap">
-                        <textarea name="topic_content" placeholder="请输入话题详情"></textarea>
+                        <textarea name="topic_content" placeholder="分享你的真实糗事"></textarea>
                     </div>
                 </li>
                 <div class="mark-publish-img">
@@ -46,7 +46,7 @@
         $(".mark-img-button").on("change", "input[type='file']", function () {
             var i, e = $(this).val(), t = e.substring(e.lastIndexOf(".") + 1);
             if (["jpg", "png", "gif", "jpeg", "bmp"].indexOf(t.toLowerCase()) == -1)return myalert("请上传图片文件！"), void $(this).val("");
-            if ($(".mark-publish-img img").length >= 7)return myalert("最多上传6张图片"), void $(this).val("");
+            if ($(".mark-publish-img img").length >= 10)return myalert("最多上传9张图片"), void $(this).val("");
             i = getObjectURL(this.files[0]);
             var r = $("<div class='mark-item-img'>");
             r.append("<div class='mark-item-mask'>删除</div>"), $("<img>").appendTo(r).attr("src", i), r.prependTo($(".mark-publish-img")), $(this).after($("<input type='file' name='file[]'>"))
@@ -59,11 +59,11 @@
         });
     });
     function check() {
-        if (!$("input[name='topic_name']").val().trim()) {
+       /* if (!$("input[name='topic_name']").val().trim()) {
             alert("标题不能为空！");
 			$(".submit").removeAttr("disabled");
             return false;
-        }
+        }*/
         if (!$("textarea[name='topic_content']").val().trim()) {
             alert("内容不能为空！");
 			$(".submit").removeAttr("disabled");

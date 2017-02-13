@@ -18,7 +18,7 @@ class TopicCollectModel extends BaseModel
         $param['apply_time'] = time();
         $return['flag'] = $this->insert($param);
         if($return['flag']['code'] = 1){
-            $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+            $message_content = $topic_info['member_name'].": ".$topic_info['topic_content'];
             $comment_content = "收藏了你的话题: ";
             $messageModel = new MessageModel();
             $toMemberId = $topic_info['topic_owner_id'];
@@ -42,10 +42,10 @@ class TopicCollectModel extends BaseModel
         $return['flag'] = $this->updateByWhere($param,'',$where);
         if($return['flag']['code'] = 1){
             if($is_collect == 2){
-                $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+                $message_content = $topic_info['member_name'].": ".$topic_info['topic_content'];
                 $comment_content = "收藏了你的话题: ";
             }else{
-                $message_content = $topic_info['member_name'].": ".$topic_info['topic_name'];
+                $message_content = $topic_info['member_name'].": ".$topic_info['topic_content'];
                 $comment_content = "取消收藏了你的话题: ";
             }
             $messageModel = new MessageModel();
