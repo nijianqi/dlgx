@@ -35,6 +35,13 @@
 <script src="__PUBLIC__/script/min/mypop.min.js"></script>
 <script>
     $(function () {
+		//指定条目数
+        var tips = new Array(2);
+		tips[0] = '说说你现在的心情~';
+        tips[1] = '有没有遇到哪些开心的事~';
+		tips[2] = '吐槽两句?';
+		var index = Math.floor(Math.random() * tips.length);
+		$("textarea").attr("placeholder",tips[index]);
         var status = $(".info-mask").attr('data-status');
         var msg = $(".info-mask").attr('data-msg');
         if (status === '1' || status === '-1') {
