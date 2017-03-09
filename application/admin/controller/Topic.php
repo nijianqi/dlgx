@@ -25,6 +25,7 @@ class Topic extends Base
                 $where['topic_name'] = ['like', '%' . $param['searchText'] . '%'];
             }
             $topic = new TopicModel();
+            $topicType = new TopicTypeModel();
             $selectResult = $topic->getListByWhere($where,'*', $offset, $limit ,$order);
             $status = config('topic_status');
             $top= config('is_top');
@@ -35,6 +36,8 @@ class Topic extends Base
                 }else{
                     $info['member_name']='官方';
                 }
+                $typeInfo = $topicType->getInfoById($vo['type_id']);
+                $selectResult[$key]['type_id'] = $typeInfo['type_name'];
                 $selectResult[$key]['topic_owner_id'] = $info['member_name'];
                 $selectResult[$key]['topic_status'] = $status[$vo['topic_status']];
                 $selectResult[$key]['topic_create_time'] = date('Y-m-d H:i:s', $vo['topic_create_time']);

@@ -1,4 +1,5 @@
 {include file="common/header" title="发布话题" keywords="发布话题" description="" /}
+<link rel="stylesheet" href="__PUBLIC__/css/weui.css">
 <style>
 .mark-img-button > img {width:5rem;height:5rem}
 .mark-publish-img{height:auto}
@@ -14,6 +15,18 @@
                         <input type="text" name="topic_name" placeholder="请输入标题">
                     </div>
                 </li>-->
+                <div class="weui-cell weui-cell_select weui-cell_select-after topic-publish-item">
+                    <div class="weui-cell__hd">
+                        <label for="select2" class="weui-label">话题类型</label>
+                    </div>
+                    <div class="weui-cell__bd cdinput-wrap">
+                        <select class="weui-select" name="type_id">
+                            {foreach name="$topicTypeList" item="vo"}
+                            <option value="{$vo.id}">{$vo.type_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
                 <li class="topic-publish-item">
                     <!--<span>内容</span>-->
                     <div class="cdinput-wrap">

@@ -14,6 +14,7 @@ use app\index\model\TopicComLikeModel;
 use app\index\model\TopicLikeModel;
 use app\index\model\TopicAlbumModel;
 use app\index\model\TopComAlbumModel;
+use app\index\model\TopicTypeModel;
 use app\index\model\MessageModel;
 
 class Topic extends Controller
@@ -491,8 +492,13 @@ class Topic extends Controller
             $return['code'] = 0;
             $return['msg'] = '';
         }
+        $topicType = new TopicTypeModel();
+        $where = [];
+        $where['type_status'] = 1;
+        $topicTypeList = $topicType->getListByWhere($where);
         $this->assign([
-            'return' => $return
+            'return' => $return,
+            'topicTypeList'=>$topicTypeList
         ]);
         return $this->fetch('/topic-publish');
     }

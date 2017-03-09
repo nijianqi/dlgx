@@ -1,17 +1,20 @@
 {include file="common/header" title="消息" keywords="消息" description="" /}
 <link rel="stylesheet" href="__PUBLIC__/css/weui.css">
-<div class="container" id="container"><div class="msg">
-<div class="weui_msg">
-    <div class="weui_icon_area"><i class="weui_icon_warn weui_icon_msg"></i></div>
-    <div class="weui_text_area">
-        <h2 class="weui_msg_title">操作失败</h2>
-        <p class="weui_msg_desc">{$return.msg}</p>
-    </div>
-    <div class="weui_opr_area">
-        <p class="weui_btn_area">
-            <a href="javascript:history.go(-1)" class="weui_btn weui_btn_primary">确定</a>
-        </p>
+<div class="container" id="container">
+    <div class="msg">
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">操作失败</h2>
+                <p class="weui-msg__desc">{$return.msg}</p>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="javascript:history.back();" class="weui-btn weui-btn_primary">确定</a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
-</div></div>
+
 {include file="common/footer" /}
